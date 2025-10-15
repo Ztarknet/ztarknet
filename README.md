@@ -43,12 +43,14 @@
 ## High‑level architecture
 
 ```mermaid
-flowchart LR
-    subgraph Users
+flowchart TB
+    subgraph Users["Users"]
+        direction TB
         U["Wallets and dApps"]
     end
 
     subgraph L2["Ztarknet L2 (Starknet compatible)"]
+        direction TB
         RPC["JSON-RPC (Madara)"]
         MEM["Mempool"]
         EXE["Cairo VM Execution"]
@@ -58,12 +60,14 @@ flowchart LR
     end
 
     subgraph L1["Zcash L1"]
+        direction TB
         ZN["Full nodes (Zebra)"]
         TZE["TZE: Circle-STARK Verify"]
         CHAIN["Chain / Miner"]
     end
 
-    U -->|send L2 tx| RPC --> MEM --> EXE --> ST
+    U -->|send L2 tx| RPC
+    RPC --> MEM --> EXE --> ST
     EXE -->|block trace| PROV --> AGG
     AGG -->|Circle-STARK proof and state root| ZN
     ZN --> TZE --> CHAIN
