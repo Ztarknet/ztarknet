@@ -45,22 +45,22 @@
 ```mermaid
 flowchart LR
     subgraph Users
-        U[Wallets and dApps]
+        U["Wallets and dApps"]
     end
 
     subgraph L2["Ztarknet L2 (Starknet compatible)"]
-        RPC[JSON RPC (Madara)]
-        MEM[Mempool]
-        EXE[Cairo VM Execution]
-        ST[State DB and State Root]
-        PROV[Prover Workers (Stwo/Cairo)]
-        AGG[Proof Aggregator (optional)]
+        RPC["JSON-RPC (Madara)"]
+        MEM["Mempool"]
+        EXE["Cairo VM Execution"]
+        ST["State DB and State Root"]
+        PROV["Prover Workers (Stwo/Cairo)"]
+        AGG["Proof Aggregator (optional)"]
     end
 
     subgraph L1["Zcash L1"]
-        ZN[Full nodes (Zebra)]
-        TZE[TZE: Circle-STARK Verify]
-        CHAIN[Chain / Miner]
+        ZN["Full nodes (Zebra)"]
+        TZE["TZE: Circle-STARK Verify"]
+        CHAIN["Chain / Miner"]
     end
 
     U -->|send L2 tx| RPC --> MEM --> EXE --> ST
