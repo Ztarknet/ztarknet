@@ -131,10 +131,10 @@ sequenceDiagram
 - [Ztarknet repo (this)](https://github.com/AbdelStark/ztarknet)
 - [Zebra fork with draft TZE plumbing — target host for the verifier.](https://github.com/AbdelStark/zebra)
 - [Draft ZIP PR — Circle‑STARK Verification as a TZE.](https://github.com/zcash/zips/pull/1107)
-- [Forum thread* — discussion: “STARK verification as a TZE; enabler for a Starknet‑style L2 on Zcash”.](https://forum.zcashcommunity.com/t/stark-verification-as-a-transparent-zcash-extension-tze-i-e-enabler-for-a-starknet-style-l2-on-zcash/52486/15)
+- [Forum thread — discussion: “STARK verification as a TZE; enabler for a Starknet‑style L2 on Zcash”.](https://forum.zcashcommunity.com/t/stark-verification-as-a-transparent-zcash-extension-tze-i-e-enabler-for-a-starknet-style-l2-on-zcash/52486/15)
 - [Madara — Starknet client (Rust), state commitment & RPC.](https://github.com/madara-alliance/madara)
 - [Stwo/Cairo — Cairo proof generation and Rust verifier.](https://github.com/starkware-libs/stwo-cairo)
-- [Starknet protocol intro** — accounts, blocks, proofs, DA](https://docs.starknet.io/learn/protocol/intro)
+- [Starknet protocol intro — accounts, blocks, proofs, DA](https://docs.starknet.io/learn/protocol/intro)
 
 ## License
 
