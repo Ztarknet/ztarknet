@@ -1,20 +1,28 @@
-# Ztarknet 🛡️🐺 — Starknet‑style L2 for Zcash (PoC)
+<div align="center">
+  <img src="misc/img/ztarknet-logo.png" alt="Ztarknet logo" width="160" />
+  <h1>Ztarknet</h1>
+  <p>Starknet-based L2 for Zcash</p>
+  <p>
+    <a href="https://github.com/AbdelStark/ztarknet">Repository</a> ·
+    <a href="https://github.com/AbdelStark/zebra">Circle STARK-enabled Zebra fork</a> ·
+    <a href="https://github.com/zcash/zips/pull/1107">Circle STARK draft ZIP</a> ·
+    <a href="https://forum.zcashcommunity.com/t/stark-verification-as-a-transparent-zcash-extension-tze-i-e-enabler-for-a-starknet-style-l2-on-zcash/52486/15">Forum discussion</a>
+  </p>
+</div>
 
-[Ztarknet repo](https://github.com/AbdelStark/ztarknet) - [Circle STARK enabled Zebra fork](https://github.com/AbdelStark/zebra) - [Circle STARK draft ZIP](https://github.com/zcash/zips/pull/1107) - [Proposal on ZCash forum](https://forum.zcashcommunity.com/t/stark-verification-as-a-transparent-zcash-extension-tze-i-e-enabler-for-a-starknet-style-l2-on-zcash/52486/15)
-
-> **Status:** concept + references for a proof‑of‑concept (PoC). This repo aims to document the idea, constraints, and the minimum components to experiment with a Starknet‑like rollup that settles to **Zcash L1** via a **Transparent Zcash Extension (TZE)** that verifies **Circle STARK** proofs.
+> **Status:** concept + references for a proof-of-concept (PoC). This repo documents the idea, constraints, and minimum components to explore a Starknet-like rollup that settles to **Zcash L1** via a **Transparent Zcash Extension (TZE)** that verifies **Circle STARK** proofs.
 
 ## What is Ztarknet?
 
-**Ztarknet** is a proposal for a Starknet‑style L2 that executes **Cairo** programs, proves the resulting state transitions with [**Circle STARKs**](https://eprint.iacr.org/2024/278) ([Stwo](https://github.com/starkware-libs/stwo-cairo)), and **settles** those transitions on **Zcash L1** by having full nodes _verify_ the proof natively via a TZE verifier. It reuses an existing Starknet client (e.g., **Madara**) for sequencing/execution and a **Stwo/Cairo** prover for proofs. The L1 verification surface is a **single TZE type** defined by a draft ZIP.
+**Ztarknet** proposes a Starknet-style L2 that executes **Cairo** programs, proves the resulting state transitions with [**Circle STARKs**](https://eprint.iacr.org/2024/278) ([Stwo](https://github.com/starkware-libs/stwo-cairo)), and **settles** those transitions on **Zcash L1** by having full nodes verify the proof natively via a TZE verifier. It reuses an existing Starknet client (e.g., **Madara**) for sequencing/execution and a **Stwo/Cairo** prover for proofs. The L1 verification surface is a **single TZE type** defined by a draft ZIP.
 
-**Why Zcash?** Zcash already gives strong base‑layer privacy. What Ztarknet explores is **programmability and scale** via an L2—with validity proofs checked natively on Zcash using the TZE framework ([ZIP‑222](https://zips.z.cash/zip-0222)) and the associated digest changes (ZIP‑245/244).
+**Why Zcash?** Zcash already offers strong base-layer privacy. Ztarknet explores **programmability and scale** via an L2—with validity proofs checked natively on Zcash using the TZE framework ([ZIP-222](https://zips.z.cash/zip-0222)) and the associated digest changes (ZIP-245/244).
 
 ## Rationale
 
-- **Separation of concerns:** keep Zcash L1 minimal; push general execution to an L2 VM (Cairo); anchor L2 with succinct validity proofs.
-- **Clean L1 integration:** use a **TZE** rather than Script changes; TZEs were designed exactly to add new transparent validity conditions in a well‑bounded way.
-- **Rust‑native path:** Madara (Rust) and Stwo/Cairo (Rust verifier + CLI) keep the prototype within Zebra’s Rust ecosystem.
+- **Separation of concerns:** keep Zcash L1 minimal, push general execution to an L2 VM (Cairo), and anchor L2 with succinct validity proofs.
+- **Clean L1 integration:** use a **TZE** rather than Script changes; TZEs were designed to add new transparent validity conditions in a well-bounded way.
+- **Rust-native path:** Madara (Rust) and Stwo/Cairo (Rust verifier + CLI) keep the prototype within Zebra’s Rust ecosystem.
 
 ## Prerequisites and scope
 
@@ -37,27 +45,27 @@
 ```mermaid
 flowchart LR
     subgraph Users
-      U[Wallets / dApps]
+        U[Wallets and dApps]
     end
 
-    subgraph L2[Ztarknet L2 (Starknet-compatible)]
-      RPC[JSON-RPC (Madara)]
-      MEM[Mempool]
-      EXE[Cairo VM Exec]
-      ST[State DB + State Root]
-      PROV[Prover Workers (Stwo/Cairo)]
-      AGG[Proof Aggregator (optional)]
+    subgraph L2["Ztarknet L2 (Starknet compatible)"]
+        RPC[JSON RPC (Madara)]
+        MEM[Mempool]
+        EXE[Cairo VM Execution]
+        ST[State DB and State Root]
+        PROV[Prover Workers (Stwo/Cairo)]
+        AGG[Proof Aggregator (optional)]
     end
 
-    subgraph L1[Zcash L1]
-      ZN[Full nodes (Zebra)]
-      TZE[TZE: Circle-STARK Verify]
-      CHAIN[Chain / Miner]
+    subgraph L1["Zcash L1"]
+        ZN[Full nodes (Zebra)]
+        TZE[TZE: Circle-STARK Verify]
+        CHAIN[Chain / Miner]
     end
 
     U -->|send L2 tx| RPC --> MEM --> EXE --> ST
     EXE -->|block trace| PROV --> AGG
-    AGG -->|Circle-STARK proof + L2 state root| ZN
+    AGG -->|Circle-STARK proof and state root| ZN
     ZN --> TZE --> CHAIN
     CHAIN -->|anchor new L2 root as TZE output| ZN
 ```
@@ -93,14 +101,14 @@ sequenceDiagram
     participant Submitter as L1 Submitter
     participant Zcash as Zcash Nodes (Zebra+TZE)
 
-    User->>Sequencer: send L2 tx via JSON-RPC
-    Sequencer->>Sequencer: order txs, execute Cairo, compute next state root (root_{k+1})
-    Sequencer->>Prover: emit execution trace for block k+1
-    Prover->>Prover: generate Circle-STARK proof for (root_k -> root_{k+1}, block k+1)
-    Prover->>Submitter: deliver (proof.json, root_{k+1})
-    Submitter->>Zcash: broadcast TZE tx: spend Anchor_k, create Anchor_{k+1}
-    Zcash->>Zcash: verify TZE: parse precondition/witness, run Stwo verifier
-    Zcash->>Zcash: on success, include tx in block; anchor root_{k+1}
+    User->>Sequencer: send L2 tx via JSON RPC
+    Sequencer->>Sequencer: order txs, execute Cairo, compute next state root
+    Sequencer->>Prover: emit execution trace for the new block
+    Prover->>Prover: generate Circle-STARK proof for the transition
+    Prover->>Submitter: deliver proof bundle with the new state root
+    Submitter->>Zcash: broadcast TZE tx (spend previous anchor, create next anchor)
+    Zcash->>Zcash: verify TZE witness with Circle-STARK verifier
+    Zcash->>Zcash: on success, include tx in block and anchor the new root
 ```
 
 - **Sequencer/exec** can be **Madara** (Rust Starknet client), which has Starknet‑compatible RPC and computes state commitments.
