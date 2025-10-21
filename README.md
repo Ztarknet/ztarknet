@@ -89,8 +89,8 @@ Starknet’s own docs describe this pattern generically (accounts, block state c
 
 - **Genesis:** create `Anchor_0` TZE output with precondition committing to `root_0`.
 - **Step k→k+1:** submit tx that _spends_ `Anchor_k` and _creates_ `Anchor_{k+1}`.
-  The TZE witness carries a proof that _executing the Cairo L2 program from `root_k` with block `k+1` txs yields `root_{k+1}`_. The precondition of `Anchor*{k+1}`commits to`root*{k+1}`.
-Zcash nodes verify the proof using the TZE verifier; if valid, `Anchor\_{k+1}` becomes the new on‑chain commitment.
+  The TZE witness carries a proof that _executing the Cairo L2 program from `root_k` with block `k+1` txs yields `root_{k+1}`_. The precondition of `Anchor_{k+1}` commits to `root_{k+1}`.
+  Zcash nodes verify the proof using the TZE verifier; if valid, `Anchor_{k+1}` becomes the new on‑chain commitment.
 
 This uses **ZIP‑222**’s model (precondition/witness per extension `type`) and integrates with **ZIP‑245/244** digests so TZE data is committed correctly in txid/signature trees.
 
