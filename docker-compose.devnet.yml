@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  madara:
+    image: ghcr.io/madara-alliance/madara:nightly-7216147
+    command: ["--devnet", "--rpc-external"]
+    ports:
+      - "9944:9944"
+    restart: unless-stopped

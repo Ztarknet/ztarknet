@@ -126,6 +126,52 @@ sequenceDiagram
 - **Submitter tool:** small Rust bin to bundle `(precondition, witness)` and build a TZE tx.
 - **Zcash node:** **Zebra fork** with the **TZE verifier** enabled, gated on a dev/test network activation.
 
+## Getting Started
+
+### Start Madara Devnet
+
+To start your Madara devnet, run:
+
+```bash
+docker compose -f docker-compose.devnet.yml up
+```
+
+This will start a local Starknet-compatible devnet that you can use for development and testing.
+
+### Explore with Cosmos Explorer
+
+You can use the open source [Cosmos Explorer](https://github.com/justmert/cosmos) to interact with your devnet:
+
+1. Clone the Cosmos repository:
+
+   ```bash
+   git clone https://github.com/justmert/cosmos.git
+   cd cosmos
+   ```
+
+2. Set up environment:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Update the RPC URL in `.env` to point to your Madara devnet:
+
+   ```
+   STARKNET_RPC_URL=http://host.docker.internal:9944
+   ```
+
+4. Start the explorer:
+   ```bash
+   docker compose up
+   ```
+
+The explorer will be available at `http://localhost:5600` and will connect to your Madara devnet running on port 9944.
+
+### Prover
+
+Coming soon!
+
 ## Resources
 
 - [Ztarknet repo (this)](https://github.com/AbdelStark/ztarknet)
