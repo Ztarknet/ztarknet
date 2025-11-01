@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ztarknet Explorer — Zcash Testnet</title>
+    <meta name="description" content="Block explorer for Ztarknet Zcash testnet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="noise-overlay" aria-hidden="true"></div>
+    
+    <header class="page-header">
+      <nav class="nav">
+        <a class="brand" href="/">
+          <img src="./ztarknet-logo.png" alt="Ztarknet logo" />
+          <span>Ztarknet Explorer</span>
+        </a>
+        <div class="nav-actions">
+          <a class="button ghost" href="/" target="_blank">
+            Back to Home
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <div id="root"></div>
+
+    <footer class="page-footer">
+      <div class="footer-content">
+        <p>
+          Built by cypherpunks, for cypherpunks.
+          <span>🛡️🐺</span>
+        </p>
+        <a href="mailto:ztarknet@proton.me">ztarknet@proton.me</a>
+      </div>
+    </footer>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" src="./app.js"></script>
+  </body>
+</html>
+
