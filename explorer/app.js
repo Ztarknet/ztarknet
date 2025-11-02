@@ -1,8 +1,8 @@
 const { useState, useEffect } = React;
 
 const RPC_ENDPOINT = 'https://rpc.regtest.ztarknet.cash';
-const POLL_INTERVAL = 10000; // 10 seconds
-const MAX_BLOCKS = 10;
+const POLL_INTERVAL = 1000; // 1 second
+const MAX_BLOCKS = 5;
 
 // RPC helper function
 async function rpcCall(method, params = []) {
@@ -68,25 +68,38 @@ function formatHash(hash) {
   return `${hash.slice(0, 16)}...${hash.slice(-16)}`;
 }
 
-// Count TZE transactions in a block
-function countTZETransactions(block) {
-  // TZE transactions will have specific markers
-  // For now, we'll look for transactions with "tze" field
-  // This will be expanded when we know the exact format
-  if (!block.tx) return 0;
+// Get block reward from valuePools
+function getBlockReward(block) {
+  if (!block.valuePools) return null;
   
-  let count = 0;
-  for (const tx of block.tx) {
-    // If tx is a string (just txid), we can't determine TZE status without full tx data
-    // If tx is an object with tze field, count it
-    if (typeof tx === 'object' && tx.tze) {
-      count++;
-    }
-  }
-  return count;
+  const transparentPool = block.valuePools.find(pool => pool.id === 'transparent');
+  if (!transparentPool || transparentPool.valueDelta === undefined) return null;
+  
+  return transparentPool.valueDelta;
 }
 
+// Simple router component
 function App() {
+  const [route, setRoute] = useState(window.location.hash || '#/');
+  
+  useEffect(() => {
+    const handleHashChange = () => {
+      setRoute(window.location.hash || '#/');
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+  
+  // Parse route
+  if (route.startsWith('#/block/')) {
+    const blockId = route.replace('#/block/', '');
+    return <BlockPage blockId={blockId} />;
+  }
+  
+  return <MainPage />;
+}
+
+function MainPage() {
   const [blocks, setBlocks] = useState([]);
   const [chainHeight, setChainHeight] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -186,11 +199,12 @@ function App() {
       <div className="blocks-container">
         {blocks.map((block, index) => {
           const totalTx = block.tx ? block.tx.length : 0;
-          const tzeTx = countTZETransactions(block);
+          const reward = getBlockReward(block);
           
           return (
-            <div 
-              key={block.hash} 
+            <a 
+              key={block.hash}
+              href={`#/block/${block.hash}`}
               className={`block-card ${block.isNew ? 'new-block' : ''}`}
             >
               <div className="block-info">
@@ -198,18 +212,22 @@ function App() {
                 <span className="block-time">{formatTime(block.time)}</span>
               </div>
               
-              <div className="block-detail">
-                <span className="block-detail-label">Hash</span>
-                <span className="block-hash" title={block.hash}>
-                  {block.hash}
-                </span>
-              </div>
+              <code className="block-hash" title={block.hash}>
+                {block.hash}
+              </code>
               
               <div className="block-details">
                 <div className="block-detail">
                   <span className="block-detail-label">Transactions</span>
                   <span className="block-detail-value">
-                    {totalTx} total / {tzeTx} TZE
+                    {totalTx}
+                  </span>
+                </div>
+                
+                <div className="block-detail">
+                  <span className="block-detail-label">Reward</span>
+                  <span className="block-detail-value">
+                    {reward !== null ? `${reward} ZEC` : 'N/A'}
                   </span>
                 </div>
                 
@@ -220,7 +238,7 @@ function App() {
                   </span>
                 </div>
               </div>
-            </div>
+            </a>
           );
         })}
       </div>
@@ -250,6 +268,229 @@ function App() {
             <code>regtest</code> - Regression test network for development
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// Block detail page
+function BlockPage({ blockId }) {
+  const [block, setBlock] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [expandedTx, setExpandedTx] = useState(null);
+  
+  useEffect(() => {
+    async function fetchBlock() {
+      try {
+        setLoading(true);
+        let blockHash = blockId;
+        
+        // If blockId is a number (height), get the hash first
+        if (/^\d+$/.test(blockId)) {
+          blockHash = await rpcCall('getblockhash', [parseInt(blockId)]);
+        }
+        
+        // Fetch block with verbosity 2 (includes transaction data)
+        const blockData = await rpcCall('getblock', [blockHash, 2]);
+        setBlock(blockData);
+        setLoading(false);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching block:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    }
+    
+    fetchBlock();
+  }, [blockId]);
+  
+  if (loading) {
+    return (
+      <div className="explorer-container">
+        <div className="loading">Loading block details...</div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="explorer-container">
+        <div className="error">
+          Error: {error}
+          <br />
+          <a href="#/" className="button secondary" style={{ marginTop: '20px', display: 'inline-flex' }}>
+            Back to Home
+          </a>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!block) {
+    return (
+      <div className="explorer-container">
+        <div className="error">Block not found</div>
+      </div>
+    );
+  }
+  
+  const totalTx = block.tx ? block.tx.length : 0;
+  const reward = getBlockReward(block);
+  
+  return (
+    <div className="explorer-container">
+      <div style={{ marginBottom: '24px' }}>
+        <a href="#/" className="button ghost">← Back to Blocks</a>
+      </div>
+      
+      <h2 className="section-title">Block #{block.height.toLocaleString()}</h2>
+      <code className="hash-display">{block.hash}</code>
+      
+      {/* Block info cards */}
+      <div className="stats-grid" style={{ marginBottom: '48px' }}>
+        <div className="stat-card">
+          <span className="stat-label">Block Height</span>
+          <div className="stat-value" style={{ fontSize: '1.8rem' }}>{block.height.toLocaleString()}</div>
+          <div className="stat-description">{formatTime(block.time)}</div>
+        </div>
+        
+        <div className="stat-card">
+          <span className="stat-label">Block Reward</span>
+          <div className="stat-value" style={{ fontSize: '1.8rem' }}>{reward !== null ? `${reward}` : 'N/A'}</div>
+          <div className="stat-description">ZEC</div>
+        </div>
+        
+        <div className="stat-card">
+          <span className="stat-label">Block Size</span>
+          <div className="stat-value" style={{ fontSize: '1.8rem' }}>{block.size ? `${block.size.toLocaleString()}` : 'N/A'}</div>
+          <div className="stat-description">Bytes</div>
+        </div>
+      </div>
+      
+      {/* Transactions list */}
+      <h2 className="section-title">{totalTx} Transaction{totalTx !== 1 ? 's' : ''}</h2>
+      <div className="transactions-container">
+        {block.tx && block.tx.map((tx, index) => {
+          const numInputs = tx.vin ? tx.vin.length : 0;
+          const numOutputs = tx.vout ? tx.vout.length : 0;
+          const totalOutput = tx.vout ? tx.vout.reduce((sum, out) => sum + (out.value || 0), 0) : 0;
+          
+          // Determine transaction kind (will be enhanced later)
+          let txKind = 'standard';
+          if (tx.vin && tx.vin.length > 0 && tx.vin[0].coinbase) {
+            txKind = 'coinbase';
+          }
+          
+          const isExpanded = expandedTx === tx.txid;
+          
+          return (
+            <div key={tx.txid || index} className="tx-card-wrapper">
+              <div 
+                className="tx-card"
+                onClick={() => setExpandedTx(isExpanded ? null : tx.txid)}
+                style={{ cursor: 'pointer' }}
+              >
+                <span className="tx-kind">{txKind}</span>
+                <code className="tx-hash" title={tx.txid}>{tx.txid}</code>
+                <div className="tx-detail">
+                  <span className="tx-detail-label">Inputs</span>
+                  <span className="tx-detail-value">{numInputs}</span>
+                </div>
+                <div className="tx-detail">
+                  <span className="tx-detail-label">Outputs</span>
+                  <span className="tx-detail-value">{numOutputs}</span>
+                </div>
+                <div className="tx-detail">
+                  <span className="tx-detail-label">Total Output</span>
+                  <span className="tx-detail-value">{totalOutput.toFixed(8)} ZEC</span>
+                </div>
+                <div className="tx-detail">
+                  <span className="tx-detail-label">Size</span>
+                  <span className="tx-detail-value">{tx.size ? `${tx.size.toLocaleString()} B` : 'N/A'}</span>
+                </div>
+              </div>
+              
+              {isExpanded && (
+                <div className="tx-expanded">
+                  <div className="tx-io-container">
+                    {/* Inputs */}
+                    <div className="tx-io-column">
+                      <h3 className="tx-io-title">Inputs ({numInputs})</h3>
+                      <div className="tx-io-list">
+                        {tx.vin && tx.vin.map((input, idx) => (
+                          <div key={idx} className="tx-io-item">
+                            <div className="tx-io-header">
+                              <span className="tx-io-index">#{idx}</span>
+                            </div>
+                            {input.coinbase ? (
+                              <div className="tx-io-field">
+                                <span className="tx-io-label">Coinbase</span>
+                                <code className="tx-io-value">{input.coinbase}</code>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="tx-io-field">
+                                  <span className="tx-io-label">Previous Output</span>
+                                  <code className="tx-io-value">{input.txid}:{input.vout}</code>
+                                </div>
+                              </>
+                            )}
+                            <div className="tx-io-field">
+                              <span className="tx-io-label">Sequence</span>
+                              <span className="tx-io-value">{input.sequence}</span>
+                            </div>
+                            {input.scriptSig && (
+                              <div className="tx-io-field">
+                                <span className="tx-io-label">Script Size</span>
+                                <span className="tx-io-value">{input.scriptSig.hex ? input.scriptSig.hex.length / 2 : 0} bytes</span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Outputs */}
+                    <div className="tx-io-column">
+                      <h3 className="tx-io-title">Outputs ({numOutputs})</h3>
+                      <div className="tx-io-list">
+                        {tx.vout && tx.vout.map((output, idx) => (
+                          <div key={idx} className="tx-io-item">
+                            <div className="tx-io-header">
+                              <span className="tx-io-index">#{output.n}</span>
+                            </div>
+                            <div className="tx-io-field">
+                              <span className="tx-io-label">Value</span>
+                              <span className="tx-io-value highlight">{output.value ? output.value.toFixed(8) : '0.00000000'} ZEC</span>
+                            </div>
+                            {output.scriptPubKey && (
+                              <>
+                                <div className="tx-io-field">
+                                  <span className="tx-io-label">Script</span>
+                                  <code className="tx-io-value">{output.scriptPubKey.hex}</code>
+                                </div>
+                                {output.scriptPubKey.addresses && output.scriptPubKey.addresses.length > 0 && (
+                                  <div className="tx-io-field">
+                                    <span className="tx-io-label">Address{output.scriptPubKey.addresses.length > 1 ? 'es' : ''}</span>
+                                    {output.scriptPubKey.addresses.map((addr, addrIdx) => (
+                                      <code key={addrIdx} className="tx-io-value">{addr}</code>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
