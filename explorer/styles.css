@@ -32,6 +32,23 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  flex-shrink: 0;
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-footer {
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 body::before {
@@ -182,6 +199,7 @@ img {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 40px 32px 120px;
+  flex: 1;
 }
 
 .stats-grid {
@@ -189,10 +207,11 @@ img {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
   margin-bottom: 48px;
+  min-height: 160px;
 }
 
 .stat-card {
-  padding: 28px;
+  padding: 28px 20px 20px 28px;
   background: var(--card-bg);
   border: 1px solid rgba(255, 137, 70, 0.2);
   border-radius: 16px;
@@ -213,7 +232,7 @@ img {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(255, 137, 70, 0.64);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: block;
 }
 
@@ -229,6 +248,7 @@ img {
   font-size: 0.9rem;
   color: var(--muted);
   line-height: 1.5;
+  margin: 0;
 }
 
 .section-title {
@@ -244,6 +264,7 @@ img {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 48px;
+  min-height: 400px;
 }
 
 .block-card {
@@ -347,6 +368,12 @@ img {
   font-family: var(--font-mono);
 }
 
+.size-value {
+  min-width: 60px;
+  display: inline-block;
+  text-align: left;
+}
+
 .developer-info {
   padding: 32px;
   background: radial-gradient(
@@ -397,6 +424,45 @@ img {
   padding: 2px 8px;
   border-radius: 4px;
   color: var(--accent-strong);
+}
+
+/* Skeleton loading styles */
+.skeleton {
+  pointer-events: none;
+  position: relative;
+  overflow: hidden;
+  will-change: contents;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 107, 26, 0.08) 20%,
+    rgba(255, 107, 26, 0.15) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-text {
+  color: transparent !important;
+  background: rgba(255, 137, 70, 0.15);
+  border-radius: 4px;
+  user-select: none;
 }
 
 .loading {
@@ -507,6 +573,12 @@ img {
   font-weight: 600;
   color: var(--foreground);
   font-family: var(--font-mono);
+}
+
+.tx-detail .size-value {
+  min-width: 60px;
+  display: inline-block;
+  text-align: left;
 }
 
 /* Expanded transaction view */
