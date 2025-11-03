@@ -374,6 +374,12 @@ img {
   text-align: left;
 }
 
+.zec-value {
+  min-width: 100px;
+  display: inline-block;
+  text-align: left;
+}
+
 .developer-info {
   padding: 32px;
   background: radial-gradient(
@@ -539,6 +545,25 @@ img {
   border-radius: 4px;
   font-weight: 700;
   white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+  display: inline-block;
+}
+
+/* Transaction kind colors */
+.tx-kind[data-kind="coinbase"] {
+  background: #f5a623;
+  color: #0a0a0e;
+}
+
+.tx-kind[data-kind="tze"] {
+  background: #16a085;
+  color: #ffffff;
+}
+
+.tx-kind[data-kind="standard"] {
+  background: var(--accent);
+  color: var(--background);
 }
 
 .tx-hash {
@@ -577,6 +602,12 @@ img {
 
 .tx-detail .size-value {
   min-width: 60px;
+  display: inline-block;
+  text-align: left;
+}
+
+.tx-detail .zec-value {
+  min-width: 100px;
   display: inline-block;
   text-align: left;
 }
@@ -669,6 +700,12 @@ img {
 .tx-io-value.highlight {
   color: var(--accent-strong);
   font-weight: 600;
+}
+
+.tx-io-value.zec-value {
+  min-width: 120px;
+  display: inline-block;
+  text-align: left;
 }
 
 .tx-io-value code {

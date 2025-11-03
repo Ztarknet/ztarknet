@@ -84,6 +84,12 @@ function formatSize(bytes) {
   }
 }
 
+// Format ZEC amount (remove trailing zeros)
+function formatZEC(amount) {
+  if (amount === null || amount === undefined) return 'N/A';
+  return parseFloat(amount.toFixed(8)).toString();
+}
+
 // Get block reward from valuePools
 function getBlockReward(block) {
   if (!block.valuePools) return null;
@@ -248,7 +254,7 @@ function MainPage() {
                 
                 <div className="block-detail">
                   <span className="block-detail-label">Reward</span>
-                  <span className="block-detail-value skeleton-text">--- ZEC</span>
+                  <span className="block-detail-value skeleton-text zec-value">--- ZEC</span>
                 </div>
                 
                 <div className="block-detail">
@@ -288,8 +294,8 @@ function MainPage() {
                 
                 <div className="block-detail">
                   <span className="block-detail-label">Reward</span>
-                  <span className="block-detail-value">
-                    {reward !== null ? `${reward} ZEC` : 'N/A'}
+                  <span className="block-detail-value zec-value">
+                    {reward !== null ? `${formatZEC(reward)} ZEC` : 'N/A'}
                   </span>
                 </div>
                 
@@ -391,7 +397,7 @@ function BlockPage({ blockId }) {
           
           <div className="stat-card skeleton">
             <span className="stat-label skeleton-text">Block Reward</span>
-            <div className="stat-value skeleton-text" style={{ fontSize: '1.8rem' }}>---</div>
+            <div className="stat-value skeleton-text zec-value" style={{ fontSize: '1.8rem' }}>---</div>
             <div className="stat-description skeleton-text">ZEC</div>
           </div>
           
@@ -421,7 +427,7 @@ function BlockPage({ blockId }) {
               </div>
               <div className="tx-detail">
                 <span className="tx-detail-label">Total Output</span>
-                <span className="tx-detail-value skeleton-text">--- ZEC</span>
+                <span className="tx-detail-value skeleton-text zec-value">--- ZEC</span>
               </div>
               <div className="tx-detail">
                 <span className="tx-detail-label">Size</span>
@@ -478,7 +484,7 @@ function BlockPage({ blockId }) {
         
         <div className="stat-card">
           <span className="stat-label">Block Reward</span>
-          <div className="stat-value" style={{ fontSize: '1.8rem' }}>{reward !== null ? `${reward}` : 'N/A'}</div>
+          <div className="stat-value zec-value" style={{ fontSize: '1.8rem' }}>{reward !== null ? formatZEC(reward) : 'N/A'}</div>
           <div className="stat-description">ZEC</div>
         </div>
         
@@ -499,10 +505,39 @@ function BlockPage({ blockId }) {
           const numOutputs = tx.vout ? tx.vout.length : 0;
           const totalOutput = tx.vout ? tx.vout.reduce((sum, out) => sum + (out.value || 0), 0) : 0;
           
-          // Determine transaction kind (will be enhanced later)
+          // Determine transaction kind
           let txKind = 'standard';
+          
+          // Check if coinbase
           if (tx.vin && tx.vin.length > 0 && tx.vin[0].coinbase) {
             txKind = 'coinbase';
+          } else {
+            // Check for TZE transaction (script begins with "ff")
+            let isTZE = false;
+            
+            // Check inputs
+            if (tx.vin) {
+              for (const input of tx.vin) {
+                if (input.scriptSig && input.scriptSig.hex && input.scriptSig.hex.toLowerCase().startsWith('ff')) {
+                  isTZE = true;
+                  break;
+                }
+              }
+            }
+            
+            // Check outputs
+            if (!isTZE && tx.vout) {
+              for (const output of tx.vout) {
+                if (output.scriptPubKey && output.scriptPubKey.hex && output.scriptPubKey.hex.toLowerCase().startsWith('ff')) {
+                  isTZE = true;
+                  break;
+                }
+              }
+            }
+            
+            if (isTZE) {
+              txKind = 'tze';
+            }
           }
           
           const isExpanded = expandedTx === tx.txid;
@@ -514,7 +549,7 @@ function BlockPage({ blockId }) {
                 onClick={() => setExpandedTx(isExpanded ? null : tx.txid)}
                 style={{ cursor: 'pointer' }}
               >
-                <span className="tx-kind">{txKind}</span>
+                <span className="tx-kind" data-kind={txKind}>{txKind}</span>
                 <code className="tx-hash" title={tx.txid}>{tx.txid}</code>
                 <div className="tx-detail">
                   <span className="tx-detail-label">Inputs</span>
@@ -526,7 +561,7 @@ function BlockPage({ blockId }) {
                 </div>
                 <div className="tx-detail">
                   <span className="tx-detail-label">Total Output</span>
-                  <span className="tx-detail-value">{totalOutput.toFixed(8)} ZEC</span>
+                  <span className="tx-detail-value zec-value">{formatZEC(totalOutput)} ZEC</span>
                 </div>
               <div className="tx-detail">
                 <span className="tx-detail-label">Size</span>
@@ -585,7 +620,7 @@ function BlockPage({ blockId }) {
                             </div>
                             <div className="tx-io-field">
                               <span className="tx-io-label">Value</span>
-                              <span className="tx-io-value highlight">{output.value ? output.value.toFixed(8) : '0.00000000'} ZEC</span>
+                              <span className="tx-io-value highlight zec-value">{formatZEC(output.value || 0)} ZEC</span>
                             </div>
                             {output.scriptPubKey && (
                               <>
