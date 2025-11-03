@@ -68,6 +68,22 @@ function formatHash(hash) {
   return `${hash.slice(0, 16)}...${hash.slice(-16)}`;
 }
 
+// Format size helper
+function formatSize(bytes) {
+  if (!bytes) return 'N/A';
+  if (bytes < 10000) {
+    return `${bytes} B`;
+  }
+  const kb = bytes / 1024;
+  if (kb < 100) {
+    return `${kb.toFixed(2)} KB`;
+  } else if (kb < 1000) {
+    return `${kb.toFixed(1)} KB`;
+  } else {
+    return `${Math.round(kb)} KB`;
+  }
+}
+
 // Get block reward from valuePools
 function getBlockReward(block) {
   if (!block.valuePools) return null;
@@ -157,14 +173,6 @@ function MainPage() {
     return () => clearInterval(interval);
   }, [lastBlockHeight]);
 
-  if (loading) {
-    return (
-      <div className="explorer-container">
-        <div className="loading">Loading blocks from the network...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="explorer-container">
       {error && (
@@ -176,28 +184,82 @@ function MainPage() {
       )}
 
       <div className="stats-grid">
-        <div className="stat-card">
-          <span className="stat-label">Chain Height</span>
-          <div className="stat-value">{chainHeight.toLocaleString()}</div>
-          <div className="stat-description">Total blocks mined</div>
-        </div>
-        
-        <div className="stat-card">
-          <span className="stat-label">Network Upgrade</span>
-          <div className="stat-value">ZFuture</div>
-          <div className="stat-description">Latest protocol version</div>
-        </div>
-        
-        <div className="stat-card">
-          <span className="stat-label">Transaction Version</span>
-          <div className="stat-value">V6</div>
-          <div className="stat-description">Current tx format</div>
-        </div>
+        {loading ? (
+          <>
+            <div className="stat-card skeleton">
+              <span className="stat-label skeleton-text">Chain Height</span>
+              <div className="stat-value skeleton-text">Loading...</div>
+              <div className="stat-description skeleton-text">Total blocks mined</div>
+            </div>
+            <div className="stat-card skeleton">
+              <span className="stat-label skeleton-text">Network Upgrade</span>
+              <div className="stat-value skeleton-text">Loading...</div>
+              <div className="stat-description skeleton-text">Latest protocol version</div>
+            </div>
+            <div className="stat-card skeleton">
+              <span className="stat-label skeleton-text">Transaction Version</span>
+              <div className="stat-value skeleton-text">Loading...</div>
+              <div className="stat-description skeleton-text">Current tx format</div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="stat-card">
+              <span className="stat-label">Chain Height</span>
+              <div className="stat-value">{chainHeight.toLocaleString()}</div>
+              <div className="stat-description">Total blocks mined</div>
+            </div>
+            
+            <div className="stat-card">
+              <span className="stat-label">Network Upgrade</span>
+              <div className="stat-value">ZFuture</div>
+              <div className="stat-description">Latest protocol version</div>
+            </div>
+            
+            <div className="stat-card">
+              <span className="stat-label">Transaction Version</span>
+              <div className="stat-value">V6</div>
+              <div className="stat-description">Current tx format</div>
+            </div>
+          </>
+        )}
       </div>
 
       <h2 className="section-title">Latest Blocks</h2>
       <div className="blocks-container">
-        {blocks.map((block, index) => {
+        {loading ? (
+          // Show skeleton placeholders during loading
+          Array.from({ length: MAX_BLOCKS }).map((_, index) => (
+            <div key={index} className="block-card skeleton">
+              <div className="block-info">
+                <span className="block-height skeleton-text">Block #---</span>
+                <span className="block-time skeleton-text">--- ago</span>
+              </div>
+              
+              <code className="block-hash skeleton-text">
+                ----------------------------------------------------------------
+              </code>
+              
+              <div className="block-details">
+                <div className="block-detail">
+                  <span className="block-detail-label">Transactions</span>
+                  <span className="block-detail-value skeleton-text">-</span>
+                </div>
+                
+                <div className="block-detail">
+                  <span className="block-detail-label">Reward</span>
+                  <span className="block-detail-value skeleton-text">--- ZEC</span>
+                </div>
+                
+                <div className="block-detail">
+                  <span className="block-detail-label">Size</span>
+                  <span className="block-detail-value skeleton-text size-value">--- B</span>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          blocks.map((block, index) => {
           const totalTx = block.tx ? block.tx.length : 0;
           const reward = getBlockReward(block);
           
@@ -233,14 +295,15 @@ function MainPage() {
                 
                 <div className="block-detail">
                   <span className="block-detail-label">Size</span>
-                  <span className="block-detail-value">
-                    {block.size ? `${block.size.toLocaleString()} B` : 'N/A'}
+                  <span className="block-detail-value size-value">
+                    {formatSize(block.size)}
                   </span>
                 </div>
               </div>
             </a>
           );
-        })}
+        })
+        )}
       </div>
 
       <div className="developer-info">
@@ -309,7 +372,64 @@ function BlockPage({ blockId }) {
   if (loading) {
     return (
       <div className="explorer-container">
-        <div className="loading">Loading block details...</div>
+        <div style={{ marginBottom: '24px' }}>
+          <a href="#/" className="button ghost">← Back to Blocks</a>
+        </div>
+        
+        <h2 className="section-title skeleton-text">Block #---</h2>
+        <code className="hash-display skeleton-text">
+          ----------------------------------------------------------------
+        </code>
+        
+        {/* Skeleton stat cards */}
+        <div className="stats-grid" style={{ marginBottom: '48px' }}>
+          <div className="stat-card skeleton">
+            <span className="stat-label skeleton-text">Block Height</span>
+            <div className="stat-value skeleton-text" style={{ fontSize: '1.8rem' }}>---</div>
+            <div className="stat-description skeleton-text">Loading...</div>
+          </div>
+          
+          <div className="stat-card skeleton">
+            <span className="stat-label skeleton-text">Block Reward</span>
+            <div className="stat-value skeleton-text" style={{ fontSize: '1.8rem' }}>---</div>
+            <div className="stat-description skeleton-text">ZEC</div>
+          </div>
+          
+          <div className="stat-card skeleton">
+            <span className="stat-label skeleton-text">Block Size</span>
+            <div className="stat-value skeleton-text size-value" style={{ fontSize: '1.8rem' }}>---</div>
+            <div className="stat-description skeleton-text">---</div>
+          </div>
+        </div>
+        
+        {/* Skeleton transactions */}
+        <h2 className="section-title skeleton-text">- Transactions</h2>
+        <div className="transactions-container">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="tx-card skeleton">
+              <span className="tx-kind skeleton-text">---</span>
+              <code className="tx-hash skeleton-text">
+                ----------------------------------------------------------------
+              </code>
+              <div className="tx-detail">
+                <span className="tx-detail-label">Inputs</span>
+                <span className="tx-detail-value skeleton-text">-</span>
+              </div>
+              <div className="tx-detail">
+                <span className="tx-detail-label">Outputs</span>
+                <span className="tx-detail-value skeleton-text">-</span>
+              </div>
+              <div className="tx-detail">
+                <span className="tx-detail-label">Total Output</span>
+                <span className="tx-detail-value skeleton-text">--- ZEC</span>
+              </div>
+              <div className="tx-detail">
+                <span className="tx-detail-label">Size</span>
+                <span className="tx-detail-value skeleton-text size-value">--- B</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -364,8 +484,10 @@ function BlockPage({ blockId }) {
         
         <div className="stat-card">
           <span className="stat-label">Block Size</span>
-          <div className="stat-value" style={{ fontSize: '1.8rem' }}>{block.size ? `${block.size.toLocaleString()}` : 'N/A'}</div>
-          <div className="stat-description">Bytes</div>
+          <div className="stat-value size-value" style={{ fontSize: '1.8rem' }}>
+            {block.size ? formatSize(block.size).split(' ')[0] : 'N/A'}
+          </div>
+          <div className="stat-description">{block.size ? formatSize(block.size).split(' ')[1] : ''}</div>
         </div>
       </div>
       
@@ -406,10 +528,10 @@ function BlockPage({ blockId }) {
                   <span className="tx-detail-label">Total Output</span>
                   <span className="tx-detail-value">{totalOutput.toFixed(8)} ZEC</span>
                 </div>
-                <div className="tx-detail">
-                  <span className="tx-detail-label">Size</span>
-                  <span className="tx-detail-value">{tx.size ? `${tx.size.toLocaleString()} B` : 'N/A'}</span>
-                </div>
+              <div className="tx-detail">
+                <span className="tx-detail-label">Size</span>
+                <span className="tx-detail-value size-value">{formatSize(tx.size)}</span>
+              </div>
               </div>
               
               {isExpanded && (
