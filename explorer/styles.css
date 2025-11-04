@@ -714,6 +714,220 @@ img {
   border-radius: 4px;
 }
 
+/* TZE Details Styles */
+.tze-details-container {
+  margin-top: 0;
+  padding: 0;
+}
+
+.tze-separator {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 107, 26, 0.3),
+    transparent
+  );
+  margin: 32px 0 24px 0;
+}
+
+.tze-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tze-header .title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.tze-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+}
+
+.tze-badge-stark_verify {
+  background: rgba(147, 51, 234, 0.15);
+  color: #a78bfa;
+  border: 1px solid rgba(147, 51, 234, 0.3);
+}
+
+.tze-badge-demo {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.tze-combined-view {
+  padding: 20px;
+  background: rgba(12, 13, 17, 0.4);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 107, 26, 0.15);
+}
+
+.tze-mode-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 107, 26, 0.1);
+}
+
+.tze-mode-field > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tze-mode-field .tze-field-label {
+  font-size: 0.75rem;
+  color: rgba(255, 137, 70, 0.64);
+  font-weight: 500;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.tze-mode-field .tze-field-value {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.tze-mode-field .tze-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.tze-extension-view {
+  padding: 0;
+}
+
+.tze-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tze-field:last-child {
+  margin-bottom: 0;
+}
+
+.tze-field-label {
+  font-size: 0.8rem;
+  color: rgba(255, 137, 70, 0.64);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tze-field-value {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--foreground);
+  word-break: break-all;
+  cursor: pointer;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 107, 26, 0.1);
+  transition: all 0.2s ease;
+}
+
+.tze-field-value:hover {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 107, 26, 0.3);
+}
+
+.tze-proof-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tze-proof-data {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--foreground);
+  word-break: break-all;
+  cursor: pointer;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 107, 26, 0.1);
+  transition: all 0.2s ease;
+  max-height: 200px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.tze-proof-data:hover {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 107, 26, 0.3);
+}
+
+.tze-proof-data.expanded {
+  max-height: 600px;
+}
+
+.tze-proof-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.tze-proof-toggle {
+  padding: 6px 16px;
+  background: rgba(255, 107, 26, 0.1);
+  border: 1px solid rgba(255, 107, 26, 0.3);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.tze-proof-toggle:hover {
+  background: rgba(255, 107, 26, 0.2);
+  border-color: rgba(255, 107, 26, 0.5);
+}
+
+.tze-proof-size {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.tze-details-error {
+  padding: 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 1024px) {
   .block-card {
     grid-template-columns: auto minmax(200px, 1fr) repeat(3, auto);
