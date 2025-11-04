@@ -739,10 +739,13 @@ img {
 }
 
 .tze-header .title {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--foreground);
+  color: var(--accent);
   margin: 0;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .tze-badge {
@@ -791,15 +794,18 @@ img {
 }
 
 .tze-mode-field .tze-field-label {
-  font-size: 0.85rem;
-  color: var(--muted);
+  font-size: 0.75rem;
+  color: rgba(255, 137, 70, 0.64);
   font-weight: 500;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 .tze-mode-field .tze-field-value {
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: var(--foreground);
+  color: var(--accent-strong);
   font-weight: 600;
 }
 
@@ -827,7 +833,7 @@ img {
 
 .tze-field-label {
   font-size: 0.8rem;
-  color: var(--muted);
+  color: rgba(255, 137, 70, 0.64);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
