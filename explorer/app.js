@@ -159,15 +159,28 @@ function getTZEModeName(tzeId, tzeMode) {
 
 function parseStarkVerifyPrecondition(payload) {
   // Skip first 4 bytes (appears to be additional metadata/flags)
-  // Then parse 64 bytes (32 bytes root + 32 bytes program_hash)
   const offset = 8; // 4 bytes = 8 hex chars
 
-  if (payload.length < offset + 128) return null; // Need at least 4 + 64 bytes
+  // Check for new format (96 bytes: root + os_program_hash + bootloader_program_hash)
+  if (payload.length >= offset + 192) {
+    return {
+      root: payload.slice(offset, offset + 64),
+      osProgramHash: payload.slice(offset + 64, offset + 128),
+      bootloaderProgramHash: payload.slice(offset + 128, offset + 192),
+      isLegacy: false
+    };
+  }
 
-  return {
-    root: payload.slice(offset, offset + 64),
-    programHash: payload.slice(offset + 64, offset + 128)
-  };
+  // Check for old format (64 bytes: root + single program_hash)
+  if (payload.length >= offset + 128) {
+    return {
+      root: payload.slice(offset, offset + 64),
+      programHash: payload.slice(offset + 64, offset + 128),
+      isLegacy: true
+    };
+  }
+
+  return null;
 }
 
 function parseStarkVerifyWitness(payload) {
@@ -556,22 +569,49 @@ function TZEDetailsView({ tx }) {
     if (tzeMode === 0) { // Initialize
       const precondition = parseStarkVerifyPrecondition(payload);
       if (precondition) {
-        extensionView = (
-          <div className="tze-extension-view">
-            <div className="tze-field">
-              <span className="tze-field-label">Genesis State</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(precondition.root)} title="Click to copy">
-                {precondition.root}
-              </code>
+        if (precondition.isLegacy) {
+          // Old format with single program hash
+          extensionView = (
+            <div className="tze-extension-view">
+              <div className="tze-field">
+                <span className="tze-field-label">Genesis State</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(precondition.root)} title="Click to copy">
+                  {precondition.root}
+                </code>
+              </div>
+              <div className="tze-field">
+                <span className="tze-field-label">Program Hash</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(precondition.programHash)} title="Click to copy">
+                  {precondition.programHash}
+                </code>
+              </div>
             </div>
-            <div className="tze-field">
-              <span className="tze-field-label">Program Hash</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(precondition.programHash)} title="Click to copy">
-                {precondition.programHash}
-              </code>
+          );
+        } else {
+          // New format with separate OS and bootloader hashes
+          extensionView = (
+            <div className="tze-extension-view">
+              <div className="tze-field">
+                <span className="tze-field-label">Genesis State</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(precondition.root)} title="Click to copy">
+                  {precondition.root}
+                </code>
+              </div>
+              <div className="tze-field">
+                <span className="tze-field-label">OS Program Hash</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(precondition.osProgramHash)} title="Click to copy">
+                  {precondition.osProgramHash}
+                </code>
+              </div>
+              <div className="tze-field">
+                <span className="tze-field-label">Bootloader Program Hash</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(precondition.bootloaderProgramHash)} title="Click to copy">
+                  {precondition.bootloaderProgramHash}
+                </code>
+              </div>
             </div>
-          </div>
-        );
+          );
+        }
       }
     } else if (tzeMode === 1) { // STARK Verify
       // Parse precondition from input (old state) - this is in the previous tx output being spent
@@ -588,63 +628,132 @@ function TZEDetailsView({ tx }) {
       }
 
       if (newStatePrecondition) {
-        extensionView = (
-          <div className="tze-extension-view">
-            <div className="tze-field">
-              <span className="tze-field-label">Old State Root</span>
-              {loadingOldState ? (
-                <code className="tze-field-value">Loading...</code>
-              ) : oldStateRoot ? (
-                <code className="tze-field-value" onClick={() => copyToClipboard(oldStateRoot)} title="Click to copy">
-                  {oldStateRoot}
-                </code>
-              ) : (
-                <code className="tze-field-value">Unable to fetch</code>
-              )}
-            </div>
-
-            <div className="tze-field">
-              <span className="tze-field-label">New State Root</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.root)} title="Click to copy">
-                {newStatePrecondition.root}
-              </code>
-            </div>
-
-            <div className="tze-field">
-              <span className="tze-field-label">Program Hash</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.programHash)} title="Click to copy">
-                {newStatePrecondition.programHash}
-              </code>
-            </div>
-
-            {witness && witness.proofData && (
+        if (newStatePrecondition.isLegacy) {
+          // Old format with single program hash
+          extensionView = (
+            <div className="tze-extension-view">
               <div className="tze-field">
-                <span className="tze-field-label">Proof</span>
-                <div className="tze-proof-container">
-                  <code
-                    className={`tze-proof-data ${expandedProof ? 'expanded' : ''}`}
-                    onClick={() => copyToClipboard(witness.proofData)}
-                    title="Click to copy"
-                  >
-                    {expandedProof
-                      ? witness.proofData
-                      : `${witness.proofData.slice(0, 120)}...${witness.proofData.slice(-120)}`
-                    }
+                <span className="tze-field-label">Old State Root</span>
+                {loadingOldState ? (
+                  <code className="tze-field-value">Loading...</code>
+                ) : oldStateRoot ? (
+                  <code className="tze-field-value" onClick={() => copyToClipboard(oldStateRoot)} title="Click to copy">
+                    {oldStateRoot}
                   </code>
-                  <div className="tze-proof-actions">
-                    <span className="tze-proof-size">{witness.proofSizeMB} MB</span>
-                    <button
-                      className="tze-proof-toggle"
-                      onClick={() => setExpandedProof(!expandedProof)}
+                ) : (
+                  <code className="tze-field-value">Unable to fetch</code>
+                )}
+              </div>
+
+              <div className="tze-field">
+                <span className="tze-field-label">New State Root</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.root)} title="Click to copy">
+                  {newStatePrecondition.root}
+                </code>
+              </div>
+
+              <div className="tze-field">
+                <span className="tze-field-label">Program Hash</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.programHash)} title="Click to copy">
+                  {newStatePrecondition.programHash}
+                </code>
+              </div>
+
+              {witness && witness.proofData && (
+                <div className="tze-field">
+                  <span className="tze-field-label">Proof</span>
+                  <div className="tze-proof-container">
+                    <code
+                      className={`tze-proof-data ${expandedProof ? 'expanded' : ''}`}
+                      onClick={() => copyToClipboard(witness.proofData)}
+                      title="Click to copy"
                     >
-                      {expandedProof ? 'Collapse' : 'Expand'}
-                    </button>
+                      {expandedProof
+                        ? witness.proofData
+                        : `${witness.proofData.slice(0, 120)}...${witness.proofData.slice(-120)}`
+                      }
+                    </code>
+                    <div className="tze-proof-actions">
+                      <span className="tze-proof-size">{witness.proofSizeMB} MB</span>
+                      <button
+                        className="tze-proof-toggle"
+                        onClick={() => setExpandedProof(!expandedProof)}
+                      >
+                        {expandedProof ? 'Collapse' : 'Expand'}
+                      </button>
+                    </div>
                   </div>
                 </div>
+              )}
+            </div>
+          );
+        } else {
+          // New format with separate OS and bootloader hashes
+          extensionView = (
+            <div className="tze-extension-view">
+              <div className="tze-field">
+                <span className="tze-field-label">Old State Root</span>
+                {loadingOldState ? (
+                  <code className="tze-field-value">Loading...</code>
+                ) : oldStateRoot ? (
+                  <code className="tze-field-value" onClick={() => copyToClipboard(oldStateRoot)} title="Click to copy">
+                    {oldStateRoot}
+                  </code>
+                ) : (
+                  <code className="tze-field-value">Unable to fetch</code>
+                )}
               </div>
-            )}
-          </div>
-        );
+
+              <div className="tze-field">
+                <span className="tze-field-label">New State Root</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.root)} title="Click to copy">
+                  {newStatePrecondition.root}
+                </code>
+              </div>
+
+              <div className="tze-field">
+                <span className="tze-field-label">OS Program Hash</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.osProgramHash)} title="Click to copy">
+                  {newStatePrecondition.osProgramHash}
+                </code>
+              </div>
+
+              <div className="tze-field">
+                <span className="tze-field-label">Bootloader Program Hash</span>
+                <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.bootloaderProgramHash)} title="Click to copy">
+                  {newStatePrecondition.bootloaderProgramHash}
+                </code>
+              </div>
+
+              {witness && witness.proofData && (
+                <div className="tze-field">
+                  <span className="tze-field-label">Proof</span>
+                  <div className="tze-proof-container">
+                    <code
+                      className={`tze-proof-data ${expandedProof ? 'expanded' : ''}`}
+                      onClick={() => copyToClipboard(witness.proofData)}
+                      title="Click to copy"
+                    >
+                      {expandedProof
+                        ? witness.proofData
+                        : `${witness.proofData.slice(0, 120)}...${witness.proofData.slice(-120)}`
+                      }
+                    </code>
+                    <div className="tze-proof-actions">
+                      <span className="tze-proof-size">{witness.proofSizeMB} MB</span>
+                      <button
+                        className="tze-proof-toggle"
+                        onClick={() => setExpandedProof(!expandedProof)}
+                      >
+                        {expandedProof ? 'Collapse' : 'Expand'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
       }
     }
   }
