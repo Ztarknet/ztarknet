@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getBlockHash, getBlock } from '@services/rpc';
 import { formatTime, formatSize, formatZEC, getBlockReward } from '@utils/formatters';
-import { getTransactionKind, getTransactionStats } from '@utils/tx-parser';
 import { TransactionCard } from '@components/transactions/TransactionCard';
-import { TransactionIOView } from '@components/transactions/TransactionIOView';
-import { TZEDetailsView } from '@components/transactions/TZEDetailsView';
+import { ExpandableTransactionCard } from '@components/transactions/ExpandableTransactionCard';
+import { HashDisplay } from '@components/common/HashDisplay';
+import { StatCard } from '@components/common/StatCard';
 
 export function BlockPage({ blockId }) {
   const [block, setBlock] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [expandedTx, setExpandedTx] = useState(null);
 
   useEffect(() => {
     async function fetchBlock() {
@@ -46,29 +45,13 @@ export function BlockPage({ blockId }) {
         </div>
 
         <h2 className="section-title skeleton-text">Block #---</h2>
-        <code className="hash-display skeleton-text">
-          ----------------------------------------------------------------
-        </code>
+        <HashDisplay isLoading={true} />
 
         {/* Skeleton stat cards */}
         <div className="stats-grid" style={{ marginBottom: '48px' }}>
-          <div className="stat-card skeleton">
-            <span className="stat-label skeleton-text">Block Height</span>
-            <div className="stat-value skeleton-text" style={{ fontSize: '1.8rem' }}>---</div>
-            <div className="stat-description skeleton-text">Loading...</div>
-          </div>
-
-          <div className="stat-card skeleton">
-            <span className="stat-label skeleton-text">Block Reward</span>
-            <div className="stat-value skeleton-text zec-value" style={{ fontSize: '1.8rem' }}>---</div>
-            <div className="stat-description skeleton-text">ZEC</div>
-          </div>
-
-          <div className="stat-card skeleton">
-            <span className="stat-label skeleton-text">Block Size</span>
-            <div className="stat-value skeleton-text size-value" style={{ fontSize: '1.8rem' }}>---</div>
-            <div className="stat-description skeleton-text">---</div>
-          </div>
+          <StatCard label="Block Height" value="---" description="Loading..." isLoading={true} />
+          <StatCard label="Block Reward" value="---" description="ZEC" isLoading={true} />
+          <StatCard label="Block Size" value="---" description="---" isLoading={true} />
         </div>
 
         {/* Skeleton transactions */}
@@ -114,84 +97,33 @@ export function BlockPage({ blockId }) {
       </div>
 
       <h2 className="section-title">Block #{block.height.toLocaleString()}</h2>
-      <code className="hash-display">{block.hash}</code>
+      <HashDisplay hash={block.hash} />
 
       {/* Block info cards */}
       <div className="stats-grid" style={{ marginBottom: '48px' }}>
-        <div className="stat-card">
-          <span className="stat-label">Block Height</span>
-          <div className="stat-value" style={{ fontSize: '1.8rem' }}>{block.height.toLocaleString()}</div>
-          <div className="stat-description">{formatTime(block.time)}</div>
-        </div>
-
-        <div className="stat-card">
-          <span className="stat-label">Block Reward</span>
-          <div className="stat-value zec-value" style={{ fontSize: '1.8rem' }}>{reward !== null ? formatZEC(reward) : 'N/A'}</div>
-          <div className="stat-description">ZEC</div>
-        </div>
-
-        <div className="stat-card">
-          <span className="stat-label">Block Size</span>
-          <div className="stat-value size-value" style={{ fontSize: '1.8rem' }}>
-            {block.size ? formatSize(block.size).split(' ')[0] : 'N/A'}
-          </div>
-          <div className="stat-description">{block.size ? formatSize(block.size).split(' ')[1] : ''}</div>
-        </div>
+        <StatCard
+          label="Block Height"
+          value={block.height.toLocaleString()}
+          description={formatTime(block.time)}
+        />
+        <StatCard
+          label="Block Reward"
+          value={reward !== null ? formatZEC(reward) : 'N/A'}
+          description="ZEC"
+        />
+        <StatCard
+          label="Block Size"
+          value={block.size ? formatSize(block.size).split(' ')[0] : 'N/A'}
+          description={block.size ? formatSize(block.size).split(' ')[1] : ''}
+        />
       </div>
 
       {/* Transactions list */}
       <h2 className="section-title">{totalTx} Transaction{totalTx !== 1 ? 's' : ''}</h2>
       <div className="transactions-container">
-        {block.tx && block.tx.map((tx, index) => {
-          const { numInputs, numOutputs, totalOutput } = getTransactionStats(tx);
-          const txKind = getTransactionKind(tx);
-          const isExpanded = expandedTx === tx.txid;
-
-          return (
-            <div key={tx.txid || index} className="tx-card-wrapper">
-              <div
-                className="tx-card"
-                onClick={() => setExpandedTx(isExpanded ? null : tx.txid)}
-                style={{ cursor: 'pointer' }}
-              >
-                <span className="tx-kind" data-kind={txKind}>{txKind}</span>
-                <code className="tx-hash" title={tx.txid}>{tx.txid}</code>
-                <div className="tx-detail">
-                  <span className="tx-detail-label">Inputs</span>
-                  <span className="tx-detail-value">{numInputs}</span>
-                </div>
-                <div className="tx-detail">
-                  <span className="tx-detail-label">Outputs</span>
-                  <span className="tx-detail-value">{numOutputs}</span>
-                </div>
-                <div className="tx-detail">
-                  <span className="tx-detail-label">Total Output</span>
-                  <span className="tx-detail-value zec-value">{formatZEC(totalOutput)} ZEC</span>
-                </div>
-                <div className="tx-detail">
-                  <span className="tx-detail-label">Size</span>
-                  <span className="tx-detail-value size-value">{formatSize(tx.size)}</span>
-                </div>
-              </div>
-
-              {isExpanded && (
-                <div className="tx-expanded">
-                  <TransactionIOView tx={tx} />
-
-                  {/* TZE Details - only show for TZE transactions */}
-                  {txKind === 'tze' && <TZEDetailsView tx={tx} />}
-
-                  {/* View Full Transaction Button */}
-                  <div style={{ marginTop: '32px', textAlign: 'right' }}>
-                    <a href={`#/tx/${tx.txid}`} className="button" style={{ display: 'inline-flex' }}>
-                      View Full Transaction →
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {block.tx && block.tx.map((tx, index) => (
+          <ExpandableTransactionCard key={tx.txid || index} tx={tx} index={index} />
+        ))}
       </div>
     </div>
   );

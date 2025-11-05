@@ -3,6 +3,8 @@ import { getRawTransaction, getBlock } from '@services/rpc';
 import { formatTime } from '@utils/formatters';
 import { getTransactionKind } from '@utils/tx-parser';
 import { TransactionDetails } from '@components/transactions/TransactionDetails';
+import { HashDisplay } from '@components/common/HashDisplay';
+import { StatCard } from '@components/common/StatCard';
 
 export function TransactionPage({ txid }) {
   const [tx, setTx] = useState(null);
@@ -44,28 +46,13 @@ export function TransactionPage({ txid }) {
         </div>
 
         <h2 className="section-title skeleton-text">Transaction</h2>
-        <code className="hash-display skeleton-text">
-          ----------------------------------------------------------------
-        </code>
+        <HashDisplay isLoading={true} />
 
         {/* Skeleton block info cards */}
         <div className="stats-grid" style={{ marginBottom: '48px' }}>
-          <div className="stat-card skeleton">
-            <span className="stat-label skeleton-text">Block Height</span>
-            <div className="stat-value skeleton-text" style={{ fontSize: '1.8rem' }}>---</div>
-            <div className="stat-description skeleton-text">Loading...</div>
-          </div>
-
-          <div className="stat-card skeleton">
-            <span className="stat-label skeleton-text">Block Hash</span>
-            <div className="stat-value skeleton-text" style={{ fontSize: '1.2rem' }}>--------------</div>
-          </div>
-
-          <div className="stat-card skeleton">
-            <span className="stat-label skeleton-text">Block Time</span>
-            <div className="stat-value skeleton-text" style={{ fontSize: '1.8rem' }}>---</div>
-            <div className="stat-description skeleton-text">Loading...</div>
-          </div>
+          <StatCard label="Block Height" value="---" description="Loading..." isLoading={true} />
+          <StatCard label="Block Hash" value="--------------" description="" isLoading={true} />
+          <StatCard label="Block Time" value="---" description="Loading..." isLoading={true} />
         </div>
 
         <h2 className="section-title skeleton-text">Transaction Details</h2>
@@ -115,27 +102,28 @@ export function TransactionPage({ txid }) {
         <h2 className="section-title" style={{ margin: 0 }}>Transaction</h2>
         <span className="tx-kind" data-kind={txKind}>{txKind}</span>
       </div>
-      <code className="hash-display">{tx.txid}</code>
+      <HashDisplay hash={tx.txid} />
 
       {/* Block info cards */}
       {block && (
         <div className="stats-grid" style={{ marginBottom: '48px' }}>
-          <div className="stat-card">
-            <span className="stat-label">Block Height</span>
-            <div className="stat-value" style={{ fontSize: '1.8rem' }}>{block.height.toLocaleString()}</div>
-            <div className="stat-description">{formatTime(block.time)}</div>
-          </div>
-
-          <div className="stat-card">
-            <span className="stat-label">Block Hash</span>
-            <code className="stat-value" style={{ fontSize: '1rem', wordBreak: 'break-all' }}>{block.hash}</code>
-          </div>
-
-          <div className="stat-card">
-            <span className="stat-label">Confirmations</span>
-            <div className="stat-value" style={{ fontSize: '1.8rem' }}>{tx.confirmations || 0}</div>
-            <div className="stat-description">Blocks</div>
-          </div>
+          <StatCard
+            label="Block Height"
+            value={block.height.toLocaleString()}
+            description={formatTime(block.time)}
+          />
+          <StatCard
+            label="Block Hash"
+            value={block.hash}
+            description=""
+            renderAsCode={true}
+            valueStyle={{ fontSize: '1rem', wordBreak: 'break-all' }}
+          />
+          <StatCard
+            label="Confirmations"
+            value={tx.confirmations || 0}
+            description="Blocks"
+          />
         </div>
       )}
 

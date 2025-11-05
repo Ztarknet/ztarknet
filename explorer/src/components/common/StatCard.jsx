@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function StatCard({ label, value, description, isLoading = false }) {
+export function StatCard({ label, value, description, isLoading = false, valueStyle, valueClassName, renderAsCode = false }) {
   if (isLoading) {
     return (
       <div className="stat-card skeleton">
@@ -11,10 +11,13 @@ export function StatCard({ label, value, description, isLoading = false }) {
     );
   }
 
+  const ValueTag = renderAsCode ? 'code' : 'div';
+  const className = valueClassName ? `stat-value ${valueClassName}` : 'stat-value';
+
   return (
     <div className="stat-card">
       <span className="stat-label">{label}</span>
-      <div className="stat-value">{value}</div>
+      <ValueTag className={className} style={valueStyle}>{value}</ValueTag>
       <div className="stat-description">{description}</div>
     </div>
   );
