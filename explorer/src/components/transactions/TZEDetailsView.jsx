@@ -233,9 +233,20 @@ export function TZEDetailsView({ tx }) {
 
       <div className="tze-combined-view">
         <div className="tze-mode-field">
-          <div>
-            <span className="tze-field-label">Mode</span>
-            <span className="tze-field-value">{modeName}</span>
+          <div className="tze-mode-header">
+            <div>
+              <span className="tze-field-label">Mode</span>
+              <span className="tze-field-value">{modeName}</span>
+            </div>
+            {tzeMode === 1 && spendingTzeInput && spendingTzeInput.txid && (
+              <a
+                href={`#/tx/${spendingTzeInput.txid}`}
+                className="tze-prev-link"
+                title="View the previous STARK Verify transaction"
+              >
+                ← View Previous Verify
+              </a>
+            )}
           </div>
           {modeDescription && (
             <p className="tze-description">{modeDescription}</p>

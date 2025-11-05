@@ -771,6 +771,28 @@ img {
   border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
+.tze-prev-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 107, 26, 0.3);
+  background: rgba(255, 107, 26, 0.05);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tze-prev-link:hover {
+  background: rgba(255, 107, 26, 0.15);
+  border-color: rgba(255, 107, 26, 0.5);
+  transform: translateX(-2px);
+}
+
 .tze-combined-view {
   padding: 20px;
   background: rgba(12, 13, 17, 0.4);
@@ -787,7 +809,14 @@ img {
   border-bottom: 1px solid rgba(255, 107, 26, 0.1);
 }
 
-.tze-mode-field > div {
+.tze-mode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.tze-mode-header > div {
   display: flex;
   align-items: center;
   gap: 12px;
