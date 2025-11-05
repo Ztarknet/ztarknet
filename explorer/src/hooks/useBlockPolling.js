@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { rpcCall } from '@services/rpc';
+import { getBlockCount, getBlocks } from '@services/rpc';
 
 export function useBlockPolling(maxBlocks = 5, pollInterval = 1000) {
   const [blocks, setBlocks] = useState([]);
@@ -12,21 +12,18 @@ export function useBlockPolling(maxBlocks = 5, pollInterval = 1000) {
   async function fetchBlocks() {
     try {
       // Get current block count
-      const blockCount = await rpcCall('getblockcount');
+      const blockCount = await getBlockCount();
       setChainHeight(blockCount);
 
       // Fetch the latest MAX_BLOCKS blocks
       const startHeight = Math.max(0, blockCount - maxBlocks);
-      const blockPromises = [];
+      const heights = [];
 
       for (let i = blockCount; i > startHeight; i--) {
-        blockPromises.push(
-          rpcCall('getblockhash', [i])
-            .then(hash => rpcCall('getblock', [hash, 1]))
-        );
+        heights.push(i);
       }
 
-      const fetchedBlocks = await Promise.all(blockPromises);
+      const fetchedBlocks = await getBlocks(heights);
 
       // Check if there are new blocks
       if (lastBlockHeight > 0 && blockCount > lastBlockHeight) {

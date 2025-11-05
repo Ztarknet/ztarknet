@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { rpcCall } from '@services/rpc';
+import { getBlockHash, getBlock } from '@services/rpc';
 import { formatTime, formatSize, formatZEC, getBlockReward } from '@utils/formatters';
 import { getTransactionKind, getTransactionStats } from '@utils/tx-parser';
 import { TransactionCard } from '@components/transactions/TransactionCard';
@@ -20,11 +20,11 @@ export function BlockPage({ blockId }) {
 
         // If blockId is a number (height), get the hash first
         if (/^\d+$/.test(blockId)) {
-          blockHash = await rpcCall('getblockhash', [parseInt(blockId)]);
+          blockHash = await getBlockHash(blockId);
         }
 
         // Fetch block with verbosity 2 (includes transaction data)
-        const blockData = await rpcCall('getblock', [blockHash, 2]);
+        const blockData = await getBlock(blockHash, 2);
         setBlock(blockData);
         setLoading(false);
         setError(null);

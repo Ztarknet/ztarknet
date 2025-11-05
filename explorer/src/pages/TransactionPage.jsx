@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { rpcCall } from '@services/rpc';
+import { getRawTransaction, getBlock } from '@services/rpc';
 import { formatTime } from '@utils/formatters';
 import { getTransactionKind } from '@utils/tx-parser';
 import { TransactionDetails } from '@components/transactions/TransactionDetails';
@@ -17,12 +17,12 @@ export function TransactionPage({ txid }) {
         setError(null);
 
         // Get transaction details
-        const txData = await rpcCall('getrawtransaction', [txid, 1]);
+        const txData = await getRawTransaction(txid);
         setTx(txData);
 
         // Get block details if transaction is in a block
         if (txData.blockhash) {
-          const blockData = await rpcCall('getblock', [txData.blockhash, 1]);
+          const blockData = await getBlock(txData.blockhash);
           setBlock(blockData);
         }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { rpcCall } from '@services/rpc';
+import { getRawTransaction } from '@services/rpc';
 import { copyToClipboard } from '@utils/formatters';
 import {
   parseTZEData,
@@ -51,8 +51,8 @@ export function TZEDetailsView({ tx }) {
       try {
         setLoadingOldState(true);
 
-        // Fetch the previous transaction (verbose=1 for decoded JSON)
-        const prevTx = await rpcCall('getrawtransaction', [spendingTzeInput.txid, 1]);
+        // Fetch the previous transaction
+        const prevTx = await getRawTransaction(spendingTzeInput.txid);
 
         // Get the output being spent
         const prevOutput = prevTx.vout[spendingTzeInput.vout];
