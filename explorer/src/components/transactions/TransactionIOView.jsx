@@ -5,6 +5,12 @@ export function TransactionIOView({ tx }) {
   const numInputs = tx.vin ? tx.vin.length : 0;
   const numOutputs = tx.vout ? tx.vout.length : 0;
 
+  const handleInputClick = (input) => {
+    if (input.txid && !input.coinbase) {
+      window.location.hash = `#/tx/${input.txid}`;
+    }
+  };
+
   return (
     <div className="tx-io-container">
       {/* Inputs */}
@@ -12,7 +18,12 @@ export function TransactionIOView({ tx }) {
         <h3 className="tx-io-title">Inputs ({numInputs})</h3>
         <div className="tx-io-list">
           {tx.vin && tx.vin.map((input, idx) => (
-            <div key={idx} className="tx-io-item">
+            <div
+              key={idx}
+              className={`tx-io-item ${!input.coinbase ? 'tx-io-item-clickable' : ''}`}
+              onClick={() => handleInputClick(input)}
+              style={!input.coinbase ? { cursor: 'pointer' } : {}}
+            >
               <div className="tx-io-header">
                 <span className="tx-io-index">#{idx}</span>
               </div>

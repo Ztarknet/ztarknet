@@ -660,6 +660,17 @@ img {
   gap: 10px;
 }
 
+.tx-io-item-clickable {
+  transition: all 0.2s ease;
+}
+
+.tx-io-item-clickable:hover {
+  background: rgba(12, 13, 17, 0.95);
+  border-color: rgba(255, 137, 70, 0.5);
+  transform: translateX(-2px);
+  box-shadow: 0 0 20px rgba(255, 137, 70, 0.15);
+}
+
 .tx-io-header {
   display: flex;
   align-items: center;
