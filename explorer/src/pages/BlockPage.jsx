@@ -40,8 +40,16 @@ export function BlockPage({ blockId }) {
   if (loading) {
     return (
       <div className="explorer-container">
-        <div style={{ marginBottom: '24px' }}>
+        <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <a href="#/" className="button ghost">← Back to Blocks</a>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button className="button ghost" disabled style={{ opacity: 0.5 }}>
+              ← Previous Block
+            </button>
+            <button className="button ghost" disabled style={{ opacity: 0.5 }}>
+              Next Block →
+            </button>
+          </div>
         </div>
 
         <h2 className="section-title skeleton-text">Block #---</h2>
@@ -92,8 +100,20 @@ export function BlockPage({ blockId }) {
 
   return (
     <div className="explorer-container">
-      <div style={{ marginBottom: '24px' }}>
+      <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <a href="#/" className="button ghost">← Back to Blocks</a>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <a
+            href={`#/block/${block.height - 1}`}
+            className="button ghost"
+            style={{ opacity: block.height <= 0 ? 0.5 : 1, pointerEvents: block.height <= 0 ? 'none' : 'auto' }}
+          >
+            ← Previous Block
+          </a>
+          <a href={`#/block/${block.height + 1}`} className="button ghost">
+            Next Block →
+          </a>
+        </div>
       </div>
 
       <h2 className="section-title">Block #{block.height.toLocaleString()}</h2>
