@@ -34,23 +34,37 @@ The transaction detail page shows:
 
 ## Running Locally
 
-Since this is a static React app using CDN resources, you can run it with any static file server:
+This is a React application built with Vite.
 
-### Using Python
+### Development Server
+
+1. Install dependencies:
 ```bash
-cd explorer
-python -m http.server 8000
+npm install
 ```
 
-Then open http://localhost:8000 in your browser.
-
-### Using Node.js
+2. Start the development server:
 ```bash
-cd explorer
-npx serve
+npm run dev
+```
+
+The explorer will be available at `http://localhost:5173` (or another port if 5173 is in use).
+
+### Production Build
+
+Build the application for production:
+```bash
+npm run build
+```
+
+Preview the production build:
+```bash
+npm run preview
 ```
 
 ## Deploying to Vercel
+
+The project includes a `vercel.json` configuration file for easy deployment.
 
 ### Using Vercel CLI
 ```bash
@@ -71,7 +85,8 @@ vercel --prod
 3. Click "Add New Project"
 4. Import your repository
 5. Set the "Root Directory" to `explorer`
-6. Deploy
+6. Vercel will automatically detect the Vite configuration
+7. Deploy
 
 The explorer will be automatically deployed and will receive automatic deployments on future commits.
 
@@ -87,12 +102,13 @@ The following Zcash RPC methods are used:
 
 ## Architecture
 
-This is a simple React application that:
-- Uses React via CDN (no build step required)
+This is a React application built with Vite that:
+- Uses modern React with JSX
 - Directly calls the Zcash RPC endpoint
 - Polls for new blocks at regular intervals
 - Animates incoming blocks with CSS animations
 - Matches the styling of the main landing page
+- Uses path aliases for clean imports (@services, @components, @hooks, @pages)
 
 ## Pages
 
