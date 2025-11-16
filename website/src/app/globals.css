@@ -61,6 +61,17 @@
     font-family: var(--font-sans);
   }
   
+  /* Text selection styles */
+  ::selection {
+    background-color: rgb(255, 137, 70);
+    color: white;
+  }
+  
+  ::-moz-selection {
+    background-color: rgb(255, 137, 70);
+    color: white;
+  }
+  
   body::before {
     content: "";
     position: fixed;
@@ -168,6 +179,57 @@
     }
     100% {
       transform: translateX(calc(100% + 0.5rem));
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideRightFull {
+    0% {
+      left: 0;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      left: calc(100% - 0.5rem);
+      opacity: 0;
+    }
+  }
+
+  @keyframes beamMove {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(500%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes beamMoveVertical {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(500%);
       opacity: 0;
     }
   }

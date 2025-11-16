@@ -3,7 +3,7 @@
 import React from "react";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { CheckCircle, Play, Database, Circle } from "lucide-react";
+import { CheckCircle, Play, Database } from "lucide-react";
 
 export function Roadmap() {
   useRevealOnScroll();
@@ -18,65 +18,9 @@ export function Roadmap() {
           </h2>
         </div>
 
-        {/* Progress Timeline Card */}
-        <div className="mb-12 reveal-on-scroll flex justify-center">
-          <div className="relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgb(8,8,12)] p-2 md:rounded-3xl md:p-3 max-w-[600px]">
-            <GlowingEffect
-              spread={40}
-              glow={true}
-              disabled={false}
-              proximity={64}
-              inactiveZone={0.01}
-            />
-            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-8 shadow-[0_18px_36px_rgba(0,0,0,0.35)]">
-          <div className="flex flex-col gap-4">
-            {/* Step 1 - Completed */}
-            <div className="flex items-center gap-4">
-              <div className="flex flex-col items-center relative">
-                <div className="w-3 h-3 rounded-full bg-[rgba(255,137,70,0.8)] border-2 border-[rgba(255,137,70,1)] relative z-10"></div>
-                <div className="absolute top-3 w-px h-12 overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-b from-[rgba(255,137,70,0.5)] to-[rgba(255,137,70,0.3)]"></div>
-                  <div className="absolute top-0 w-2 h-2 rounded-full bg-[rgba(255,137,70,0.9)] animate-[slideDown_2s_ease-in-out_infinite] -ml-0.5"></div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 pb-8">
-                <CheckCircle className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
-                <span className="text-sm text-[rgba(255,255,255,0.8)]">01 - Demonstrate native proof verification</span>
-              </div>
-            </div>
-
-            {/* Step 2 - In Progress */}
-            <div className="flex items-center gap-4">
-              <div className="flex flex-col items-center relative">
-                <div className="w-3 h-3 rounded-full bg-[rgba(255,137,70,0.6)] border-2 border-[rgba(255,137,70,0.8)] animate-pulse relative z-10"></div>
-                <div className="absolute top-3 w-px h-12 overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-[rgba(255,137,70,0.1)]"></div>
-                  <div className="absolute top-0 w-2 h-2 rounded-full bg-[rgba(255,137,70,0.6)] animate-[slideDown_2s_ease-in-out_infinite] -ml-0.5" style={{ animationDelay: '0.5s' }}></div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 pb-8">
-                <Play className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
-                <span className="text-sm text-[rgba(255,255,255,0.8)] font-medium">02 - Release a replayable devnet</span>
-              </div>
-            </div>
-
-            {/* Step 3 - Upcoming */}
-            <div className="flex items-center gap-4">
-              <div className="flex flex-col items-center">
-                <Circle className="w-3 h-3 text-[rgba(255,137,70,0.3)]" />
-              </div>
-              <div className="flex items-center gap-3">
-                <Database className="h-5 w-5 text-[rgba(255,137,70,0.5)]" />
-                <span className="text-sm text-[rgba(255,255,255,0.5)]">03 - Explore data availability options</span>
-              </div>
-            </div>
-          </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
-          <article className="group reveal-on-scroll relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300">
+        <div className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 lg:gap-4">
+          {/* Card 01 - Top Left */}
+          <article className="group reveal-on-scroll relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300 md:[grid-area:1/1/2/9]">
             <GlowingEffect
               spread={40}
               glow={true}
@@ -109,8 +53,77 @@ export function Roadmap() {
               </div>
             </div>
           </article>
-          
-          <article className="group reveal-on-scroll relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300">
+
+          {/* Progress Timeline - Right Column (2 rows) */}
+          <div className="reveal-on-scroll md:[grid-area:1/9/3/13]">
+            <div className="relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgb(8,8,12)] p-2 md:rounded-3xl md:p-3">
+              <GlowingEffect
+                spread={40}
+                glow={true}
+                disabled={false}
+                proximity={64}
+                inactiveZone={0.01}
+              />
+              <div className="relative h-full overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-6 md:p-8 shadow-[0_18px_36px_rgba(0,0,0,0.35)] flex items-center justify-center">
+                <div className="relative flex flex-col items-center gap-3 w-full">
+                  {/* Single continuous vertical line with beam */}
+                  <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px bg-[rgba(255,137,70,0.2)] z-0"></div>
+                  <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px z-0 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[rgb(255,137,70)] to-transparent h-[30%] animate-[beamMoveVertical_6s_ease-in-out_infinite] opacity-80 blur-[1px]"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[rgb(255,137,70)] to-transparent h-[20%] animate-[beamMoveVertical_6s_ease-in-out_infinite] opacity-100"></div>
+                  </div>
+
+                  {/* Step 1 - Completed */}
+                  <div className="w-full max-w-[180px] relative z-10">
+                    <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
+                        <CheckCircle className="h-4 w-4 text-[rgb(255,137,70)]" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-sm font-semibold text-white">01 - Proof verification</h4>
+                        <p className="text-xs text-[rgba(255,255,255,0.6)]">Completed</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Spacer */}
+                  <div className="h-12 relative z-10"></div>
+
+                  {/* Step 2 - In Progress */}
+                  <div className="w-full max-w-[180px] relative z-10">
+                    <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
+                        <Play className="h-4 w-4 text-[rgb(255,137,70)]" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-sm font-semibold text-white">02 - Replayable devnet</h4>
+                        <p className="text-xs text-[rgba(255,255,255,0.6)]">In progress</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Spacer */}
+                  <div className="h-12 relative z-10"></div>
+
+                  {/* Step 3 - Upcoming */}
+                  <div className="w-full max-w-[180px] relative z-10">
+                    <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
+                        <Database className="h-4 w-4 text-[rgb(255,137,70)]" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-sm font-semibold text-white">03 - Data availability</h4>
+                        <p className="text-xs text-[rgba(255,255,255,0.6)]">Upcoming</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 02 - Bottom Left */}
+          <article className="group reveal-on-scroll relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300 md:[grid-area:2/1/3/5]">
             <GlowingEffect
               spread={40}
               glow={true}
@@ -144,7 +157,8 @@ export function Roadmap() {
             </div>
           </article>
           
-          <article className="group reveal-on-scroll relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300">
+          {/* Card 03 - Bottom Right */}
+          <article className="group reveal-on-scroll relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300 md:[grid-area:2/5/3/9]">
             <GlowingEffect
               spread={40}
               glow={true}
