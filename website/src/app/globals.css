@@ -157,6 +157,34 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  @keyframes slideRight {
+    0% {
+      transform: translateX(0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(calc(100% + 0.5rem));
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideDown {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(calc(100% + 0.5rem));
+      opacity: 0;
+    }
+  }
 }
 
 

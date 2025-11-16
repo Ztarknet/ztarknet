@@ -18,14 +18,26 @@ export function Roadmap() {
           </h2>
         </div>
 
-        {/* Progress Timeline */}
+        {/* Progress Timeline Card */}
         <div className="mb-12 reveal-on-scroll flex justify-center">
+          <div className="relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgb(8,8,12)] p-2 md:rounded-3xl md:p-3 max-w-[600px]">
+            <GlowingEffect
+              spread={40}
+              glow={true}
+              disabled={false}
+              proximity={64}
+              inactiveZone={0.01}
+            />
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-8 shadow-[0_18px_36px_rgba(0,0,0,0.35)]">
           <div className="flex flex-col gap-4">
             {/* Step 1 - Completed */}
             <div className="flex items-center gap-4">
-              <div className="flex flex-col items-center">
-                <div className="w-3 h-3 rounded-full bg-[rgba(255,137,70,0.8)] border-2 border-[rgba(255,137,70,1)]"></div>
-                <div className="w-px h-12 bg-gradient-to-b from-[rgba(255,137,70,0.5)] to-[rgba(255,137,70,0.3)]"></div>
+              <div className="flex flex-col items-center relative">
+                <div className="w-3 h-3 rounded-full bg-[rgba(255,137,70,0.8)] border-2 border-[rgba(255,137,70,1)] relative z-10"></div>
+                <div className="absolute top-3 w-px h-12 overflow-hidden">
+                  <div className="w-full h-full bg-gradient-to-b from-[rgba(255,137,70,0.5)] to-[rgba(255,137,70,0.3)]"></div>
+                  <div className="absolute top-0 w-2 h-2 rounded-full bg-[rgba(255,137,70,0.9)] animate-[slideDown_2s_ease-in-out_infinite] -ml-0.5"></div>
+                </div>
               </div>
               <div className="flex items-center gap-3 pb-8">
                 <CheckCircle className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
@@ -35,9 +47,12 @@ export function Roadmap() {
 
             {/* Step 2 - In Progress */}
             <div className="flex items-center gap-4">
-              <div className="flex flex-col items-center">
-                <div className="w-3 h-3 rounded-full bg-[rgba(255,137,70,0.6)] border-2 border-[rgba(255,137,70,0.8)] animate-pulse"></div>
-                <div className="w-px h-12 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-[rgba(255,137,70,0.1)]"></div>
+              <div className="flex flex-col items-center relative">
+                <div className="w-3 h-3 rounded-full bg-[rgba(255,137,70,0.6)] border-2 border-[rgba(255,137,70,0.8)] animate-pulse relative z-10"></div>
+                <div className="absolute top-3 w-px h-12 overflow-hidden">
+                  <div className="w-full h-full bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-[rgba(255,137,70,0.1)]"></div>
+                  <div className="absolute top-0 w-2 h-2 rounded-full bg-[rgba(255,137,70,0.6)] animate-[slideDown_2s_ease-in-out_infinite] -ml-0.5" style={{ animationDelay: '0.5s' }}></div>
+                </div>
               </div>
               <div className="flex items-center gap-3 pb-8">
                 <Play className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
@@ -54,6 +69,8 @@ export function Roadmap() {
                 <Database className="h-5 w-5 text-[rgba(255,137,70,0.5)]" />
                 <span className="text-sm text-[rgba(255,255,255,0.5)]">03 - Explore data availability options</span>
               </div>
+            </div>
+          </div>
             </div>
           </div>
         </div>

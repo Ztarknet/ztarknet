@@ -19,9 +19,18 @@ export function Stack() {
           </h2>
         </div>
 
-        {/* Architecture Stack Diagram */}
+        {/* Architecture Stack Diagram Card */}
         <div className="mb-12 reveal-on-scroll">
-          <div className="flex flex-col items-center gap-3 max-w-[280px] mx-auto">
+          <div className="relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgb(8,8,12)] p-2 md:rounded-3xl md:p-3 max-w-[320px] mx-auto">
+            <GlowingEffect
+              spread={40}
+              glow={true}
+              disabled={false}
+              proximity={64}
+              inactiveZone={0.01}
+            />
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-6 shadow-[0_18px_36px_rgba(0,0,0,0.35)]">
+          <div className="flex flex-col items-center gap-3">
             {/* Layer 1: Zcash L1 */}
             <div className="w-full">
               <div className="flex items-center gap-3 p-4 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
@@ -35,11 +44,14 @@ export function Stack() {
               </div>
             </div>
 
-            {/* Arrow */}
-            <div className="flex flex-col items-center">
-              <div className="w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
-              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-1" />
-              <div className="w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
+            {/* Arrow with Animation */}
+            <div className="flex flex-col items-center relative h-16">
+              <div className="absolute top-0 w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
+              <div className="absolute top-0 w-px h-full flex items-start overflow-hidden">
+                <div className="w-2 h-2 rounded-full bg-[rgba(255,137,70,0.8)] animate-[slideDown_2s_ease-in-out_infinite]"></div>
+              </div>
+              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-auto relative z-10" />
+              <div className="absolute bottom-0 w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
             </div>
 
             {/* Layer 2: TZE Tx Builder */}
@@ -55,11 +67,14 @@ export function Stack() {
               </div>
             </div>
 
-            {/* Arrow */}
-            <div className="flex flex-col items-center">
-              <div className="w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
-              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-1" />
-              <div className="w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
+            {/* Arrow with Animation */}
+            <div className="flex flex-col items-center relative h-16">
+              <div className="absolute top-0 w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
+              <div className="absolute top-0 w-px h-full flex items-start overflow-hidden">
+                <div className="w-2 h-2 rounded-full bg-[rgba(255,137,70,0.8)] animate-[slideDown_2s_ease-in-out_infinite]"></div>
+              </div>
+              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-auto relative z-10" />
+              <div className="absolute bottom-0 w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
             </div>
 
             {/* Layer 3: Stwo/Cairo */}
@@ -75,11 +90,14 @@ export function Stack() {
               </div>
             </div>
 
-            {/* Arrow */}
-            <div className="flex flex-col items-center">
-              <div className="w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
-              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-1" />
-              <div className="w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
+            {/* Arrow with Animation */}
+            <div className="flex flex-col items-center relative h-16">
+              <div className="absolute top-0 w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
+              <div className="absolute top-0 w-px h-full flex items-start overflow-hidden">
+                <div className="w-2 h-2 rounded-full bg-[rgba(255,137,70,0.8)] animate-[slideDown_2s_ease-in-out_infinite]"></div>
+              </div>
+              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-auto relative z-10" />
+              <div className="absolute bottom-0 w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
             </div>
 
             {/* Layer 4: Madara */}
@@ -93,6 +111,8 @@ export function Stack() {
                   <p className="text-xs text-[rgba(255,255,255,0.6)]">L2 Sequencer</p>
                 </div>
               </div>
+            </div>
+          </div>
             </div>
           </div>
         </div>
