@@ -3,7 +3,7 @@
 import React from "react";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { CheckCircle, Play, Database } from "lucide-react";
+import { CheckCircle, Play, Database, Circle } from "lucide-react";
 
 export function Roadmap() {
   useRevealOnScroll();
@@ -16,6 +16,46 @@ export function Roadmap() {
           <h2 className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.2] font-bold tracking-tight">
             What the PoC unlocks
           </h2>
+        </div>
+
+        {/* Progress Timeline */}
+        <div className="mb-12 reveal-on-scroll flex justify-center">
+          <div className="flex flex-col gap-4">
+            {/* Step 1 - Completed */}
+            <div className="flex items-center gap-4">
+              <div className="flex flex-col items-center">
+                <div className="w-3 h-3 rounded-full bg-[rgba(255,137,70,0.8)] border-2 border-[rgba(255,137,70,1)]"></div>
+                <div className="w-px h-12 bg-gradient-to-b from-[rgba(255,137,70,0.5)] to-[rgba(255,137,70,0.3)]"></div>
+              </div>
+              <div className="flex items-center gap-3 pb-8">
+                <CheckCircle className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
+                <span className="text-sm text-[rgba(255,255,255,0.8)]">01 - Demonstrate native proof verification</span>
+              </div>
+            </div>
+
+            {/* Step 2 - In Progress */}
+            <div className="flex items-center gap-4">
+              <div className="flex flex-col items-center">
+                <div className="w-3 h-3 rounded-full bg-[rgba(255,137,70,0.6)] border-2 border-[rgba(255,137,70,0.8)] animate-pulse"></div>
+                <div className="w-px h-12 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-[rgba(255,137,70,0.1)]"></div>
+              </div>
+              <div className="flex items-center gap-3 pb-8">
+                <Play className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
+                <span className="text-sm text-[rgba(255,255,255,0.8)] font-medium">02 - Release a replayable devnet</span>
+              </div>
+            </div>
+
+            {/* Step 3 - Upcoming */}
+            <div className="flex items-center gap-4">
+              <div className="flex flex-col items-center">
+                <Circle className="w-3 h-3 text-[rgba(255,137,70,0.3)]" />
+              </div>
+              <div className="flex items-center gap-3">
+                <Database className="h-5 w-5 text-[rgba(255,137,70,0.5)]" />
+                <span className="text-sm text-[rgba(255,255,255,0.5)]">03 - Explore data availability options</span>
+              </div>
+            </div>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-7">

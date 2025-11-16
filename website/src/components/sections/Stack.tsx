@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { Shield, Server, Cpu, Send } from "lucide-react";
+import { Shield, Server, Cpu, Send, ArrowDownUp } from "lucide-react";
 
 export function Stack() {
   useRevealOnScroll();
@@ -17,6 +17,84 @@ export function Stack() {
           <h2 className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.2] font-bold tracking-tight">
             Minimal components, maximum signal
           </h2>
+        </div>
+
+        {/* Architecture Stack Diagram */}
+        <div className="mb-12 reveal-on-scroll">
+          <div className="flex flex-col items-center gap-3 max-w-[280px] mx-auto">
+            {/* Layer 1: Zcash L1 */}
+            <div className="w-full">
+              <div className="flex items-center gap-3 p-4 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)]">
+                  <Shield className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-white">Zcash L1</h4>
+                  <p className="text-xs text-[rgba(255,255,255,0.6)]">Consensus Layer</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Arrow */}
+            <div className="flex flex-col items-center">
+              <div className="w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
+              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-1" />
+              <div className="w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
+            </div>
+
+            {/* Layer 2: TZE Tx Builder */}
+            <div className="w-full">
+              <div className="flex items-center gap-3 p-4 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)]">
+                  <Send className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-white">TZE Tx Builder</h4>
+                  <p className="text-xs text-[rgba(255,255,255,0.6)]">Proof Bundling</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Arrow */}
+            <div className="flex flex-col items-center">
+              <div className="w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
+              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-1" />
+              <div className="w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
+            </div>
+
+            {/* Layer 3: Stwo/Cairo */}
+            <div className="w-full">
+              <div className="flex items-center gap-3 p-4 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)]">
+                  <Cpu className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-white">Stwo/Cairo</h4>
+                  <p className="text-xs text-[rgba(255,255,255,0.6)]">Proof Generation</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Arrow */}
+            <div className="flex flex-col items-center">
+              <div className="w-px h-6 bg-gradient-to-b from-[rgba(255,137,70,0.3)] to-transparent"></div>
+              <ArrowDownUp className="h-4 w-4 text-[rgba(255,137,70,0.5)] my-1" />
+              <div className="w-px h-6 bg-gradient-to-t from-[rgba(255,137,70,0.3)] to-transparent"></div>
+            </div>
+
+            {/* Layer 4: Madara */}
+            <div className="w-full">
+              <div className="flex items-center gap-3 p-4 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)]">
+                  <Server className="h-5 w-5 text-[rgba(255,137,70,0.8)]" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-white">Madara</h4>
+                  <p className="text-xs text-[rgba(255,255,255,0.6)]">L2 Sequencer</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         
         <ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-12 lg:gap-4">

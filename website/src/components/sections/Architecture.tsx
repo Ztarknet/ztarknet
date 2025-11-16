@@ -3,7 +3,7 @@
 import React from "react";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { Layers, Sparkles, Coins } from "lucide-react";
+import { Layers, Sparkles, Coins, Database, Zap, Shield, CheckCircle, ArrowRight, FileText, Package } from "lucide-react";
 
 export function Architecture() {
   useRevealOnScroll();
@@ -16,6 +16,64 @@ export function Architecture() {
           <h2 className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.2] font-bold tracking-tight">
             The Circle STARK rollup loop
           </h2>
+        </div>
+
+        {/* Flow Diagram */}
+        <div className="mb-12 reveal-on-scroll">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 px-4">
+            {/* Step 1 */}
+            <div className="flex flex-col items-center text-center max-w-[140px]">
+              <div className="w-16 h-16 rounded-xl border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <Database className="h-8 w-8 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <h4 className="text-sm font-semibold text-white mb-1">Madara L2</h4>
+              <p className="text-xs text-[rgba(255,255,255,0.6)]">Sequencing</p>
+            </div>
+
+            <ArrowRight className="h-5 w-5 text-[rgba(255,137,70,0.5)] hidden md:block" />
+
+            {/* Step 2 */}
+            <div className="flex flex-col items-center text-center max-w-[140px]">
+              <div className="w-16 h-16 rounded-xl border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <Zap className="h-8 w-8 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <h4 className="text-sm font-semibold text-white mb-1">Execute</h4>
+              <p className="text-xs text-[rgba(255,255,255,0.6)]">Batch Txs</p>
+            </div>
+
+            <ArrowRight className="h-5 w-5 text-[rgba(255,137,70,0.5)] hidden md:block" />
+
+            {/* Step 3 */}
+            <div className="flex flex-col items-center text-center max-w-[140px]">
+              <div className="w-16 h-16 rounded-xl border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <Sparkles className="h-8 w-8 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <h4 className="text-sm font-semibold text-white mb-1">Stwo Proof</h4>
+              <p className="text-xs text-[rgba(255,255,255,0.6)]">Generation</p>
+            </div>
+
+            <ArrowRight className="h-5 w-5 text-[rgba(255,137,70,0.5)] hidden md:block" />
+
+            {/* Step 4 */}
+            <div className="flex flex-col items-center text-center max-w-[140px]">
+              <div className="w-16 h-16 rounded-xl border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <Shield className="h-8 w-8 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <h4 className="text-sm font-semibold text-white mb-1">Zcash L1</h4>
+              <p className="text-xs text-[rgba(255,255,255,0.6)]">Verify TZE</p>
+            </div>
+
+            <ArrowRight className="h-5 w-5 text-[rgba(255,137,70,0.5)] hidden md:block" />
+
+            {/* Step 5 */}
+            <div className="flex flex-col items-center text-center max-w-[140px]">
+              <div className="w-16 h-16 rounded-xl border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgba(255,137,70,0.6)] hover:bg-[rgba(255,137,70,0.1)]">
+                <CheckCircle className="h-8 w-8 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <h4 className="text-sm font-semibold text-white mb-1">Validated</h4>
+              <p className="text-xs text-[rgba(255,255,255,0.6)]">Anchor</p>
+            </div>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -100,9 +158,50 @@ export function Architecture() {
             </div>
           </article>
         </div>
-        
-        <div className="max-w-[880px] mx-auto mt-9 text-center text-[rgba(201,201,210,0.75)]">
-          <p>
+
+        {/* Transaction Flow Mini-Diagram */}
+        <div className="max-w-[880px] mx-auto mt-9">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 mb-6 p-6 rounded-xl border border-[rgba(255,137,70,0.2)] bg-[rgba(255,137,70,0.02)]">
+            {/* Step 1 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-2">
+                <FileText className="h-6 w-6 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <span className="text-xs text-[rgba(255,255,255,0.7)]">State Root</span>
+            </div>
+
+            <ArrowRight className="h-4 w-4 text-[rgba(255,137,70,0.5)] hidden md:block" />
+
+            {/* Step 2 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-2">
+                <Sparkles className="h-6 w-6 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <span className="text-xs text-[rgba(255,255,255,0.7)]">Prove</span>
+            </div>
+
+            <ArrowRight className="h-4 w-4 text-[rgba(255,137,70,0.5)] hidden md:block" />
+
+            {/* Step 3 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-2">
+                <Shield className="h-6 w-6 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <span className="text-xs text-[rgba(255,255,255,0.7)]">Verify TZE</span>
+            </div>
+
+            <ArrowRight className="h-4 w-4 text-[rgba(255,137,70,0.5)] hidden md:block" />
+
+            {/* Step 4 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] flex items-center justify-center mb-2">
+                <Package className="h-6 w-6 text-[rgba(255,137,70,0.8)]" />
+              </div>
+              <span className="text-xs text-[rgba(255,255,255,0.7)]">New UTXO</span>
+            </div>
+          </div>
+          
+          <p className="text-center text-[rgba(201,201,210,0.75)]">
             It&apos;s a clean UTXO chain of anchors: prove the state transition, hand the
             verifier the bytes, and let Zcash consensus seal the next root. No ceremony,
             no sidecar trust assumptions.
