@@ -17,7 +17,7 @@ export function ExpandableTransactionCard({ tx, index }) {
   const txKind = getTransactionKind(tx);
 
   return (
-    <div key={tx.txid || index} className="flex flex-col gap-0">
+    <div key={tx.txid || index} className="reveal-on-scroll reveal-from-left flex flex-col gap-0">
       <div
         className="relative py-3.5 px-5 border border-[rgba(255,137,70,0.2)] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 cursor-pointer hover:translate-x-2 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(255,107,26,0.25),0_8px_24px_rgba(0,0,0,0.4)]"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -81,24 +81,33 @@ export function ExpandableTransactionCard({ tx, index }) {
         </div>
       </div>
 
-      {isExpanded && (
-        <div className="p-6 bg-[rgba(8,8,12,0.9)] border border-[rgba(255,137,70,0.15)] border-t-0 rounded-b-xl -mt-3">
-          <TransactionIOView tx={tx} />
+      {/* Expandable section with height animation */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateRows: isExpanded ? '1fr' : '0fr',
+          transition: 'grid-template-rows 0.3s ease-out',
+        }}
+      >
+        <div style={{ overflow: 'hidden' }}>
+          <div className="p-6 bg-[rgba(8,8,12,0.9)] border border-[rgba(255,137,70,0.15)] border-t-0 rounded-b-xl -mt-3">
+            <TransactionIOView tx={tx} />
 
-          {/* TZE Details - only show for TZE transactions */}
-          {txKind === 'tze' && <TZEDetailsView tx={tx} />}
+            {/* TZE Details - only show for TZE transactions */}
+            {txKind === 'tze' && <TZEDetailsView tx={tx} />}
 
-          {/* View Full Transaction Button */}
-          <div className="mt-8 text-right">
-            <a
-              href={`#/tx/${tx.txid}`}
-              className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.4)] text-foreground hover:border-accent hover:-translate-y-0.5"
-            >
-              View Full Transaction →
-            </a>
+            {/* View Full Transaction Button */}
+            <div className="mt-8 text-right">
+              <a
+                href={`#/tx/${tx.txid}`}
+                className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.4)] text-foreground hover:border-accent hover:-translate-y-0.5"
+              >
+                View Full Transaction →
+              </a>
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -76,7 +76,7 @@ export function TransactionCard({ tx, isLoading = false }) {
 
   return (
     <div
-      className="relative py-3.5 px-5 border border-[rgba(255,137,70,0.2)] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 hover:translate-x-2 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(255,107,26,0.25),0_8px_24px_rgba(0,0,0,0.4)]"
+      className="reveal-on-scroll reveal-from-left relative py-3.5 px-5 border border-[rgba(255,137,70,0.2)] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 hover:translate-x-2 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(255,107,26,0.25),0_8px_24px_rgba(0,0,0,0.4)]"
       style={{
         background: 'radial-gradient(circle at center, rgba(255, 107, 26, 0.05), rgba(8, 8, 12, 0.9) 80%)'
       }}

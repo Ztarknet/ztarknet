@@ -46,7 +46,7 @@ export function BlockCard({ block, isLoading = false }) {
   return (
     <a
       href={`#/block/${block.hash}`}
-      className={`relative py-3.5 px-5 border border-[rgba(255,137,70,0.2)] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 opacity-100 grid md:grid-cols-[auto_minmax(200px,1fr)_repeat(3,auto)] grid-cols-1 gap-5 md:gap-5 gap-3 items-center no-underline cursor-pointer hover:translate-x-2 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(255,107,26,0.25),0_8px_24px_rgba(0,0,0,0.4)] ${
+      className={`reveal-on-scroll reveal-from-left relative py-3.5 px-5 border border-[rgba(255,137,70,0.2)] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 opacity-100 grid md:grid-cols-[auto_minmax(200px,1fr)_repeat(3,auto)] grid-cols-1 gap-5 md:gap-5 gap-3 items-center no-underline cursor-pointer hover:translate-x-2 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(255,107,26,0.25),0_8px_24px_rgba(0,0,0,0.4)] ${
         block.isNew ? 'animate-slideIn' : ''
       }`}
       style={{

@@ -21,7 +21,7 @@ export function TransactionIOView({ tx }) {
           {tx.vin && tx.vin.map((input, idx) => (
             <div
               key={idx}
-              className={`relative p-4 border border-[rgba(255,137,70,0.2)] rounded-lg flex flex-col gap-2.5 ${
+              className={`reveal-on-scroll relative p-4 border border-[rgba(255,137,70,0.2)] rounded-lg flex flex-col gap-2.5 ${
                 !input.coinbase ? 'transition-all duration-200 hover:-translate-x-1 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(255,107,26,0.2)] cursor-pointer' : 'transition-all duration-200'
               }`}
               onClick={() => handleInputClick(input)}
@@ -66,7 +66,7 @@ export function TransactionIOView({ tx }) {
           {tx.vout && tx.vout.map((output, idx) => (
             <div
               key={idx}
-              className="relative p-4 border border-[rgba(255,137,70,0.2)] rounded-lg flex flex-col gap-2.5 transition-all duration-200 hover:translate-x-1 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(255,107,26,0.2)]"
+              className="reveal-on-scroll relative p-4 border border-[rgba(255,137,70,0.2)] rounded-lg flex flex-col gap-2.5 transition-all duration-200 hover:translate-x-1 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(255,107,26,0.2)]"
               style={{
                 background: 'radial-gradient(circle at bottom right, rgba(255, 107, 26, 0.04), rgba(8, 8, 12, 0.85) 70%)'
               }}

@@ -5,12 +5,14 @@ import { getTransactionKind } from '@utils/tx-parser';
 import { TransactionDetails } from '@components/transactions/TransactionDetails';
 import { HashDisplay } from '@components/common/HashDisplay';
 import { StatCard } from '@components/common/StatCard';
+import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
 
 export function TransactionPage({ txid }) {
   const [tx, setTx] = useState(null);
   const [block, setBlock] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  useRevealOnScroll();
 
   useEffect(() => {
     async function fetchTransaction() {

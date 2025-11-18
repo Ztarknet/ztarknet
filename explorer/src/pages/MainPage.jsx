@@ -1,5 +1,6 @@
 import React from 'react';
 import { useBlockPolling } from '@hooks/useBlockPolling';
+import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
 import { RPC_ENDPOINT } from '@services/rpc';
 import { StatCard } from '@components/common/StatCard';
 import { BlocksList } from '@components/blocks/BlocksList';
@@ -8,6 +9,7 @@ const MAX_BLOCKS = 5;
 
 export function MainPage() {
   const { blocks, chainHeight, loading, error } = useBlockPolling(MAX_BLOCKS);
+  useRevealOnScroll();
 
   return (
     <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">

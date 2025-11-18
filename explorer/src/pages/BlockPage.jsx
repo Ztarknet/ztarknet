@@ -5,11 +5,13 @@ import { TransactionCard } from '@components/transactions/TransactionCard';
 import { ExpandableTransactionCard } from '@components/transactions/ExpandableTransactionCard';
 import { HashDisplay } from '@components/common/HashDisplay';
 import { StatCard } from '@components/common/StatCard';
+import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
 
 export function BlockPage({ blockId }) {
   const [block, setBlock] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  useRevealOnScroll();
 
   useEffect(() => {
     async function fetchBlock() {

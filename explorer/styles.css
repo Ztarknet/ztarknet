@@ -70,5 +70,30 @@
     color: transparent !important;
     background: rgba(255, 137, 70, 0.15);
   }
+
+  /* Reveal on scroll animations */
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    /* Once visible, remove the reveal transform so hover effects work normally */
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  /* Reveal from left variant */
+  .reveal-on-scroll.reveal-from-left {
+    transform: translateX(-32px);
+  }
+
+  .reveal-on-scroll.reveal-from-left.is-visible {
+    transform: translateX(0);
+  }
 }
 
