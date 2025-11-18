@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
+import { Header } from '@components/common/Header';
 import { MainPage } from '@pages/MainPage';
 import { BlockPage } from '@pages/BlockPage';
 import { TransactionPage } from '@pages/TransactionPage';
@@ -16,17 +17,23 @@ function App() {
   }, []);
 
   // Parse route
+  let content;
   if (route.startsWith('#/block/')) {
     const blockId = route.replace('#/block/', '');
-    return <BlockPage blockId={blockId} />;
-  }
-
-  if (route.startsWith('#/tx/')) {
+    content = <BlockPage blockId={blockId} />;
+  } else if (route.startsWith('#/tx/')) {
     const txid = route.replace('#/tx/', '');
-    return <TransactionPage txid={txid} />;
+    content = <TransactionPage txid={txid} />;
+  } else {
+    content = <MainPage />;
   }
 
-  return <MainPage />;
+  return (
+    <>
+      <Header />
+      {content}
+    </>
+  );
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

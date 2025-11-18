@@ -40,35 +40,46 @@ export function MainPage() {
         />
       </div>
 
-      <h2 className="section-title">Latest Blocks</h2>
-      <BlocksList blocks={blocks} loading={loading} maxBlocks={MAX_BLOCKS} />
+      <section id="latest-blocks">
+        <h2 className="section-title">Latest Blocks</h2>
+        <BlocksList blocks={blocks} loading={loading} maxBlocks={MAX_BLOCKS} />
+      </section>
 
-      <div className="developer-info">
-        <h2>Developer Information</h2>
+      <section id="latest-transactions">
+        <h2 className="section-title">Latest Transactions</h2>
+        <div className="transactions-placeholder">
+          <p className="placeholder-text">Transaction list coming soon...</p>
+        </div>
+      </section>
 
-        <div className="info-item">
-          <span className="info-label">RPC Endpoint</span>
-          <div className="info-value">
-            <code>{RPC_ENDPOINT}</code>
+      <section id="developer-info">
+        <div className="developer-info">
+          <h2>Developer Information</h2>
+
+          <div className="info-item">
+            <span className="info-label">RPC Endpoint</span>
+            <div className="info-value">
+              <code>{RPC_ENDPOINT}</code>
+            </div>
+          </div>
+
+          <div className="info-item">
+            <span className="info-label">Default Miner Address</span>
+            <div className="info-value">
+              Use the default mnemonic to claim coinbase rewards. This serves as a faucet for developers
+              testing on the network. All miners use the same coinbase address by default, allowing you
+              to claim rewards using the shared mnemonic phrase.
+            </div>
+          </div>
+
+          <div className="info-item">
+            <span className="info-label">Network Type</span>
+            <div className="info-value">
+              <code>regtest</code> - Regression test network for development
+            </div>
           </div>
         </div>
-
-        <div className="info-item">
-          <span className="info-label">Default Miner Address</span>
-          <div className="info-value">
-            Use the default mnemonic to claim coinbase rewards. This serves as a faucet for developers
-            testing on the network. All miners use the same coinbase address by default, allowing you
-            to claim rewards using the shared mnemonic phrase.
-          </div>
-        </div>
-
-        <div className="info-item">
-          <span className="info-label">Network Type</span>
-          <div className="info-value">
-            <code>regtest</code> - Regression test network for development
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }
