@@ -4,6 +4,7 @@ import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
 import { RPC_ENDPOINT } from '@services/rpc';
 import { StatCard } from '@components/common/StatCard';
 import { BlocksList } from '@components/blocks/BlocksList';
+import { TransactionsList } from '@components/transactions/TransactionsList.tsx';
 
 const MAX_BLOCKS = 5;
 
@@ -49,9 +50,7 @@ export function MainPage() {
 
       <section id="latest-transactions" className="mb-12">
         <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">Latest Transactions</h2>
-        <div className="py-20 px-8 text-center bg-card-bg border border-[rgba(255,137,70,0.2)] rounded-2xl mb-12">
-          <p className="text-xl text-muted font-mono m-0">Transaction list coming soon...</p>
-        </div>
+        <TransactionsList chainHeight={chainHeight} />
       </section>
 
       <section id="developer-info">
