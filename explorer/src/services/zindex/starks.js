@@ -20,7 +20,7 @@ export async function getVerifier(verifier_id) {
   if (!verifier_id) {
     throw new Error('Verifier ID is required');
   }
-  return apiGet(`${STARKS_BASE}/verifier`, { verifier_id });
+  return apiGet(`${STARKS_BASE}/verifiers/verifier`, { verifier_id });
 }
 
 /**
@@ -92,7 +92,7 @@ export async function getStarkProofsByTransaction(txid) {
   if (!txid) {
     throw new Error('Transaction ID is required');
   }
-  return apiGet(`${STARKS_BASE}/proofs-by-transaction`, { txid });
+  return apiGet(`${STARKS_BASE}/proofs/by-transaction`, { txid });
 }
 
 /**

@@ -103,7 +103,7 @@ export async function getTzeInputsByPrevOutput(params) {
     throw new Error('Output index (vout) is required');
   }
 
-  return apiGet(`${TZE_GRAPH_BASE}/inputs/by-prev-output`, { txid, vout });
+  return apiGet(`${TZE_GRAPH_BASE}/inputs/by-prev-output`, { prev_txid: txid, prev_vout: vout });
 }
 
 // ==================== TZE Outputs ====================

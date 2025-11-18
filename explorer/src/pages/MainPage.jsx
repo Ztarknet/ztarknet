@@ -6,7 +6,7 @@ import { StatCard } from '@components/common/StatCard';
 import { BlocksList } from '@components/blocks/BlocksList';
 import { TransactionsList } from '@components/transactions/TransactionsList.tsx';
 
-const MAX_BLOCKS = 5;
+const MAX_BLOCKS = 7;
 
 export function MainPage() {
   const { blocks, chainHeight, loading, error } = useBlockPolling(MAX_BLOCKS);

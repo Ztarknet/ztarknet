@@ -25,15 +25,6 @@ export function useBlockPolling(maxBlocks = 5, pollInterval = 1000) {
 
       const fetchedBlocks = await getBlocks(heights);
 
-      // Check if there are new blocks
-      if (lastBlockHeight > 0 && blockCount > lastBlockHeight) {
-        // Mark new blocks
-        const newBlocksCount = blockCount - lastBlockHeight;
-        fetchedBlocks.slice(0, newBlocksCount).forEach(block => {
-          block.isNew = true;
-        });
-      }
-
       setBlocks(fetchedBlocks);
       setLastBlockHeight(blockCount);
       setLoading(false);

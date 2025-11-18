@@ -8,11 +8,17 @@ import {
   parseStarkVerifyPrecondition,
   parseStarkVerifyWitness
 } from '@utils/tze-parser';
+import { getVerifier } from '@services/zindex/starks';
+import { getTzeInputsByPrevOutput } from '@services/zindex/tze_graph';
 
 export function TZEDetailsView({ tx }) {
   const [expandedProof, setExpandedProof] = useState(false);
   const [oldStateRoot, setOldStateRoot] = useState(null);
   const [loadingOldState, setLoadingOldState] = useState(false);
+  const [verifierName, setVerifierName] = useState(null);
+  const [loadingVerifier, setLoadingVerifier] = useState(false);
+  const [nextVerifyTx, setNextVerifyTx] = useState(null);
+  const [loadingNextVerify, setLoadingNextVerify] = useState(false);
 
   // Parse TZE data from inputs and outputs
   let tzeInputData = null;
@@ -75,6 +81,107 @@ export function TZEDetailsView({ tx }) {
 
     fetchOldState();
   }, [tx.txid]);
+
+  // Fetch verifier name from starks API
+  useEffect(() => {
+    async function fetchVerifier() {
+      if (!tx.txid) {
+        setVerifierName(null);
+        return;
+      }
+
+      try {
+        setLoadingVerifier(true);
+        const { getStarkProofsByTransaction } = await import('@services/zindex/starks');
+
+        console.log('[TZE Details] Fetching proofs for tx:', tx.txid);
+        // Get STARK proofs for this transaction
+        const proofsData = await getStarkProofsByTransaction(tx.txid);
+        console.log('[TZE Details] Proofs data:', proofsData);
+
+        // The API returns an array directly (not { proofs: [...] })
+        if (proofsData && Array.isArray(proofsData) && proofsData.length > 0) {
+          const proof = proofsData[0];
+          console.log('[TZE Details] First proof:', proof);
+
+          // Fetch verifier details using verifier_id from proof
+          if (proof.verifier_id) {
+            console.log('[TZE Details] Fetching verifier with ID:', proof.verifier_id);
+            const verifierData = await getVerifier(proof.verifier_id);
+            console.log('[TZE Details] Verifier data:', verifierData);
+            if (verifierData && verifierData.verifier_name) {
+              setVerifierName(verifierData.verifier_name);
+            }
+          } else {
+            console.log('[TZE Details] No verifier_id in proof');
+          }
+        } else {
+          console.log('[TZE Details] No proofs found in response');
+        }
+      } catch (error) {
+        console.error('[TZE Details] Error fetching verifier:', error);
+      } finally {
+        setLoadingVerifier(false);
+      }
+    }
+
+    fetchVerifier();
+  }, [tx.txid]);
+
+  // Check if TZE output is spent (find next verify transaction)
+  useEffect(() => {
+    async function fetchNextVerify() {
+      if (!tx.txid || !tzeOutputData) {
+        console.log('[TZE Details] Skipping next verify check - txid:', tx.txid, 'tzeOutputData:', !!tzeOutputData);
+        setNextVerifyTx(null);
+        return;
+      }
+
+      try {
+        setLoadingNextVerify(true);
+
+        // Find the vout index of the TZE output
+        let tzeVout = null;
+        if (tx.vout) {
+          for (let i = 0; i < tx.vout.length; i++) {
+            const output = tx.vout[i];
+            if (output.scriptPubKey && output.scriptPubKey.hex && output.scriptPubKey.hex.toLowerCase().startsWith('ff')) {
+              tzeVout = i;
+              break;
+            }
+          }
+        }
+
+        console.log('[TZE Details] Found TZE vout:', tzeVout, 'for tx:', tx.txid);
+
+        if (tzeVout !== null) {
+          // Query zindex to find if this output is spent
+          console.log('[TZE Details] Querying for spending inputs of:', { txid: tx.txid, vout: tzeVout });
+          const spendingInputs = await getTzeInputsByPrevOutput({
+            txid: tx.txid,
+            vout: tzeVout
+          });
+          console.log('[TZE Details] Spending inputs response:', spendingInputs);
+
+          // The API returns an array directly (not { inputs: [...] })
+          if (spendingInputs && Array.isArray(spendingInputs) && spendingInputs.length > 0) {
+            // Get the first spending transaction
+            const spendingInput = spendingInputs[0];
+            console.log('[TZE Details] Found next verify tx:', spendingInput.txid);
+            setNextVerifyTx(spendingInput.txid);
+          } else {
+            console.log('[TZE Details] No spending inputs found');
+          }
+        }
+      } catch (error) {
+        console.error('[TZE Details] Error fetching next verify transaction:', error);
+      } finally {
+        setLoadingNextVerify(false);
+      }
+    }
+
+    fetchNextVerify();
+  }, [tx.txid, tzeOutputData]);
 
   if (!tzeOutputData) {
     return <div className="p-4 bg-red-600/10 border border-red-600/30 rounded-lg text-red-200 text-sm">Unable to parse TZE data</div>;
@@ -243,21 +350,48 @@ export function TZEDetailsView({ tx }) {
       </div>
 
       <div className="p-5 bg-[rgba(12,13,17,0.4)] rounded-[10px] border border-[rgba(255,107,26,0.15)]">
+        {/* Verifier Field - shown for both Initialize and Verify modes */}
+        <div className="flex flex-col gap-2 pb-2">
+          <div className="flex justify-between items-center gap-3">
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-medium font-mono uppercase tracking-wider">Verifier</span>
+              {loadingVerifier ? (
+                <span className="font-mono text-sm text-muted">Loading...</span>
+              ) : verifierName ? (
+                <span className="font-mono text-sm text-accent-strong font-semibold">{verifierName}</span>
+              ) : (
+                <span className="font-mono text-sm text-muted italic">Not available</span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {tzeMode === 1 && spendingTzeInput && spendingTzeInput.txid && (
+                <a
+                  href={`#/tx/${spendingTzeInput.txid}`}
+                  className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:-translate-x-0.5 whitespace-nowrap"
+                  title="View the previous STARK Verify transaction"
+                >
+                  ← View Prev Verify
+                </a>
+              )}
+              {nextVerifyTx && (
+                <a
+                  href={`#/tx/${nextVerifyTx}`}
+                  className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:translate-x-0.5 whitespace-nowrap"
+                  title="View the next STARK Verify transaction"
+                >
+                  View Next Verify →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-2 pb-4 mb-4 border-b border-[rgba(255,107,26,0.1)]">
           <div className="flex justify-between items-center gap-3">
             <div className="flex items-center gap-3">
               <span className="text-xs text-[rgba(255,137,70,0.64)] font-medium font-mono uppercase tracking-wider">Mode</span>
               <span className="font-mono text-sm text-accent-strong font-semibold">{modeName}</span>
             </div>
-            {tzeMode === 1 && spendingTzeInput && spendingTzeInput.txid && (
-              <a
-                href={`#/tx/${spendingTzeInput.txid}`}
-                className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:-translate-x-0.5 whitespace-nowrap"
-                title="View the previous STARK Verify transaction"
-              >
-                ← View Previous Verify
-              </a>
-            )}
           </div>
           {modeDescription && (
             <p className="m-0 text-muted text-sm italic">{modeDescription}</p>
