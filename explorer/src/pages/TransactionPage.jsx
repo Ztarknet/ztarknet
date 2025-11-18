@@ -40,23 +40,23 @@ export function TransactionPage({ txid }) {
 
   if (loading) {
     return (
-      <div className="explorer-container">
-        <div style={{ marginBottom: '24px' }}>
-          <a href="#/" className="button ghost">← Back to Blocks</a>
+      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+        <div className="mb-6 flex flex-row gap-3">
+          <a href="#/" className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5">← Back to Blocks</a>
         </div>
 
-        <h2 className="section-title skeleton-text">Transaction</h2>
+        <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight skeleton-text">Transaction</h2>
         <HashDisplay isLoading={true} />
 
         {/* Skeleton block info cards */}
-        <div className="stats-grid" style={{ marginBottom: '48px' }}>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
           <StatCard label="Block Height" value="---" description="Loading..." isLoading={true} />
           <StatCard label="Block Hash" value="--------------" description="" isLoading={true} />
           <StatCard label="Block Time" value="---" description="Loading..." isLoading={true} />
         </div>
 
-        <h2 className="section-title skeleton-text">Transaction Details</h2>
-        <div className="tx-expanded skeleton" style={{ marginTop: '24px' }}>
+        <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight skeleton-text">Transaction Details</h2>
+        <div className="p-6 bg-[rgba(8,8,12,0.9)] border border-[rgba(255,137,70,0.15)] rounded-xl mt-6 skeleton">
           <div className="skeleton-text">Loading transaction data...</div>
         </div>
       </div>
@@ -65,11 +65,11 @@ export function TransactionPage({ txid }) {
 
   if (error) {
     return (
-      <div className="explorer-container">
-        <div className="error">
+      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+        <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Error: {error}
           <br />
-          <a href="#/" className="button secondary" style={{ marginTop: '20px', display: 'inline-flex' }}>
+          <a href="#/" className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.4)] text-foreground hover:border-accent hover:-translate-y-0.5 mt-5">
             Back to Home
           </a>
         </div>
@@ -79,34 +79,42 @@ export function TransactionPage({ txid }) {
 
   if (!tx) {
     return (
-      <div className="explorer-container">
-        <div className="error">Transaction not found</div>
+      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+        <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">Transaction not found</div>
       </div>
     );
   }
 
   const txKind = getTransactionKind(tx);
 
+  const TX_KIND_STYLES = {
+    coinbase: 'bg-[#f5a623] text-[#0a0a0e]',
+    tze: 'bg-[#16a085] text-white',
+    standard: 'bg-accent text-background'
+  };
+
   return (
-    <div className="explorer-container">
-      <div style={{ marginBottom: '24px' }}>
-        <a href="#/" className="button ghost">← Back to Blocks</a>
+    <div className="max-w-container mx-auto px-8 pt-[120px] pb-[120px] flex-1">
+      <div className="mb-6 flex flex-row gap-3">
+        <a href="#/" className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5">← Back to Blocks</a>
         {block && (
-          <a href={`#/block/${block.hash}`} className="button ghost" style={{ marginLeft: '12px' }}>
+          <a href={`#/block/${block.hash}`} className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5">
             View Block
           </a>
         )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-        <h2 className="section-title" style={{ margin: 0 }}>Transaction</h2>
-        <span className="tx-kind" data-kind={txKind}>{txKind}</span>
+      <div className="flex items-center gap-4 mb-4">
+        <h2 className="text-[1.8rem] font-bold text-foreground tracking-tight m-0">Transaction</h2>
+        <span className={`text-[0.65rem] font-mono uppercase tracking-wider font-bold whitespace-nowrap min-w-[80px] text-center inline-block py-1 px-2.5 rounded ${TX_KIND_STYLES[txKind] || TX_KIND_STYLES.standard}`}>
+          {txKind}
+        </span>
       </div>
       <HashDisplay hash={tx.txid} />
 
       {/* Block info cards */}
       {block && (
-        <div className="stats-grid" style={{ marginBottom: '48px' }}>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
           <StatCard
             label="Block Height"
             value={block.height.toLocaleString()}
@@ -128,7 +136,7 @@ export function TransactionPage({ txid }) {
       )}
 
       {/* Transaction Details */}
-      <h2 className="section-title">Transaction Details</h2>
+      <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">Transaction Details</h2>
       <TransactionDetails tx={tx} txKind={txKind} />
     </div>
   );

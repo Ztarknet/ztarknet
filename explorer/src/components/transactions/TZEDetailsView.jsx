@@ -77,7 +77,7 @@ export function TZEDetailsView({ tx }) {
   }, [tx.txid]);
 
   if (!tzeOutputData) {
-    return <div className="tze-details-error">Unable to parse TZE data</div>;
+    return <div className="p-4 bg-red-600/10 border border-red-600/30 rounded-lg text-red-200 text-sm">Unable to parse TZE data</div>;
   }
 
   const { tzeId, payload } = tzeOutputData;
@@ -108,22 +108,22 @@ export function TZEDetailsView({ tx }) {
       const precondition = parseStarkVerifyPrecondition(payload);
       if (precondition) {
         extensionView = (
-          <div className="tze-extension-view">
-            <div className="tze-field">
-              <span className="tze-field-label">Genesis State</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(precondition.root)} title="Click to copy">
+          <div className="p-0">
+            <div className="flex flex-col gap-2 mb-4">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">Genesis State</span>
+              <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]" onClick={() => copyToClipboard(precondition.root)} title="Click to copy">
                 {precondition.root}
               </code>
             </div>
-            <div className="tze-field">
-              <span className="tze-field-label">OS Program Hash</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(precondition.osProgramHash)} title="Click to copy">
+            <div className="flex flex-col gap-2 mb-4">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">OS Program Hash</span>
+              <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]" onClick={() => copyToClipboard(precondition.osProgramHash)} title="Click to copy">
                 {precondition.osProgramHash}
               </code>
             </div>
-            <div className="tze-field">
-              <span className="tze-field-label">Bootloader Program Hash</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(precondition.bootloaderProgramHash)} title="Click to copy">
+            <div className="flex flex-col gap-2 mb-0">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">Bootloader Program Hash</span>
+              <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]" onClick={() => copyToClipboard(precondition.bootloaderProgramHash)} title="Click to copy">
                 {precondition.bootloaderProgramHash}
               </code>
             </div>
@@ -146,47 +146,49 @@ export function TZEDetailsView({ tx }) {
 
       if (newStatePrecondition) {
         extensionView = (
-          <div className="tze-extension-view">
-            <div className="tze-field">
-              <span className="tze-field-label">Old State Root</span>
+          <div className="p-0">
+            <div className="flex flex-col gap-2 mb-4">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">Old State Root</span>
               {loadingOldState ? (
-                <code className="tze-field-value">Loading...</code>
+                <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]">Loading...</code>
               ) : oldStateRoot ? (
-                <code className="tze-field-value" onClick={() => copyToClipboard(oldStateRoot)} title="Click to copy">
+                <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]" onClick={() => copyToClipboard(oldStateRoot)} title="Click to copy">
                   {oldStateRoot}
                 </code>
               ) : (
-                <code className="tze-field-value">Unable to fetch</code>
+                <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]">Unable to fetch</code>
               )}
             </div>
 
-            <div className="tze-field">
-              <span className="tze-field-label">New State Root</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.root)} title="Click to copy">
+            <div className="flex flex-col gap-2 mb-4">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">New State Root</span>
+              <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]" onClick={() => copyToClipboard(newStatePrecondition.root)} title="Click to copy">
                 {newStatePrecondition.root}
               </code>
             </div>
 
-            <div className="tze-field">
-              <span className="tze-field-label">OS Program Hash</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.osProgramHash)} title="Click to copy">
+            <div className="flex flex-col gap-2 mb-4">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">OS Program Hash</span>
+              <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]" onClick={() => copyToClipboard(newStatePrecondition.osProgramHash)} title="Click to copy">
                 {newStatePrecondition.osProgramHash}
               </code>
             </div>
 
-            <div className="tze-field">
-              <span className="tze-field-label">Bootloader Program Hash</span>
-              <code className="tze-field-value" onClick={() => copyToClipboard(newStatePrecondition.bootloaderProgramHash)} title="Click to copy">
+            <div className="flex flex-col gap-2 mb-4">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">Bootloader Program Hash</span>
+              <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]" onClick={() => copyToClipboard(newStatePrecondition.bootloaderProgramHash)} title="Click to copy">
                 {newStatePrecondition.bootloaderProgramHash}
               </code>
             </div>
 
             {witness && witness.proofData && (
-              <div className="tze-field">
-                <span className="tze-field-label">Proof</span>
-                <div className="tze-proof-container">
+              <div className="flex flex-col gap-2 mb-0">
+                <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">Proof</span>
+                <div className="flex flex-col gap-2.5">
                   <code
-                    className={`tze-proof-data ${expandedProof ? 'expanded' : ''}`}
+                    className={`font-mono text-xs text-foreground break-all cursor-pointer py-3 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)] leading-relaxed overflow-y-auto ${
+                      expandedProof ? 'max-h-[600px]' : 'max-h-[200px]'
+                    }`}
                     onClick={() => copyToClipboard(witness.proofData)}
                     title="Click to copy"
                   >
@@ -195,10 +197,10 @@ export function TZEDetailsView({ tx }) {
                       : `${witness.proofData.slice(0, 120)}...${witness.proofData.slice(-120)}`
                     }
                   </code>
-                  <div className="tze-proof-actions">
-                    <span className="tze-proof-size">{witness.proofSizeMB} MB</span>
+                  <div className="flex items-center justify-end gap-3">
+                    <span className="text-xs text-muted font-mono">{witness.proofSizeMB} MB</span>
                     <button
-                      className="tze-proof-toggle"
+                      className="py-1.5 px-4 bg-[rgba(255,107,26,0.1)] border border-[rgba(255,107,26,0.3)] rounded-md text-accent text-xs font-semibold cursor-pointer transition-all duration-200 hover:bg-[rgba(255,107,26,0.2)] hover:border-[rgba(255,107,26,0.5)] font-sans"
                       onClick={() => setExpandedProof(!expandedProof)}
                     >
                       {expandedProof ? 'Collapse' : 'Expand'}
@@ -216,32 +218,41 @@ export function TZEDetailsView({ tx }) {
   // Fallback for demo or unknown extensions
   if (!extensionView) {
     extensionView = (
-      <div className="tze-extension-view">
-        <p className="tze-description">Extension details view coming soon</p>
+      <div className="p-0">
+        <p className="m-0 text-muted text-sm italic">Extension details view coming soon</p>
       </div>
     );
   }
 
-  return (
-    <div className="tze-details-container">
-      <div className="tze-separator"></div>
+  const TZE_BADGE_STYLES = {
+    stark_verify: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+    demo: 'bg-blue-500/15 text-blue-300 border-blue-500/30'
+  };
 
-      <div className="tze-header">
-        <h3 className="title">TZE Details</h3>
-        <span className={`tze-badge tze-badge-${typeName}`}>{typeName}</span>
+  return (
+    <div className="mt-0 p-0">
+      <div className="h-px my-8 mb-6" style={{
+        background: 'linear-gradient(to right, transparent, rgba(255, 107, 26, 0.3), transparent)'
+      }}></div>
+
+      <div className="flex items-center gap-3 mb-5">
+        <h3 className="text-base font-semibold text-accent m-0 font-mono uppercase tracking-wider">TZE Details</h3>
+        <span className={`inline-block py-1 px-3 rounded-md text-xs font-semibold uppercase tracking-wide font-mono border ${TZE_BADGE_STYLES[typeName] || TZE_BADGE_STYLES.demo}`}>
+          {typeName}
+        </span>
       </div>
 
-      <div className="tze-combined-view">
-        <div className="tze-mode-field">
-          <div className="tze-mode-header">
-            <div>
-              <span className="tze-field-label">Mode</span>
-              <span className="tze-field-value">{modeName}</span>
+      <div className="p-5 bg-[rgba(12,13,17,0.4)] rounded-[10px] border border-[rgba(255,107,26,0.15)]">
+        <div className="flex flex-col gap-2 pb-4 mb-4 border-b border-[rgba(255,107,26,0.1)]">
+          <div className="flex justify-between items-center gap-3">
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-[rgba(255,137,70,0.64)] font-medium font-mono uppercase tracking-wider">Mode</span>
+              <span className="font-mono text-sm text-accent-strong font-semibold">{modeName}</span>
             </div>
             {tzeMode === 1 && spendingTzeInput && spendingTzeInput.txid && (
               <a
                 href={`#/tx/${spendingTzeInput.txid}`}
-                className="tze-prev-link"
+                className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:-translate-x-0.5 whitespace-nowrap"
                 title="View the previous STARK Verify transaction"
               >
                 ← View Previous Verify
@@ -249,7 +260,7 @@ export function TZEDetailsView({ tx }) {
             )}
           </div>
           {modeDescription && (
-            <p className="tze-description">{modeDescription}</p>
+            <p className="m-0 text-muted text-sm italic">{modeDescription}</p>
           )}
         </div>
 
