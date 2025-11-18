@@ -5,6 +5,7 @@ import { FlickeringGrid } from '@components/common/FlickeringGrid';
 import { MainPage } from '@pages/MainPage';
 import { BlockPage } from '@pages/BlockPage';
 import { TransactionPage } from '@pages/TransactionPage';
+import { VerifierPage } from '@pages/VerifierPage';
 
 function App() {
   const [route, setRoute] = useState(window.location.hash || '#/');
@@ -25,6 +26,9 @@ function App() {
   } else if (route.startsWith('#/tx/')) {
     const txid = route.replace('#/tx/', '');
     content = <TransactionPage txid={txid} />;
+  } else if (route.startsWith('#/verifier/')) {
+    const verifierId = route.replace('#/verifier/', '');
+    content = <VerifierPage verifierId={verifierId} />;
   } else {
     content = <MainPage />;
   }

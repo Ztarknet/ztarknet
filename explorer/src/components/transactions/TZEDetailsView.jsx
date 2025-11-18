@@ -358,7 +358,12 @@ export function TZEDetailsView({ tx }) {
               {loadingVerifier ? (
                 <span className="font-mono text-sm text-muted">Loading...</span>
               ) : verifierName ? (
-                <span className="font-mono text-sm text-accent-strong font-semibold">{verifierName}</span>
+                <a
+                  href={`#/verifier/${verifierName}`}
+                  className="font-mono text-sm text-accent-strong font-semibold hover:text-accent transition-colors duration-200 no-underline"
+                >
+                  {verifierName}
+                </a>
               ) : (
                 <span className="font-mono text-sm text-muted italic">Not available</span>
               )}

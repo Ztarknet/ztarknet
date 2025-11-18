@@ -60,10 +60,23 @@ export async function apiFetch(url, options = {}) {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
     }
 
-    const data = await response.json();
+    // Check if response has content
+    const text = await response.text();
+    if (!text || text.trim().length === 0) {
+      throw new Error('API returned empty response');
+    }
+
+    // Try to parse JSON
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      console.error('Failed to parse JSON response:', text);
+      throw new Error('API returned invalid JSON response');
+    }
 
     if (data.result === 'error') {
       throw new Error(data.error || 'API returned error');
@@ -71,7 +84,7 @@ export async function apiFetch(url, options = {}) {
 
     return data.data;
   } catch (error) {
-    console.error('Zindex API error:', error);
+    console.error('Zindex API error:', { url, error: error.message });
     throw error;
   }
 }
