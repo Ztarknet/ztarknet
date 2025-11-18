@@ -1,5 +1,6 @@
 import React from 'react';
 import { formatZEC } from '@utils/formatters';
+import { GlowingEffect } from '@/components/common/GlowingEffect';
 
 export function TransactionIOView({ tx }) {
   const numInputs = tx.vin ? tx.vin.length : 0;
@@ -20,11 +21,15 @@ export function TransactionIOView({ tx }) {
           {tx.vin && tx.vin.map((input, idx) => (
             <div
               key={idx}
-              className={`p-4 bg-[rgba(12,13,17,0.8)] border border-[rgba(255,137,70,0.2)] rounded-lg flex flex-col gap-2.5 ${
-                !input.coinbase ? 'transition-all duration-200 hover:bg-[rgba(12,13,17,0.95)] hover:border-[rgba(255,137,70,0.5)] hover:-translate-x-0.5 hover:shadow-[0_0_20px_rgba(255,137,70,0.15)] cursor-pointer' : ''
+              className={`relative p-4 border border-[rgba(255,137,70,0.2)] rounded-lg flex flex-col gap-2.5 ${
+                !input.coinbase ? 'transition-all duration-200 hover:-translate-x-1 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(255,107,26,0.2)] cursor-pointer' : 'transition-all duration-200'
               }`}
               onClick={() => handleInputClick(input)}
+              style={{
+                background: 'radial-gradient(circle at bottom left, rgba(255, 107, 26, 0.04), rgba(8, 8, 12, 0.85) 70%)'
+              }}
             >
+              <GlowingEffect proximity={64} spread={30} />
               <div className="flex items-center justify-between pb-2 border-b border-[rgba(255,137,70,0.1)]">
                 <span className="text-xs font-mono font-bold text-accent">#{idx}</span>
               </div>
@@ -59,7 +64,14 @@ export function TransactionIOView({ tx }) {
         <h3 className="text-base font-semibold text-accent m-0 font-mono uppercase tracking-wider">Outputs ({numOutputs})</h3>
         <div className="flex flex-col gap-4">
           {tx.vout && tx.vout.map((output, idx) => (
-            <div key={idx} className="p-4 bg-[rgba(12,13,17,0.8)] border border-[rgba(255,137,70,0.2)] rounded-lg flex flex-col gap-2.5">
+            <div
+              key={idx}
+              className="relative p-4 border border-[rgba(255,137,70,0.2)] rounded-lg flex flex-col gap-2.5 transition-all duration-200 hover:translate-x-1 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(255,107,26,0.2)]"
+              style={{
+                background: 'radial-gradient(circle at bottom right, rgba(255, 107, 26, 0.04), rgba(8, 8, 12, 0.85) 70%)'
+              }}
+            >
+              <GlowingEffect proximity={64} spread={30} />
               <div className="flex items-center justify-between pb-2 border-b border-[rgba(255,137,70,0.1)]">
                 <span className="text-xs font-mono font-bold text-accent">#{output.n}</span>
               </div>

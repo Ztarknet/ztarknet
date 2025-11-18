@@ -3,6 +3,7 @@ import { formatZEC, formatSize } from '@utils/formatters';
 import { getTransactionKind, getTransactionStats } from '@utils/tx-parser';
 import { TransactionIOView } from '@components/transactions/TransactionIOView';
 import { TZEDetailsView } from '@components/transactions/TZEDetailsView';
+import { GlowingEffect } from '@/components/common/GlowingEffect';
 
 const TX_KIND_STYLES = {
   coinbase: 'bg-[#f5a623] text-[#0a0a0e]',
@@ -18,9 +19,13 @@ export function ExpandableTransactionCard({ tx, index }) {
   return (
     <div key={tx.txid || index} className="flex flex-col gap-0">
       <div
-        className="py-3.5 px-5 bg-card-bg border border-[rgba(255,137,70,0.2)] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 cursor-pointer hover:border-[rgba(255,137,70,0.4)] hover:translate-x-1"
+        className="relative py-3.5 px-5 border border-[rgba(255,137,70,0.2)] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 cursor-pointer hover:translate-x-2 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(255,107,26,0.25),0_8px_24px_rgba(0,0,0,0.4)]"
         onClick={() => setIsExpanded(!isExpanded)}
+        style={{
+          background: 'radial-gradient(circle at center, rgba(255, 107, 26, 0.05), rgba(8, 8, 12, 0.9) 80%)'
+        }}
       >
+        <GlowingEffect proximity={64} spread={30} />
         {/* Mobile/Tablet Layout - Below md breakpoint */}
         <div className="md:hidden flex flex-col gap-3">
           <span className={`text-[0.65rem] font-mono uppercase tracking-wider font-bold whitespace-nowrap min-w-[80px] text-center inline-block py-1 px-2.5 rounded ${TX_KIND_STYLES[txKind] || TX_KIND_STYLES.standard}`}>
