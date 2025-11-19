@@ -49,7 +49,7 @@ export function Stack() {
                 inactiveZone={0.01}
               />
               <div className="relative h-full overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-6 shadow-[0_18px_36px_rgba(0,0,0,0.35)] flex items-center justify-center">
-                <div className="relative flex flex-col items-center gap-3 w-full">
+                <div className="relative flex flex-col items-center gap-1.5 w-full">
                   {/* Single continuous vertical line with beam */}
                   <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px bg-[rgba(255,137,70,0.2)] z-0"></div>
                   <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px z-0 overflow-hidden">
@@ -71,7 +71,7 @@ export function Stack() {
                   </div>
 
                   {/* Spacer */}
-                  <div className="h-12 relative z-10"></div>
+                  <div className="h-6 relative z-10"></div>
 
                   {/* Layer 2: TZE Tx Builder */}
                   <div className="w-full max-w-[180px] relative z-10">
@@ -87,7 +87,7 @@ export function Stack() {
                   </div>
 
                   {/* Spacer */}
-                  <div className="h-12 relative z-10"></div>
+                  <div className="h-6 relative z-10"></div>
 
                   {/* Layer 3: Stwo/Cairo */}
                   <div className="w-full max-w-[180px] relative z-10">
@@ -103,7 +103,7 @@ export function Stack() {
                   </div>
 
                   {/* Spacer */}
-                  <div className="h-12 relative z-10"></div>
+                  <div className="h-6 relative z-10"></div>
 
                   {/* Layer 4: Madara */}
                   <div className="w-full max-w-[180px] relative z-10">
