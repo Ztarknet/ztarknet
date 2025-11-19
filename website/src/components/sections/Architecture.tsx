@@ -44,7 +44,7 @@ export function Architecture() {
                 {/* Single animated line behind all boxes - aligned with center of icon boxes (h-16 = 64px, center = 32px = top-8) */}
 
                 <div className="relative w-full h-full overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-6 md:p-8 shadow-[0_18px_36px_rgba(0,0,0,0.35)] flex items-center justify-center">
-                  <div className="relative w-full flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+                  <div className="relative w-full flex flex-col md:flex-row items-center gap-1.5 md:gap-0 md:justify-between">
                     {/* Vertical line for mobile */}
                     <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px bg-[rgba(255,137,70,0.2)] z-0 md:hidden"></div>
                     <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px z-0 overflow-hidden md:hidden">
@@ -57,8 +57,20 @@ export function Architecture() {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgb(255,137,70)] to-transparent w-[30%] h-full animate-[beamMove_6s_ease-in-out_infinite] opacity-80 blur-[1px]"></div>
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgb(255,137,70)] to-transparent w-[20%] h-full animate-[beamMove_6s_ease-in-out_infinite] opacity-100"></div>
                     </div>
-                    {/* Step 1 */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10">
+                    {/* Step 1 - Mobile version */}
+                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                      <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
+                          <Database className="h-4 w-4 text-[rgb(255,137,70)]" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-sm font-semibold text-white">Madara L2</h4>
+                          <p className="text-xs text-[rgba(255,255,255,0.6)]">Sequencing</p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Step 1 - Desktop version */}
+                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <Database className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -69,8 +81,22 @@ export function Architecture() {
                         Sequencing
                       </p>
                     </div>
-                    {/* Step 2 */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10">
+                    {/* Spacer for mobile */}
+                    <div className="h-6 relative z-10 md:hidden"></div>
+                    {/* Step 2 - Mobile version */}
+                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                      <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
+                          <Zap className="h-4 w-4 text-[rgb(255,137,70)]" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-sm font-semibold text-white">Execute</h4>
+                          <p className="text-xs text-[rgba(255,255,255,0.6)]">Batch Txs</p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Step 2 - Desktop version */}
+                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <Zap className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -81,8 +107,22 @@ export function Architecture() {
                         Batch Txs
                       </p>
                     </div>
-                    {/* Step 3 */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10">
+                    {/* Spacer for mobile */}
+                    <div className="h-6 relative z-10 md:hidden"></div>
+                    {/* Step 3 - Mobile version */}
+                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                      <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
+                          <Sparkles className="h-4 w-4 text-[rgb(255,137,70)]" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-sm font-semibold text-white">Stwo Proof</h4>
+                          <p className="text-xs text-[rgba(255,255,255,0.6)]">Generation</p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Step 3 - Desktop version */}
+                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <Sparkles className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -93,8 +133,22 @@ export function Architecture() {
                         Generation
                       </p>
                     </div>
-                    {/* Step 4 */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10">
+                    {/* Spacer for mobile */}
+                    <div className="h-6 relative z-10 md:hidden"></div>
+                    {/* Step 4 - Mobile version */}
+                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                      <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
+                          <Shield className="h-4 w-4 text-[rgb(255,137,70)]" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-sm font-semibold text-white">Zcash L1</h4>
+                          <p className="text-xs text-[rgba(255,255,255,0.6)]">Verify TZE</p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Step 4 - Desktop version */}
+                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <Shield className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -105,8 +159,22 @@ export function Architecture() {
                         Verify TZE
                       </p>
                     </div>
-                    {/* Step 5 */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10">
+                    {/* Spacer for mobile */}
+                    <div className="h-6 relative z-10 md:hidden"></div>
+                    {/* Step 5 - Mobile version */}
+                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                      <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
+                          <CheckCircle className="h-4 w-4 text-[rgb(255,137,70)]" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-sm font-semibold text-white">Validated</h4>
+                          <p className="text-xs text-[rgba(255,255,255,0.6)]">Anchor</p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Step 5 - Desktop version */}
+                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <CheckCircle className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
