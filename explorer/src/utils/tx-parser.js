@@ -1,5 +1,15 @@
 // Determine transaction kind
 export function getTransactionKind(tx) {
+  // If using zindex API format (has 'type' field)
+  if (tx.type) {
+    // Map zindex type to display kind
+    if (tx.type === 'coinbase') return 'coinbase';
+    if (tx.type === 'tze') return 'tze';
+    // For specific types like t2t, t2z, z2t, z2z, show as 'standard'
+    return 'standard';
+  }
+
+  // Otherwise use RPC format detection
   // Check if coinbase
   if (tx.vin && tx.vin.length > 0 && tx.vin[0].coinbase) {
     return 'coinbase';
@@ -37,6 +47,30 @@ export function getTransactionKind(tx) {
 
 // Get transaction input/output counts and total output
 export function getTransactionStats(tx) {
+  // If using zindex API format (has aggregated fields)
+  if (tx.total_output !== undefined) {
+    // Convert satoshis to ZEC (zindex stores in satoshis)
+    const totalOutput = tx.total_output / 100000000;
+
+    // Zindex doesn't provide input/output counts in summary
+    // For coinbase transactions, we know there's always 1 input
+    let numInputs = '?';
+    let numOutputs = '?';
+
+    if (tx.type === 'coinbase') {
+      numInputs = 1;
+      // Coinbase typically has 1 output, but could have more
+      numOutputs = '≥1';
+    }
+
+    return {
+      numInputs: tx.num_inputs || numInputs,
+      numOutputs: tx.num_outputs || numOutputs,
+      totalOutput
+    };
+  }
+
+  // Otherwise use RPC format
   const numInputs = tx.vin ? tx.vin.length : 0;
   const numOutputs = tx.vout ? tx.vout.length : 0;
   const totalOutput = tx.vout ? tx.vout.reduce((sum, out) => sum + (out.value || 0), 0) : 0;
