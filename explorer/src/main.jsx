@@ -6,6 +6,7 @@ import { MainPage } from '@pages/MainPage';
 import { BlockPage } from '@pages/BlockPage';
 import { TransactionPage } from '@pages/TransactionPage';
 import { VerifierPage } from '@pages/VerifierPage';
+import { AccountPage } from '@pages/AccountPage';
 
 function App() {
   const [route, setRoute] = useState(window.location.hash || '#/');
@@ -29,6 +30,9 @@ function App() {
   } else if (route.startsWith('#/verifier/')) {
     const verifierId = route.replace('#/verifier/', '');
     content = <VerifierPage verifierId={verifierId} />;
+  } else if (route.startsWith('#/account/')) {
+    const address = route.replace('#/account/', '');
+    content = <AccountPage address={address} />;
   } else {
     content = <MainPage />;
   }
