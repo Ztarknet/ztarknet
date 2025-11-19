@@ -1,5 +1,5 @@
 import React from 'react';
-import { useBlockPolling } from '@hooks/useBlockPolling';
+import { useChainHeight } from '@hooks/useBlockPolling';
 import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
 import { RPC_ENDPOINT } from '@services/rpc';
 import { StatCard } from '@components/common/StatCard';
@@ -9,7 +9,7 @@ import { TransactionsList } from '@components/transactions/TransactionsList.tsx'
 const MAX_BLOCKS = 7;
 
 export function MainPage() {
-  const { blocks, chainHeight, loading, error } = useBlockPolling(MAX_BLOCKS);
+  const { chainHeight, loading, error } = useChainHeight();
   useRevealOnScroll();
 
   return (
@@ -45,12 +45,12 @@ export function MainPage() {
 
       <section id="latest-blocks" className="mb-12">
         <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">Latest Blocks</h2>
-        <BlocksList blocks={blocks} loading={loading} maxBlocks={MAX_BLOCKS} />
+        <BlocksList initialBlocks={MAX_BLOCKS} />
       </section>
 
       <section id="latest-transactions" className="mb-12">
         <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">Latest Transactions</h2>
-        <TransactionsList chainHeight={chainHeight} />
+        <TransactionsList />
       </section>
 
       <section id="developer-info">

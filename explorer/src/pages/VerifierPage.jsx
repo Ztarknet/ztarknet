@@ -187,7 +187,7 @@ export function VerifierPage({ verifierId }) {
         {/* Skeleton stat cards */}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
           <StatCard label="Total Proofs" value="---" description="Loading..." isLoading={true} />
-          <StatCard label="Total Proofs Size" value="---" description="MB" isLoading={true} />
+          <StatCard label="Total Proofs Sizes" value="---" description="MB" isLoading={true} />
           <StatCard label="Bridge Balance" value="---" description="ZEC" isLoading={true} />
         </div>
       </div>
@@ -285,7 +285,7 @@ export function VerifierPage({ verifierId }) {
           description="STARK Proofs Verified"
         />
         <StatCard
-          label="Total Proof Size"
+          label="Total Proofs Sizes"
           value={totalProofSizeMB}
           description="MB"
         />
