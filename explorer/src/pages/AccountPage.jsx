@@ -151,15 +151,11 @@ export function AccountPage({ address }) {
         setLoading(true);
         setError(null);
 
-        console.log('[AccountPage] Fetching account:', address);
-
         // Fetch account data
         let accountData;
         try {
           accountData = await getAccount(address);
-          console.log('[AccountPage] Account data:', accountData);
         } catch (e) {
-          console.error('[AccountPage] Error fetching account:', e.message);
           throw new Error(`Account not found: ${address}`);
         }
 
@@ -172,16 +168,15 @@ export function AccountPage({ address }) {
         // Fetch transaction count
         try {
           const countData = await getAccountTransactionCount(address);
-          console.log('[AccountPage] Transaction count:', countData);
           setTransactionCount(countData?.count || countData || 0);
         } catch (countError) {
-          console.error('[AccountPage] Error fetching transaction count:', countError);
+          // Transaction count endpoint may not be available, default to 0
           setTransactionCount(0);
         }
 
         setLoading(false);
       } catch (err) {
-        console.error('[AccountPage] Error fetching account:', err);
+        console.error('Error fetching account:', err);
         setError(err.message || 'Failed to load account data');
         setLoading(false);
       }
@@ -243,8 +238,6 @@ export function AccountPage({ address }) {
       // Calculate balance change from full transaction data
       const { received, sent } = calculateTxBalanceChange(tx, accountAddress);
 
-      console.log(`[AccountPage] Tx ${i} (${tx.txid?.slice(0, 8)}...): received=${received}, sent=${sent}`);
-
       // Reverse the transaction effect to get prior balance
       balance = balance - received + sent;
 
@@ -273,8 +266,6 @@ export function AccountPage({ address }) {
 
         // Fetch first page of account transactions from zindex
         const txData = await getAccountTransactions({ address, limit: PAGE_SIZE, offset: 0 });
-        console.log('[AccountPage] Transactions data from zindex:', txData);
-
         const txList = Array.isArray(txData) ? txData : (txData?.transactions || []);
 
         if (txList.length === 0) {
@@ -336,8 +327,6 @@ export function AccountPage({ address }) {
 
       // Fetch next page
       const txData = await getAccountTransactions({ address, limit: PAGE_SIZE, offset });
-      console.log('[AccountPage] Loading more transactions:', txData);
-
       const txList = Array.isArray(txData) ? txData : (txData?.transactions || []);
 
       if (txList.length === 0) {

@@ -23,59 +23,59 @@ export function VerifierPage({ verifierId }) {
         setLoading(true);
         setError(null);
 
-        // Try to fetch by ID first, then by name if that fails
+        // Determine if verifierId looks like a name (starts with "verifier_") or an ID
+        const isName = verifierId.startsWith('verifier_');
+
         let verifierData;
-        try {
-          console.log('[VerifierPage] Fetching verifier by ID:', verifierId);
-          verifierData = await getVerifier(verifierId);
-        } catch (e) {
-          console.log('[VerifierPage] ID fetch failed, trying by name:', e.message);
-          // If ID fetch fails, try name
+        if (isName) {
+          // Fetch by name first
           try {
             verifierData = await getVerifierByName(verifierId);
-          } catch (nameError) {
-            console.error('[VerifierPage] Name fetch also failed:', nameError.message);
-            throw new Error(`Verifier not found: ${verifierId}`);
+          } catch (e) {
+            // Fall back to ID if name fails
+            verifierData = await getVerifier(verifierId);
+          }
+        } else {
+          // Fetch by ID first
+          try {
+            verifierData = await getVerifier(verifierId);
+          } catch (e) {
+            // Fall back to name if ID fails
+            verifierData = await getVerifierByName(verifierId);
           }
         }
 
-        console.log('[VerifierPage] Verifier data:', verifierData);
-
         if (!verifierData || !verifierData.verifier_id) {
-          throw new Error('Invalid verifier data received from API');
+          throw new Error(`Verifier not found: ${verifierId}`);
         }
 
         setVerifier(verifierData);
 
         // Fetch proofs for this verifier
         try {
-          console.log('[VerifierPage] Fetching proofs for verifier_id:', verifierData.verifier_id);
           const proofsData = await getStarkProofsByVerifier(verifierData.verifier_id);
-          console.log('[VerifierPage] Proofs data:', proofsData);
           setProofs(Array.isArray(proofsData) ? proofsData : []);
         } catch (proofsError) {
-          console.error('[VerifierPage] Error fetching proofs:', proofsError);
+          console.error('Error fetching proofs:', proofsError);
           setProofs([]);
         }
 
         // Fetch recent facts for this verifier (to get program hashes and state root)
         try {
-          console.log('[VerifierPage] Fetching recent facts (limit 1)');
           const factsData = await getRecentFacts({ limit: 1 });
-          console.log('[VerifierPage] Recent facts data:', factsData);
           if (Array.isArray(factsData) && factsData.length > 0) {
             setLatestFact(factsData[0]);
           } else {
             setLatestFact(null);
           }
         } catch (factsError) {
-          console.error('[VerifierPage] Error fetching facts:', factsError);
+          console.error('Error fetching facts:', factsError);
           setLatestFact(null);
         }
 
         setLoading(false);
       } catch (err) {
-        console.error('[VerifierPage] Error fetching verifier:', err);
+        console.error('Error fetching verifier:', err);
         setError(err.message || 'Failed to load verifier data');
         setLoading(false);
       }
@@ -251,6 +251,25 @@ export function VerifierPage({ verifierId }) {
         {verifier.verifier_name || `Verifier ${verifier.verifier_id}`}
       </h2>
 
+      {/* Verifier Statistics Cards */}
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-8 min-h-[160px]">
+        <StatCard
+          label="Total Proofs"
+          value={proofs.length.toLocaleString()}
+          description="STARK Proofs Verified"
+        />
+        <StatCard
+          label="Total Proofs Sizes"
+          value={totalProofSizeMB}
+          description="MB"
+        />
+        <StatCard
+          label="Bridge Balance"
+          value={bridgeBalance}
+          description="ZEC"
+        />
+      </div>
+
       {/* Program Hashes Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div className="flex flex-col gap-2">
@@ -268,32 +287,13 @@ export function VerifierPage({ verifierId }) {
       </div>
 
       {/* Current State Root - Full Width Row */}
-      <div className="mb-8">
+      <div className="mb-12">
         <div className="flex flex-col gap-2">
           <span className="text-xs font-mono tracking-widest uppercase text-[rgba(255,137,70,0.64)] mb-2">Current State Root</span>
           <code className="font-mono text-sm text-foreground break-all bg-black/30 py-2.5 px-4 rounded-lg block">
             {currentStateRoot}
           </code>
         </div>
-      </div>
-
-      {/* Verifier Statistics Cards */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
-        <StatCard
-          label="Total Proofs"
-          value={proofs.length.toLocaleString()}
-          description="STARK Proofs Verified"
-        />
-        <StatCard
-          label="Total Proofs Sizes"
-          value={totalProofSizeMB}
-          description="MB"
-        />
-        <StatCard
-          label="Bridge Balance"
-          value={bridgeBalance}
-          description="ZEC"
-        />
       </div>
 
       {/* TZE Transactions List */}

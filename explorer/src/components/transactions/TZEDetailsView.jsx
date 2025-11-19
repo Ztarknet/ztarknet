@@ -94,29 +94,20 @@ export function TZEDetailsView({ tx }) {
         setLoadingVerifier(true);
         const { getStarkProofsByTransaction } = await import('@services/zindex/starks');
 
-        console.log('[TZE Details] Fetching proofs for tx:', tx.txid);
         // Get STARK proofs for this transaction
         const proofsData = await getStarkProofsByTransaction(tx.txid);
-        console.log('[TZE Details] Proofs data:', proofsData);
 
         // The API returns an array directly (not { proofs: [...] })
         if (proofsData && Array.isArray(proofsData) && proofsData.length > 0) {
           const proof = proofsData[0];
-          console.log('[TZE Details] First proof:', proof);
 
           // Fetch verifier details using verifier_id from proof
           if (proof.verifier_id) {
-            console.log('[TZE Details] Fetching verifier with ID:', proof.verifier_id);
             const verifierData = await getVerifier(proof.verifier_id);
-            console.log('[TZE Details] Verifier data:', verifierData);
             if (verifierData && verifierData.verifier_name) {
               setVerifierName(verifierData.verifier_name);
             }
-          } else {
-            console.log('[TZE Details] No verifier_id in proof');
           }
-        } else {
-          console.log('[TZE Details] No proofs found in response');
         }
       } catch (error) {
         console.error('[TZE Details] Error fetching verifier:', error);
@@ -131,8 +122,23 @@ export function TZEDetailsView({ tx }) {
   // Check if TZE output is spent (find next verify transaction)
   useEffect(() => {
     async function fetchNextVerify() {
-      if (!tx.txid || !tzeOutputData) {
-        console.log('[TZE Details] Skipping next verify check - txid:', tx.txid, 'tzeOutputData:', !!tzeOutputData);
+      if (!tx.txid) {
+        setNextVerifyTx(null);
+        return;
+      }
+
+      // Check if there's TZE output data
+      let hasTzeOutput = false;
+      if (tx.vout) {
+        for (const output of tx.vout) {
+          if (output.scriptPubKey && output.scriptPubKey.hex && output.scriptPubKey.hex.toLowerCase().startsWith('ff')) {
+            hasTzeOutput = true;
+            break;
+          }
+        }
+      }
+
+      if (!hasTzeOutput) {
         setNextVerifyTx(null);
         return;
       }
@@ -152,25 +158,18 @@ export function TZEDetailsView({ tx }) {
           }
         }
 
-        console.log('[TZE Details] Found TZE vout:', tzeVout, 'for tx:', tx.txid);
-
         if (tzeVout !== null) {
           // Query zindex to find if this output is spent
-          console.log('[TZE Details] Querying for spending inputs of:', { txid: tx.txid, vout: tzeVout });
           const spendingInputs = await getTzeInputsByPrevOutput({
             txid: tx.txid,
             vout: tzeVout
           });
-          console.log('[TZE Details] Spending inputs response:', spendingInputs);
 
           // The API returns an array directly (not { inputs: [...] })
           if (spendingInputs && Array.isArray(spendingInputs) && spendingInputs.length > 0) {
             // Get the first spending transaction
             const spendingInput = spendingInputs[0];
-            console.log('[TZE Details] Found next verify tx:', spendingInput.txid);
             setNextVerifyTx(spendingInput.txid);
-          } else {
-            console.log('[TZE Details] No spending inputs found');
           }
         }
       } catch (error) {
@@ -181,7 +180,7 @@ export function TZEDetailsView({ tx }) {
     }
 
     fetchNextVerify();
-  }, [tx.txid, tzeOutputData]);
+  }, [tx.txid]);
 
   if (!tzeOutputData) {
     return <div className="p-4 bg-red-600/10 border border-red-600/30 rounded-lg text-red-200 text-sm">Unable to parse TZE data</div>;
@@ -360,9 +359,18 @@ export function TZEDetailsView({ tx }) {
               ) : verifierName ? (
                 <a
                   href={`#/verifier/${verifierName}`}
-                  className="font-mono text-sm text-accent-strong font-semibold hover:text-accent transition-colors duration-200 no-underline"
+                  className="inline-flex items-center gap-1.5 font-mono text-sm text-accent-strong font-semibold hover:text-accent transition-colors duration-200 no-underline group"
                 >
                   {verifierName}
+                  <svg
+                    className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
                 </a>
               ) : (
                 <span className="font-mono text-sm text-muted italic">Not available</span>

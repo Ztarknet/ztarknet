@@ -37,7 +37,7 @@ export function Header() {
         }`}
         animate={{
           width: isScrolled ? '55%' : '100%',
-          minWidth: isScrolled ? 'min(100%,700px)' : 'auto',
+          minWidth: isScrolled ? 'min(100%,700px)' : '0px',
           y: isScrolled ? 20 : 0,
         }}
         transition={{
