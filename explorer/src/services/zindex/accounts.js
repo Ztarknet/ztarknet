@@ -60,7 +60,7 @@ export async function getAccountsByBalanceRange(params = {}) {
  * @returns {Promise<Object>} Top accounts by balance
  */
 export async function getTopAccountsByBalance(params = {}) {
-  return apiGet(`${ACCOUNTS_BASE}/top-balance`, {
+  return apiGet(`${ACCOUNTS_BASE}/top-balances`, {
     limit: params.limit ?? 10,
   });
 }
@@ -104,7 +104,7 @@ export async function getAccountTransactions(params) {
  * Get account transactions by type
  * @param {Object} params - Query parameters
  * @param {string} params.address - Account address
- * @param {string} params.type - Transaction type (coinbase|tze|t2t|t2z|z2t|z2z)
+ * @param {string} params.type - Transaction type (receive|send)
  * @param {number} [params.limit=10] - Maximum number of transactions to return
  * @param {number} [params.offset=0] - Number of transactions to skip
  * @returns {Promise<Object>} Account transactions of the specified type
@@ -116,10 +116,10 @@ export async function getAccountTransactionsByType(params) {
     throw new Error('Account address is required');
   }
   if (!type) {
-    throw new Error('Transaction type is required');
+    throw new Error('Transaction type is required (receive|send)');
   }
 
-  return apiGet(`${ACCOUNTS_BASE}/transactions/by-type`, {
+  return apiGet(`${ACCOUNTS_BASE}/transactions/type`, {
     address,
     type,
     ...withPaginationDefaults(rest),
@@ -172,27 +172,30 @@ export async function getAccountSendingTransactions(params) {
  * Get account transactions within a block range
  * @param {Object} params - Query parameters
  * @param {string} params.address - Account address
- * @param {number} params.from_height - Starting block height
- * @param {number} params.to_height - Ending block height
+ * @param {number} params.from_block - Starting block height
+ * @param {number} params.to_block - Ending block height
+ * @param {number} [params.limit=10] - Maximum number of transactions to return
+ * @param {number} [params.offset=0] - Number of transactions to skip
  * @returns {Promise<Object>} Account transactions in the block range
  */
 export async function getAccountTransactionsByBlockRange(params) {
-  const { address, from_height, to_height } = params || {};
+  const { address, from_block, to_block, ...rest } = params || {};
 
   if (!address) {
     throw new Error('Account address is required');
   }
-  if (from_height === undefined || from_height === null) {
-    throw new Error('from_height is required');
+  if (from_block === undefined || from_block === null) {
+    throw new Error('from_block is required');
   }
-  if (to_height === undefined || to_height === null) {
-    throw new Error('to_height is required');
+  if (to_block === undefined || to_block === null) {
+    throw new Error('to_block is required');
   }
 
   return apiGet(`${ACCOUNTS_BASE}/transactions/block-range`, {
     address,
-    from_height,
-    to_height,
+    from_block,
+    to_block,
+    ...withPaginationDefaults(rest),
   });
 }
 
@@ -205,7 +208,7 @@ export async function getAccountTransactionCount(address) {
   if (!address) {
     throw new Error('Account address is required');
   }
-  return apiGet(`${ACCOUNTS_BASE}/transaction-count`, { address });
+  return apiGet(`${ACCOUNTS_BASE}/transactions/count`, { address });
 }
 
 /**
@@ -225,7 +228,7 @@ export async function getAccountTransaction(params) {
     throw new Error('Transaction ID is required');
   }
 
-  return apiGet(`${ACCOUNTS_BASE}/transaction`, { address, txid });
+  return apiGet(`${ACCOUNTS_BASE}/transactions/transaction`, { address, txid });
 }
 
 /**
@@ -237,5 +240,26 @@ export async function getTransactionAccounts(txid) {
   if (!txid) {
     throw new Error('Transaction ID is required');
   }
-  return apiGet(`${ACCOUNTS_BASE}/tx-accounts`, { txid });
+  return apiGet(`${ACCOUNTS_BASE}/transactions/by-txid`, { txid });
+}
+
+// ==================== Count ====================
+
+/**
+ * Count total accounts
+ * @returns {Promise<Object>} Account count
+ */
+export async function countAccounts() {
+  return apiGet(`${ACCOUNTS_BASE}/count`);
+}
+
+/**
+ * Count account transactions with optional filters
+ * @param {Object} params - Query parameters
+ * @param {string} [params.address] - Filter by account address
+ * @param {string} [params.type] - Filter by transaction type (send|receive)
+ * @returns {Promise<Object>} Account transaction count
+ */
+export async function countAccountTransactions(params = {}) {
+  return apiGet(`${ACCOUNTS_BASE}/transactions/total-count`, params);
 }

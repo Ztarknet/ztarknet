@@ -171,6 +171,40 @@ export async function getInputSources(txid) {
   return apiGet(`${TX_GRAPH_BASE}/inputs/sources`, { txid });
 }
 
+// ==================== Count ====================
+
+/**
+ * Count transactions with optional filters
+ * @param {Object} params - Query parameters
+ * @param {string} [params.type] - Transaction type filter (coinbase|tze|t2t|t2z|z2t|z2z)
+ * @param {number} [params.block_height] - Block height filter
+ * @returns {Promise<Object>} Transaction count
+ */
+export async function countTransactions(params = {}) {
+  return apiGet(`${TX_GRAPH_BASE}/transactions/count`, params);
+}
+
+/**
+ * Count transaction outputs with optional filters
+ * @param {Object} params - Query parameters
+ * @param {string} [params.txid] - Filter by transaction ID
+ * @param {boolean} [params.spent] - Filter by spent status (true for spent outputs only)
+ * @returns {Promise<Object>} Output count
+ */
+export async function countOutputs(params = {}) {
+  return apiGet(`${TX_GRAPH_BASE}/outputs/count`, params);
+}
+
+/**
+ * Count transaction inputs with optional filters
+ * @param {Object} params - Query parameters
+ * @param {string} [params.txid] - Filter by transaction ID
+ * @returns {Promise<Object>} Input count
+ */
+export async function countInputs(params = {}) {
+  return apiGet(`${TX_GRAPH_BASE}/inputs/count`, params);
+}
+
 // ==================== Graph ====================
 
 /**

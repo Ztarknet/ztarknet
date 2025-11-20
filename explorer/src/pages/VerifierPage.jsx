@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getVerifier, getVerifierByName, getStarkProofsByVerifier, getRecentFacts } from '@services/zindex/starks';
+import { getVerifier, getVerifierByName, getStarkProofsByVerifier, getRecentFacts, countStarkProofs, getSumProofSizesByVerifier } from '@services/zindex/starks';
 import { getRawTransaction } from '@services/rpc';
 import { formatZEC } from '@utils/formatters';
 import { HashDisplay } from '@components/common/HashDisplay';
@@ -12,6 +12,8 @@ export function VerifierPage({ verifierId }) {
   const [proofs, setProofs] = useState([]);
   const [latestFact, setLatestFact] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [totalProofCount, setTotalProofCount] = useState(0);
+  const [totalProofSizeMB, setTotalProofSizeMB] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
   const [error, setError] = useState(null);
@@ -58,6 +60,26 @@ export function VerifierPage({ verifierId }) {
         } catch (proofsError) {
           console.error('Error fetching proofs:', proofsError);
           setProofs([]);
+        }
+
+        // Fetch total proof count for this verifier
+        try {
+          const countData = await countStarkProofs({ verifier_id: verifierData.verifier_id });
+          setTotalProofCount(countData?.count || 0);
+        } catch (countError) {
+          console.error('Error fetching proof count:', countError);
+          setTotalProofCount(0);
+        }
+
+        // Fetch total proof sizes for this verifier
+        try {
+          const sumData = await getSumProofSizesByVerifier(verifierData.verifier_id);
+          // Convert bytes to MB
+          const sizeMB = sumData?.total_proof_size ? (sumData.total_proof_size / (1024 * 1024)).toFixed(2) : '0.00';
+          setTotalProofSizeMB(sizeMB);
+        } catch (sumError) {
+          console.error('Error fetching proof sizes:', sumError);
+          setTotalProofSizeMB('0.00');
         }
 
         // Fetch recent facts for this verifier (to get program hashes and state root)
@@ -216,20 +238,6 @@ export function VerifierPage({ verifierId }) {
     );
   }
 
-  // Calculate total proof size from TZE transactions
-  const totalProofSizeMB = transactions.reduce((sum, tx) => {
-    // Get size of TZE data from transaction
-    if (tx.vin) {
-      for (const input of tx.vin) {
-        if (input.scriptSig && input.scriptSig.hex && input.scriptSig.hex.toLowerCase().startsWith('ff')) {
-          // TZE input found, add its size
-          sum += (input.scriptSig.hex.length / 2) / (1024 * 1024); // Convert hex chars to bytes to MB
-        }
-      }
-    }
-    return sum;
-  }, 0).toFixed(2);
-
   // Get program hashes and state root from latest fact
   const osProgramHash = latestFact?.inner_program_hash || 'N/A';
   const bootloaderProgramHash = latestFact?.program_hash || 'N/A';
@@ -255,7 +263,7 @@ export function VerifierPage({ verifierId }) {
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-8 min-h-[160px]">
         <StatCard
           label="Total Proofs"
-          value={proofs.length.toLocaleString()}
+          value={totalProofCount.toLocaleString()}
           description="STARK Proofs Verified"
         />
         <StatCard

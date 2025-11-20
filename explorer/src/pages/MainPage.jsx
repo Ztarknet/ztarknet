@@ -1,16 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useChainHeight } from '@hooks/useBlockPolling';
 import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
 import { RPC_ENDPOINT } from '@services/rpc';
 import { StatCard } from '@components/common/StatCard';
 import { BlocksList } from '@components/blocks/BlocksList';
 import { TransactionsList } from '@components/transactions/TransactionsList.tsx';
+import { countTransactions, countStarkProofs } from '@services/zindex';
 
 const MAX_BLOCKS = 7;
 
 export function MainPage() {
   const { chainHeight, loading, error } = useChainHeight();
+  const [totalTransactions, setTotalTransactions] = useState(0);
+  const [txLoading, setTxLoading] = useState(true);
+  const [totalProofs, setTotalProofs] = useState(0);
+  const [proofsLoading, setProofsLoading] = useState(true);
   useRevealOnScroll();
+
+  // Fetch total transaction count
+  useEffect(() => {
+    async function fetchTotalTransactions() {
+      try {
+        setTxLoading(true);
+        const result = await countTransactions();
+        setTotalTransactions(result?.count || 0);
+      } catch (err) {
+        console.error('Error fetching transaction count:', err);
+        setTotalTransactions(0);
+      } finally {
+        setTxLoading(false);
+      }
+    }
+    fetchTotalTransactions();
+  }, []);
+
+  // Fetch total STARK proofs count
+  useEffect(() => {
+    async function fetchTotalProofs() {
+      try {
+        setProofsLoading(true);
+        const result = await countStarkProofs();
+        setTotalProofs(result?.count || 0);
+      } catch (err) {
+        console.error('Error fetching proof count:', err);
+        setTotalProofs(0);
+      } finally {
+        setProofsLoading(false);
+      }
+    }
+    fetchTotalProofs();
+  }, []);
 
   return (
     <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
@@ -30,16 +69,16 @@ export function MainPage() {
           isLoading={loading}
         />
         <StatCard
-          label="Network Upgrade"
-          value="ZFuture"
-          description="Latest protocol version"
-          isLoading={loading}
+          label="Transactions"
+          value={(totalTransactions-chainHeight).toLocaleString()} // Subtracting chainHeight to exclude coinbase transactions
+          description="All-time transaction count"
+          isLoading={txLoading}
         />
         <StatCard
-          label="Transaction Version"
-          value="V6"
-          description="Current tx format"
-          isLoading={loading}
+          label="Proofs Verified"
+          value={totalProofs.toLocaleString()}
+          description="Total STARK proofs verified"
+          isLoading={proofsLoading}
         />
       </div>
 
@@ -75,10 +114,24 @@ export function MainPage() {
             </div>
           </div>
 
-          <div className="mb-0">
+          <div className="mb-5">
             <span className="block text-[0.85rem] font-mono uppercase tracking-widest text-[rgba(255,137,70,0.7)] mb-2">Network Type</span>
             <div className="text-base font-mono text-foreground break-all leading-relaxed">
               <code className="bg-black/40 px-2 py-0.5 rounded text-accent-strong">regtest</code> - Regression test network for development
+            </div>
+          </div>
+
+          <div className="mb-5">
+            <span className="block text-[0.85rem] font-mono uppercase tracking-widest text-[rgba(255,137,70,0.7)] mb-2">Transaction Version</span>
+            <div className="text-base font-mono text-foreground break-all leading-relaxed">
+              <code className="bg-black/40 px-2 py-0.5 rounded text-accent-strong">V6</code> - Current transaction format
+            </div>
+          </div>
+
+          <div className="mb-0">
+            <span className="block text-[0.85rem] font-mono uppercase tracking-widest text-[rgba(255,137,70,0.7)] mb-2">Network Upgrade</span>
+            <div className="text-base font-mono text-foreground break-all leading-relaxed">
+              <code className="bg-black/40 px-2 py-0.5 rounded text-accent-strong">ZFuture</code> - Latest protocol version
             </div>
           </div>
         </div>
