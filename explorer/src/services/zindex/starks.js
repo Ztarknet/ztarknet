@@ -275,3 +275,49 @@ export async function getStateTransition(params) {
 
   return apiGet(`${STARKS_BASE}/facts/state-transition`, { old_state, new_state });
 }
+
+// ==================== Count ====================
+
+/**
+ * Count total verifiers
+ * @returns {Promise<Object>} Verifier count
+ */
+export async function countVerifiers() {
+  return apiGet(`${STARKS_BASE}/verifiers/count`);
+}
+
+/**
+ * Count STARK proofs with optional filters
+ * @param {Object} params - Query parameters
+ * @param {string} [params.verifier_id] - Filter by verifier ID
+ * @param {number} [params.block_height] - Filter by block height
+ * @returns {Promise<Object>} STARK proof count
+ */
+export async function countStarkProofs(params = {}) {
+  return apiGet(`${STARKS_BASE}/proofs/count`, params);
+}
+
+/**
+ * Count Ztarknet facts with optional filters
+ * @param {Object} params - Query parameters
+ * @param {string} [params.verifier_id] - Filter by verifier ID
+ * @param {number} [params.block_height] - Filter by block height
+ * @returns {Promise<Object>} Ztarknet facts count
+ */
+export async function countFacts(params = {}) {
+  return apiGet(`${STARKS_BASE}/facts/count`, params);
+}
+
+// ==================== Aggregations ====================
+
+/**
+ * Get sum of all proof sizes for a verifier
+ * @param {string} verifier_id - Verifier ID
+ * @returns {Promise<Object>} Total proof size data
+ */
+export async function getSumProofSizesByVerifier(verifier_id) {
+  if (!verifier_id) {
+    throw new Error('Verifier ID is required');
+  }
+  return apiGet(`${STARKS_BASE}/verifier/sum-proof-sizes`, { verifier_id });
+}

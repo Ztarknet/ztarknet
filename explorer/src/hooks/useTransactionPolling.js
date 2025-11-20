@@ -16,11 +16,12 @@ export function useTransactionPolling(
   const isInitializedRef = useRef(false);
   const currentOffsetRef = useRef(0);
 
-  // Fetch transactions based on filter
+  // Fetch transactions based on filter (can be 'all', single type, or comma-separated types)
   const fetchTransactions = useCallback(async (offset = 0, limit = initialCount) => {
-    if (filter === 'all') {
+    if (filter === 'all' || !filter) {
       return getRecentTransactions({ limit, offset });
     } else {
+      // Filter can be a single type or comma-separated types (e.g., "tze,t2t,t2z")
       return getTransactionsByType({ type: filter, limit, offset });
     }
   }, [filter, initialCount]);

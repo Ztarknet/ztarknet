@@ -52,20 +52,27 @@ export function getTransactionStats(tx) {
     // Convert satoshis to ZEC (zindex stores in satoshis)
     const totalOutput = tx.total_output / 100000000;
 
-    // Zindex doesn't provide input/output counts in summary
-    // For coinbase transactions, we know there's always 1 input
-    let numInputs = '?';
-    let numOutputs = '?';
+    // Use input_count and output_count from the API response
+    // Fall back to defaults if not available
+    let numInputs = tx.input_count ?? '?';
+    let numOutputs = tx.output_count ?? '?';
 
-    if (tx.type === 'coinbase') {
+    // Legacy fallback for old field names
+    if (numInputs === '?') {
+      numInputs = tx.num_inputs ?? '?';
+    }
+    if (numOutputs === '?') {
+      numOutputs = tx.num_outputs ?? '?';
+    }
+
+    // Additional fallback for coinbase transactions if counts are still unknown
+    if (tx.type === 'coinbase' && numInputs === '?') {
       numInputs = 1;
-      // Coinbase typically has 1 output, but could have more
-      numOutputs = '≥1';
     }
 
     return {
-      numInputs: tx.num_inputs || numInputs,
-      numOutputs: tx.num_outputs || numOutputs,
+      numInputs,
+      numOutputs,
       totalOutput
     };
   }

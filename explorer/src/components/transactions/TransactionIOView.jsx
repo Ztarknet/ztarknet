@@ -140,7 +140,23 @@ export function TransactionIOView({ tx }) {
                     <div className="flex flex-col gap-1">
                       <span className="text-[0.7rem] font-mono uppercase tracking-wider text-[rgba(255,137,70,0.64)]">Address{output.scriptPubKey.addresses.length > 1 ? 'es' : ''}</span>
                       {output.scriptPubKey.addresses.map((addr, addrIdx) => (
-                        <code key={addrIdx} className="text-[0.85rem] text-foreground font-mono break-all leading-tight">{addr}</code>
+                        <a
+                          key={addrIdx}
+                          href={`#/account/${addr}`}
+                          className="inline-flex items-center gap-1.5 font-mono text-[0.85rem] text-accent-strong font-semibold hover:text-accent transition-colors duration-200 no-underline group break-all leading-tight"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {addr}
+                          <svg
+                            className="w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                          >
+                            <path d="M9 18l6-6-6-6" />
+                          </svg>
+                        </a>
                       ))}
                     </div>
                   )}
