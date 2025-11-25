@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { getVerifier, getVerifierByName, getStarkProofsByVerifier, getRecentFacts, countStarkProofs, getSumProofSizesByVerifier } from '@services/zindex/starks';
 import { getRawTransaction } from '@services/rpc';
 import { formatZEC } from '@utils/formatters';
@@ -6,6 +6,8 @@ import { HashDisplay } from '@components/common/HashDisplay';
 import { StatCard } from '@components/common/StatCard';
 import { TransactionCard } from '@components/transactions/TransactionCard';
 import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
+
+const PAGE_SIZE = 10;
 
 export function VerifierPage({ verifierId }) {
   const [verifier, setVerifier] = useState(null);
@@ -16,14 +18,31 @@ export function VerifierPage({ verifierId }) {
   const [totalProofSizeMB, setTotalProofSizeMB] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
+  const [loadingMoreProofs, setLoadingMoreProofs] = useState(false);
+  const [proofsOffset, setProofsOffset] = useState(0);
   const [error, setError] = useState(null);
+
+  // Track which transaction IDs we've already fetched to avoid refetching
+  const fetchedTxIdsRef = useRef(new Set());
+
   useRevealOnScroll();
+
+  // Calculate if all proofs are loaded (only true when we have the count AND loaded all)
+  const allProofsLoaded = totalProofCount > 0 && proofs.length >= totalProofCount;
+  // Total TZE count is proofs + 1 for init transaction
+  const totalTzeCount = totalProofCount + 1;
 
   useEffect(() => {
     async function fetchVerifier() {
       try {
         setLoading(true);
         setError(null);
+
+        // Reset state for new verifier
+        fetchedTxIdsRef.current.clear();
+        setTransactions([]);
+        setProofs([]);
+        setProofsOffset(0);
 
         // Determine if verifierId looks like a name (starts with "verifier_") or an ID
         const isName = verifierId.startsWith('verifier_');
@@ -53,22 +72,28 @@ export function VerifierPage({ verifierId }) {
 
         setVerifier(verifierData);
 
-        // Fetch proofs for this verifier
-        try {
-          const proofsData = await getStarkProofsByVerifier(verifierData.verifier_id);
-          setProofs(Array.isArray(proofsData) ? proofsData : []);
-        } catch (proofsError) {
-          console.error('Error fetching proofs:', proofsError);
-          setProofs([]);
-        }
-
-        // Fetch total proof count for this verifier
+        // Fetch total proof count for this verifier first
+        let proofCount = 0;
         try {
           const countData = await countStarkProofs({ verifier_id: verifierData.verifier_id });
-          setTotalProofCount(countData?.count || 0);
+          proofCount = countData?.count || 0;
+          setTotalProofCount(proofCount);
         } catch (countError) {
           console.error('Error fetching proof count:', countError);
           setTotalProofCount(0);
+        }
+
+        // Fetch initial page of proofs for this verifier
+        try {
+          const proofsData = await getStarkProofsByVerifier(verifierData.verifier_id, {
+            limit: PAGE_SIZE,
+            offset: 0
+          });
+          setProofs(Array.isArray(proofsData) ? proofsData : []);
+          setProofsOffset(PAGE_SIZE);
+        } catch (proofsError) {
+          console.error('Error fetching proofs:', proofsError);
+          setProofs([]);
         }
 
         // Fetch total proof sizes for this verifier
@@ -106,11 +131,25 @@ export function VerifierPage({ verifierId }) {
     fetchVerifier();
   }, [verifierId]);
 
-  // Fetch transactions for each proof + init transaction
+  // Helper to sort transactions with init at bottom
+  const sortTransactions = useCallback((txs, initTxId) => {
+    return [...txs].sort((a, b) => {
+      const aIsInit = a.txid === initTxId;
+      const bIsInit = b.txid === initTxId;
+
+      // If one is init and other isn't, init goes to bottom
+      if (aIsInit && !bIsInit) return 1;
+      if (!aIsInit && bIsInit) return -1;
+
+      // Otherwise sort by block height (most recent first)
+      return (b.blockheight || 0) - (a.blockheight || 0);
+    });
+  }, []);
+
+  // Fetch transactions for initial proofs only
   useEffect(() => {
-    async function fetchTransactions() {
-      if (!verifier) {
-        setLoadingTransactions(false);
+    async function fetchInitialTransactions() {
+      if (!verifier || proofs.length === 0) {
         return;
       }
 
@@ -121,21 +160,18 @@ export function VerifierPage({ verifierId }) {
         const initTxId = verifier.verifier_id ? verifier.verifier_id.split(':')[0] : null;
 
         // Get unique transaction IDs from proofs
-        const proofTxIds = proofs.map(proof => proof.txid);
+        const proofTxIds = [...new Set(proofs.map(proof => proof.txid))];
 
-        // Combine init tx + proof txs (removing duplicates)
-        const allTxIds = initTxId
-          ? [...new Set([initTxId, ...proofTxIds])]
-          : [...new Set(proofTxIds)];
+        // Filter out txids we've already fetched
+        const newTxIds = proofTxIds.filter(txid => !fetchedTxIdsRef.current.has(txid));
 
-        if (allTxIds.length === 0) {
-          setTransactions([]);
+        if (newTxIds.length === 0) {
           setLoadingTransactions(false);
           return;
         }
 
-        // Fetch each transaction
-        const txPromises = allTxIds.map(txid =>
+        // Fetch each new transaction
+        const txPromises = newTxIds.map(txid =>
           getRawTransaction(txid).catch(err => {
             console.error(`Error fetching transaction ${txid}:`, err);
             return null;
@@ -144,23 +180,17 @@ export function VerifierPage({ verifierId }) {
 
         const txData = await Promise.all(txPromises);
 
-        // Filter out null values
-        const validTxs = txData.filter(tx => tx !== null);
-
-        // Sort by block height (most recent first), with init transaction at the bottom
-        validTxs.sort((a, b) => {
-          const aIsInit = a.txid === initTxId;
-          const bIsInit = b.txid === initTxId;
-
-          // If one is init and other isn't, init goes to bottom
-          if (aIsInit && !bIsInit) return 1;
-          if (!aIsInit && bIsInit) return -1;
-
-          // Otherwise sort by block height (most recent first)
-          return (b.blockheight || 0) - (a.blockheight || 0);
+        // Filter out null values and track fetched txids
+        const validTxs = txData.filter(tx => {
+          if (tx !== null) {
+            fetchedTxIdsRef.current.add(tx.txid);
+            return true;
+          }
+          return false;
         });
 
-        setTransactions(validTxs);
+        // Append to existing transactions and sort
+        setTransactions(prev => sortTransactions([...prev, ...validTxs], initTxId));
         setLoadingTransactions(false);
       } catch (err) {
         console.error('Error fetching transactions:', err);
@@ -168,8 +198,82 @@ export function VerifierPage({ verifierId }) {
       }
     }
 
-    fetchTransactions();
-  }, [verifier, proofs]);
+    fetchInitialTransactions();
+  }, [verifier, proofs, sortTransactions]);
+
+  // Add init transaction when all proofs are loaded
+  useEffect(() => {
+    async function addInitTransaction() {
+      if (!verifier || !allProofsLoaded) return;
+
+      const initTxId = verifier.verifier_id ? verifier.verifier_id.split(':')[0] : null;
+      if (!initTxId || fetchedTxIdsRef.current.has(initTxId)) return;
+
+      try {
+        const initTx = await getRawTransaction(initTxId);
+        if (initTx) {
+          fetchedTxIdsRef.current.add(initTx.txid);
+          setTransactions(prev => sortTransactions([...prev, initTx], initTxId));
+        }
+      } catch (err) {
+        console.error('Error fetching init transaction:', err);
+      }
+    }
+
+    addInitTransaction();
+  }, [verifier, allProofsLoaded, sortTransactions]);
+
+  // Load more proofs and their transactions
+  async function loadMoreProofs() {
+    if (!verifier || loadingMoreProofs || allProofsLoaded) return;
+
+    try {
+      setLoadingMoreProofs(true);
+
+      const moreProofs = await getStarkProofsByVerifier(verifier.verifier_id, {
+        limit: PAGE_SIZE,
+        offset: proofsOffset
+      });
+
+      if (Array.isArray(moreProofs) && moreProofs.length > 0) {
+        // Get unique new txids from the new proofs
+        const newProofTxIds = [...new Set(moreProofs.map(proof => proof.txid))];
+        const txIdsToFetch = newProofTxIds.filter(txid => !fetchedTxIdsRef.current.has(txid));
+
+        // Fetch the new transactions
+        if (txIdsToFetch.length > 0) {
+          const txPromises = txIdsToFetch.map(txid =>
+            getRawTransaction(txid).catch(err => {
+              console.error(`Error fetching transaction ${txid}:`, err);
+              return null;
+            })
+          );
+
+          const txData = await Promise.all(txPromises);
+          const validNewTxs = txData.filter(tx => {
+            if (tx !== null) {
+              fetchedTxIdsRef.current.add(tx.txid);
+              return true;
+            }
+            return false;
+          });
+
+          const initTxId = verifier.verifier_id ? verifier.verifier_id.split(':')[0] : null;
+
+          // Append new transactions and re-sort
+          setTransactions(prev => sortTransactions([...prev, ...validNewTxs], initTxId));
+        }
+
+        setProofs(prev => [...prev, ...moreProofs]);
+        setProofsOffset(prev => prev + PAGE_SIZE);
+      }
+
+      setLoadingMoreProofs(false);
+    } catch (err) {
+      console.error('Error loading more proofs:', err);
+      setLoadingMoreProofs(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -306,18 +410,41 @@ export function VerifierPage({ verifierId }) {
 
       {/* TZE Transactions List */}
       <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">
-        {transactions.length} TZE Transaction{transactions.length !== 1 ? 's' : ''}
+        {transactions.length} of {totalTzeCount} TZE Transaction{totalTzeCount !== 1 ? 's' : ''}
       </h2>
       <div className="flex flex-col gap-4">
         {loadingTransactions ? (
           // Loading skeletons
-          Array.from({ length: 3 }).map((_, index) => (
+          Array.from({ length: Math.min(PAGE_SIZE, 3) }).map((_, index) => (
             <TransactionCard key={index} tx={null} isLoading={true} />
           ))
         ) : transactions.length > 0 ? (
-          transactions.map(tx => (
-            <TransactionCard key={tx.txid} tx={tx} />
-          ))
+          <>
+            {transactions.map(tx => (
+              <TransactionCard key={tx.txid} tx={tx} />
+            ))}
+
+            {/* Load More Button - only show if there are more proofs to load */}
+            {!allProofsLoaded && (
+              <button
+                onClick={loadMoreProofs}
+                disabled={loadingMoreProofs}
+                className="mt-4 px-6 py-3 rounded-xl border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] hover:bg-[rgba(255,137,70,0.1)] hover:border-[rgba(255,137,70,0.5)] transition-all duration-200 text-accent-strong font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingMoreProofs ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Loading...
+                  </span>
+                ) : (
+                  'Load More TZE Transactions'
+                )}
+              </button>
+            )}
+          </>
         ) : (
           <div className="py-20 px-8 text-center bg-[rgba(8,8,12,0.9)] border border-[rgba(255,137,70,0.2)] rounded-2xl">
             <p className="text-xl text-muted font-mono m-0">

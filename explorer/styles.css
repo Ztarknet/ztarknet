@@ -71,6 +71,15 @@
     background: rgba(255, 137, 70, 0.15);
   }
 
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
   /* Reveal on scroll animations */
   .reveal-on-scroll {
     opacity: 0;
