@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Header } from '@components/common/Header';
+import { Footer } from '@components/common/Footer';
 import { FlickeringGrid } from '@components/common/FlickeringGrid';
 import { HomePage } from '@pages/HomePage';
 import { ZtarknetConnectorProvider } from '@context/ZtarknetConnector';
@@ -39,9 +40,10 @@ function App() {
         maxOpacity={0.2}
         flickerChance={0.1}
       />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col h-screen min-h-[600px]">
         <Header />
         {content}
+        <Footer />
       </div>
     </ZtarknetConnectorProvider>
   );
