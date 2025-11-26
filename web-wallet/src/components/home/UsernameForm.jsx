@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useZtarknetConnector } from '@/context/ZtarknetConnector';
 
-export function UsernameForm({ accountAddress }) {
+export function UsernameForm({ accountAddress, onUsernameChanged, optimisticUsername }) {
   const { username, claimUsername, isUsernameClaimed, refreshUsername } = useZtarknetConnector();
+  // Use optimistic username if provided, otherwise fall back to context username
+  const displayUsername = optimisticUsername || username;
   const [newUsername, setNewUsername] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -77,10 +79,16 @@ export function UsernameForm({ accountAddress }) {
     setIsSubmitting(true);
 
     try {
-      const txHash = await claimUsername(newUsername);
+      const claimedUsername = newUsername; // Store before clearing
+      const txHash = await claimUsername(claimedUsername);
       if (txHash) {
         setSuccess(`Username claimed successfully! Transaction hash: ${txHash}`);
         setNewUsername('');
+
+        // Optimistically update username in accounts list
+        if (onUsernameChanged) {
+          onUsernameChanged(claimedUsername);
+        }
 
         // Refresh username after a short delay
         setTimeout(() => {
@@ -108,10 +116,10 @@ export function UsernameForm({ accountAddress }) {
   return (
     <div className="space-y-4 min-w-0">
       {/* Current Username */}
-      {username && (
+      {displayUsername && (
         <div className="p-4 rounded-lg bg-[rgba(255,107,26,0.1)] border border-[rgba(255,137,70,0.2)]">
           <div className="text-sm text-muted mb-1">Current Username</div>
-          <div className="text-lg font-semibold text-foreground">{username}</div>
+          <div className="text-lg font-semibold text-foreground">{displayUsername}</div>
         </div>
       )}
 
@@ -119,7 +127,7 @@ export function UsernameForm({ accountAddress }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">
-            {username ? 'Change Username' : 'Claim Username'}
+            {displayUsername ? 'Change Username' : 'Claim Username'}
           </label>
           <input
             type="text"
@@ -190,7 +198,7 @@ export function UsernameForm({ accountAddress }) {
           disabled={isSubmitting || !!validationError || !newUsername || isCheckingUsername}
           className="w-full py-3 px-4 rounded-full font-semibold tracking-wide border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:bg-[rgba(255,107,26,0.15)] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
         >
-          {isSubmitting ? 'Claiming...' : username ? 'Change Username' : 'Claim Username'}
+          {isSubmitting ? 'Claiming...' : displayUsername ? 'Change Username' : 'Claim Username'}
         </button>
       </form>
 

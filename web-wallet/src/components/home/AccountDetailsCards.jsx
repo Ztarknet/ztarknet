@@ -3,7 +3,7 @@ import { useZtarknetConnector } from '@/context/ZtarknetConnector';
 import { StatCard } from '@/components/common/StatCard';
 import { STORAGE_KEYS } from '@/config/ztarknet';
 
-export function AccountDetailsCards({ accountAddress }) {
+export function AccountDetailsCards({ accountAddress, optimisticBalanceOffset = 0, optimisticTxCount = 0 }) {
   const { getBalance, provider } = useZtarknetConnector();
   const [balance, setBalance] = useState(null);
   const [nonce, setNonce] = useState(null);
@@ -73,17 +73,25 @@ export function AccountDetailsCards({ accountAddress }) {
     );
   }
 
+  // Calculate displayed balance with optimistic offset
+  const displayedBalance = balance !== null
+    ? Math.max(0, parseFloat(balance) - optimisticBalanceOffset).toFixed(4)
+    : null;
+
+  // Calculate displayed nonce with optimistic count
+  const displayedNonce = nonce !== null ? nonce + optimisticTxCount : null;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
       <StatCard
         label="Account Balance"
-        value={balance ? `${balance} STRK` : 'Loading...'}
+        value={displayedBalance ? `${displayedBalance} STRK` : 'Loading...'}
         description="Fee token balance"
         isLoading={isLoading}
       />
       <StatCard
         label="Total Transactions"
-        value={nonce !== null ? nonce : 'Loading...'}
+        value={displayedNonce !== null ? displayedNonce : 'Loading...'}
         description="Number of transactions sent"
         isLoading={isLoading}
       />

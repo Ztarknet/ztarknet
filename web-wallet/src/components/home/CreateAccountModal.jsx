@@ -97,7 +97,7 @@ export function CreateAccountModal({ isOpen, onClose, onAccountCreated }) {
             setTimeout(() => {
               onAccountCreated(privateKey, accountAddress);
               onClose();
-            }, 500);
+            }, 8000);
           }
         } catch (err) {
           console.error('Failed to check balance:', err);
@@ -249,7 +249,7 @@ export function CreateAccountModal({ isOpen, onClose, onAccountCreated }) {
                   <div className="flex-1">
                     <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Wait for funds</h4>
                     <p className="text-xs sm:text-sm text-muted">
-                      Wait a few seconds for the funds to be sent from the faucet
+                      Wait a 5-10 seconds for the funds to be sent from the faucet
                     </p>
                   </div>
                 </div>

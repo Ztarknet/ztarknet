@@ -28,22 +28,26 @@ export function AppsGrid({ selectedAddress }) {
   const handleAppClick = (e, app) => {
     e.preventDefault();
 
-    if (!selectedAddress) {
-      // No account selected, just open the app
-      window.open(app.url, '_blank', 'noreferrer');
-      return;
-    }
+    // For now, always just open the app directly (connect feature temporarily disabled)
+    window.open(app.url, '_blank', 'noreferrer');
 
-    const isConnected = isAccountConnectedToApp(app.appName, selectedAddress);
+    // TODO: Re-enable connection modal when feature is ready
+    // if (!selectedAddress) {
+    //   // No account selected, just open the app
+    //   window.open(app.url, '_blank', 'noreferrer');
+    //   return;
+    // }
 
-    if (isConnected) {
-      // Already connected, open the app
-      window.open(app.url, '_blank', 'noreferrer');
-    } else {
-      // Not connected, show modal
-      setModalApp(app);
-      setIsModalOpen(true);
-    }
+    // const isConnected = isAccountConnectedToApp(app.appName, selectedAddress);
+
+    // if (isConnected) {
+    //   // Already connected, open the app
+    //   window.open(app.url, '_blank', 'noreferrer');
+    // } else {
+    //   // Not connected, show modal
+    //   setModalApp(app);
+    //   setIsModalOpen(true);
+    // }
   };
 
   const handleConnect = () => {

@@ -13,7 +13,7 @@ const tabs = [
   { id: 'history', label: 'History', icon: '📜' },
 ];
 
-export function ActionTabs({ accountAddress, initialTab = 'send', initialSendValues = null }) {
+export function ActionTabs({ accountAddress, initialTab = 'send', initialSendValues = null, onTransactionSent, onUsernameChanged, optimisticUsername }) {
   const [activeTab, setActiveTab] = useState(initialTab);
 
   // Update active tab when initialTab prop changes
@@ -26,13 +26,13 @@ export function ActionTabs({ accountAddress, initialTab = 'send', initialSendVal
   const renderTabContent = () => {
     switch (activeTab) {
       case 'send':
-        return <SendForm accountAddress={accountAddress} initialValues={initialSendValues} />;
+        return <SendForm accountAddress={accountAddress} initialValues={initialSendValues} onTransactionSent={onTransactionSent} />;
       case 'receive':
         return <ReceiveForm accountAddress={accountAddress} />;
       case 'fund':
         return <FundInstructions accountAddress={accountAddress} />;
       case 'username':
-        return <UsernameForm accountAddress={accountAddress} />;
+        return <UsernameForm accountAddress={accountAddress} onUsernameChanged={onUsernameChanged} optimisticUsername={optimisticUsername} />;
       case 'history':
         return <TransactionHistory accountAddress={accountAddress} />;
       default:

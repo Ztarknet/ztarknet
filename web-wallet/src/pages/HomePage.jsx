@@ -7,6 +7,8 @@ import { ActionTabs } from '@/components/home/ActionTabs';
 import { AppsGrid } from '@/components/home/AppsGrid';
 import { CreateAccountModal } from '@/components/home/CreateAccountModal';
 import { DeleteAccountModal } from '@/components/home/DeleteAccountModal';
+import { AccountSettingsModal } from '@/components/home/AccountSettingsModal';
+import { ImportAccountModal } from '@/components/home/ImportAccountModal';
 
 export function HomePage() {
   const { connectStorageAccount, storePrivateKey, deployAccount, username, getUsernameForAddress, getAvailableKeys, getPrivateKey } = useZtarknetConnector();
@@ -14,8 +16,13 @@ export function HomePage() {
   const [selectedUsername, setSelectedUsername] = useState(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [settingsAccount, setSettingsAccount] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [deepLinkParams, setDeepLinkParams] = useState(null);
+  const [optimisticBalanceOffset, setOptimisticBalanceOffset] = useState(0);
+  const [optimisticTxCount, setOptimisticTxCount] = useState(0);
 
   // Check URL parameters on mount (for receive form deep links)
   useEffect(() => {
@@ -57,10 +64,25 @@ export function HomePage() {
   const handleAccountSelect = async (privateKey, address) => {
     await connectStorageAccount(privateKey);
     setSelectedAddress(address);
+    // Reset optimistic values when switching accounts
+    setOptimisticBalanceOffset(0);
+    setOptimisticTxCount(0);
 
     // Fetch username for this address
     const accountUsername = await getUsernameForAddress(address);
     setSelectedUsername(accountUsername || `Account-${address.slice(-8)}`);
+  };
+
+  // Handle optimistic balance and tx count update when transaction is sent
+  const handleTransactionSent = (amount) => {
+    setOptimisticBalanceOffset(prev => prev + amount);
+    setOptimisticTxCount(prev => prev + 1);
+  };
+
+  // Handle optimistic username update when username is changed
+  const handleUsernameChanged = (newUsername) => {
+    setSelectedUsername(newUsername);
+    // Don't refresh - let the optimistic username display via the prop
   };
 
   const handleCreateAccount = () => {
@@ -101,6 +123,23 @@ export function HomePage() {
     setRefreshKey(prev => prev + 1);
   };
 
+  const handleOpenSettings = (account) => {
+    setSettingsAccount(account);
+    setIsSettingsModalOpen(true);
+  };
+
+  const handleOpenImport = () => {
+    setIsImportModalOpen(true);
+  };
+
+  const handleAccountImported = async (privateKey, address) => {
+    // Connect to the imported account
+    await handleAccountSelect(privateKey, address);
+
+    // Refresh the accounts list
+    setRefreshKey(prev => prev + 1);
+  };
+
   return (
     <main className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       <div className="max-w-[1600px] w-full mx-auto">
@@ -112,6 +151,9 @@ export function HomePage() {
               onAccountSelect={handleAccountSelect}
               selectedAddress={selectedAddress}
               onCreateAccount={handleCreateAccount}
+              onOpenSettings={handleOpenSettings}
+              onOpenImport={handleOpenImport}
+              optimisticUsername={selectedUsername}
             />
           </div>
 
@@ -124,13 +166,20 @@ export function HomePage() {
             />
 
             {/* Account Details Cards */}
-            <AccountDetailsCards accountAddress={selectedAddress} />
+            <AccountDetailsCards
+              accountAddress={selectedAddress}
+              optimisticBalanceOffset={optimisticBalanceOffset}
+              optimisticTxCount={optimisticTxCount}
+            />
 
             {/* Action Tabs (Send, Receive, Fund, Username, History) */}
             <ActionTabs
               accountAddress={selectedAddress}
               initialTab={deepLinkParams?.tab}
               initialSendValues={deepLinkParams?.sendValues}
+              onTransactionSent={handleTransactionSent}
+              onUsernameChanged={handleUsernameChanged}
+              optimisticUsername={selectedUsername}
             />
 
             {/* Apps Grid */}
@@ -152,6 +201,19 @@ export function HomePage() {
         accountAddress={selectedAddress}
         username={selectedUsername}
         onAccountDeleted={handleAccountDeleted}
+      />
+
+      <AccountSettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        accountAddress={settingsAccount?.address}
+        privateKey={settingsAccount ? getPrivateKey(settingsAccount.keyId) : null}
+      />
+
+      <ImportAccountModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onAccountImported={handleAccountImported}
       />
     </main>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useZtarknetConnector } from '@/context/ZtarknetConnector';
 
-export function SendForm({ accountAddress, initialValues = null }) {
+export function SendForm({ accountAddress, initialValues = null, onTransactionSent }) {
   const { invokeContract } = useZtarknetConnector();
   const [toAddress, setToAddress] = useState(initialValues?.to || '');
   const [amount, setAmount] = useState(initialValues?.amount || '');
@@ -50,6 +50,11 @@ export function SendForm({ accountAddress, initialValues = null }) {
 
       const response = await invokeContract(transferCall);
       setSuccess(`Transaction sent! Hash: ${response.transaction_hash}`);
+
+      // Optimistically update balance
+      if (onTransactionSent) {
+        onTransactionSent(parseFloat(amount));
+      }
 
       // Reset form
       setToAddress('');
