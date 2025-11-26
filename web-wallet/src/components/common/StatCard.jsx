@@ -24,7 +24,7 @@ export function StatCard({ label, value, description, isLoading = false, valueSt
 
   return (
     <div
-      className="reveal-on-scroll reveal-from-left relative pt-7 pr-5 pb-5 pl-7 border border-[rgba(255,137,70,0.2)] rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,137,70,0.05),0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(255,107,26,0.3),inset_0_0_0_1px_rgba(255,137,70,0.1)]"
+      className="relative pt-7 pr-5 pb-5 pl-7 border border-[rgba(255,137,70,0.2)] rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,137,70,0.05),0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(255,107,26,0.3),inset_0_0_0_1px_rgba(255,137,70,0.1)]"
       style={{
         background: 'radial-gradient(circle at top left, rgba(255, 107, 26, 0.08), rgba(8, 8, 12, 0.9) 60%)'
       }}

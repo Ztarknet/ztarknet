@@ -40,9 +40,12 @@ function App() {
         maxOpacity={0.2}
         flickerChance={0.1}
       />
-      <div className="flex-1 flex flex-col h-screen min-h-[600px]">
+      <div className="flex flex-col min-h-screen">
         <Header />
-        {content}
+        <div className="h-24" />
+        <div className="flex-1">
+          {content}
+        </div>
         <Footer />
       </div>
     </ZtarknetConnectorProvider>
