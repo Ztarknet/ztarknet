@@ -28,21 +28,21 @@ export function FundInstructions({ accountAddress }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-w-0">
       <div className="space-y-4">
         {/* Step 1 */}
         <div className="flex gap-4">
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[rgba(255,107,26,0.2)] border border-[rgba(255,137,70,0.4)] flex items-center justify-center font-bold text-foreground">
             1
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-foreground mb-2">Copy Your Account Address</h3>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={accountAddress}
                 readOnly
-                className="flex-1 p-3 rounded-lg bg-[rgba(8,8,12,0.6)] border border-[rgba(255,137,70,0.2)] text-foreground font-mono text-sm truncate focus:outline-none"
+                className="flex-1 min-w-0 p-3 rounded-lg bg-[rgba(8,8,12,0.6)] border border-[rgba(255,137,70,0.2)] text-foreground font-mono text-sm truncate focus:outline-none"
               />
               <button
                 onClick={handleCopyAddress}

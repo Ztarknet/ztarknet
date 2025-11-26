@@ -48,9 +48,9 @@ export function ReceiveForm({ accountAddress }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 min-w-0">
       {/* Token Selector (placeholder for now) */}
-      <div>
+      <div className="min-w-0">
         <label className="block text-sm font-medium text-foreground mb-2">
           Token
         </label>
@@ -60,7 +60,7 @@ export function ReceiveForm({ accountAddress }) {
       </div>
 
       {/* Amount (Optional) */}
-      <div>
+      <div className="min-w-0">
         <label className="block text-sm font-medium text-foreground mb-2">
           Amount (Optional)
         </label>
@@ -75,16 +75,16 @@ export function ReceiveForm({ accountAddress }) {
       </div>
 
       {/* Shareable Link */}
-      <div>
+      <div className="min-w-0">
         <label className="block text-sm font-medium text-foreground mb-2">
           Shareable Link
         </label>
-        <div className="flex gap-2">
+        <div className="flex gap-2 min-w-0">
           <input
             type="text"
             value={shareableLink}
             readOnly
-            className="flex-1 p-3 rounded-lg bg-[rgba(8,8,12,0.6)] border border-[rgba(255,137,70,0.2)] text-muted font-mono text-sm truncate focus:outline-none"
+            className="flex-1 min-w-0 p-3 rounded-lg bg-[rgba(8,8,12,0.6)] border border-[rgba(255,137,70,0.2)] text-muted font-mono text-sm truncate focus:outline-none"
           />
           <button
             onClick={handleCopyLink}

@@ -4,26 +4,26 @@ import { GlowingEffect } from '@/components/common/GlowingEffect';
 const apps = [
   {
     id: 'art-peace',
-    name: 'Art/Peace',
-    description: 'Collaborative pixel art canvas on Ztarknet',
+    name: 'zart/peace',
+    description: 'Collaborative pixel art on Ztarknet. Privacy meets art!',
     url: 'https://ztarknet.art-peace.net',
-    icon: '🎨',
+    icon: '/zart-peace-logo.png',
   },
   // Add more apps here as they become available
 ];
 
 export function AppsGrid() {
   return (
-    <div>
-      <h3 className="text-xl font-semibold text-foreground mb-4">Ztarknet Apps</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="min-w-0">
+      <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-3 sm:mb-4">Ztarknet Apps</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
         {apps.map((app) => (
           <a
             key={app.id}
             href={app.url}
             target="_blank"
             rel="noreferrer"
-            className="relative group block p-6 border border-[rgba(255,137,70,0.2)] rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,137,70,0.05),0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(255,107,26,0.3),inset_0_0_0_1px_rgba(255,137,70,0.1)] cursor-pointer"
+            className="relative group block p-5 sm:p-6 border border-[rgba(255,137,70,0.2)] rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,137,70,0.05),0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(255,107,26,0.3),inset_0_0_0_1px_rgba(255,137,70,0.1)] cursor-pointer text-center"
             style={{
               background: 'radial-gradient(circle at top left, rgba(255, 107, 26, 0.08), rgba(8, 8, 12, 0.9) 60%)'
             }}
@@ -31,15 +31,21 @@ export function AppsGrid() {
             <GlowingEffect proximity={64} spread={30} />
 
             {/* App Icon */}
-            <div className="text-5xl mb-4">{app.icon}</div>
+            <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 flex justify-center">
+              {app.icon.startsWith('/') ? (
+                <img src={app.icon} alt={app.name} className="w-12 h-12 sm:w-16 sm:h-16 object-contain" />
+              ) : (
+                app.icon
+              )}
+            </div>
 
             {/* App Name */}
-            <h4 className="text-lg font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
+            <h4 className="text-base sm:text-lg font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
               {app.name}
             </h4>
 
             {/* App Description */}
-            <p className="text-sm text-muted leading-relaxed">
+            <p className="text-xs sm:text-sm text-muted leading-relaxed">
               {app.description}
             </p>
 

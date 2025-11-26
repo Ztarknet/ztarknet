@@ -163,8 +163,8 @@ export function CreateAccountModal({ isOpen, onClose, onAccountCreated }) {
             }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-[rgba(255,137,70,0.2)]">
-              <h2 className="text-2xl font-bold text-foreground">Create New Account</h2>
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[rgba(255,137,70,0.2)]">
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">Create New Account</h2>
               <button
                 onClick={handleCancel}
                 className="text-muted hover:text-foreground transition-colors"
@@ -177,35 +177,35 @@ export function CreateAccountModal({ isOpen, onClose, onAccountCreated }) {
             </div>
 
             {/* Content */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {error && (
                 <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
                   {error}
                 </div>
               )}
 
-              <div className="space-y-6">
-                <p className="text-muted">
+              <div className="space-y-4 sm:space-y-6">
+                <p className="text-sm sm:text-base text-muted">
                   New accounts need gas tokens to setup. Please follow these steps to get your FREE gas!
                 </p>
 
                 {/* Step 1: Copy Address */}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[rgba(255,107,26,0.2)] border border-[rgba(255,137,70,0.4)] flex items-center justify-center font-bold text-foreground">
+                <div className="flex gap-3 sm:gap-4">
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[rgba(255,107,26,0.2)] border border-[rgba(255,137,70,0.4)] flex items-center justify-center text-sm sm:text-base font-bold text-foreground">
                     1
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-2">Copy your account address</h4>
-                    <div className="flex gap-2">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2">Copy your account address</h4>
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <input
                         type="text"
                         value={accountAddress || ''}
                         readOnly
-                        className="flex-1 p-2 rounded-lg bg-[rgba(8,8,12,0.6)] border border-[rgba(255,137,70,0.2)] text-foreground font-mono text-sm truncate"
+                        className="flex-1 min-w-0 p-2 rounded-lg bg-[rgba(8,8,12,0.6)] border border-[rgba(255,137,70,0.2)] text-foreground font-mono text-xs sm:text-sm truncate"
                       />
                       <button
                         onClick={handleCopyAddress}
-                        className="px-4 rounded-lg font-semibold border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:bg-[rgba(255,107,26,0.15)]"
+                        className="px-4 py-2 rounded-lg text-sm font-semibold border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:bg-[rgba(255,107,26,0.15)] whitespace-nowrap"
                       >
                         {copied ? '✓ Copied' : 'Copy'}
                       </button>
@@ -214,13 +214,13 @@ export function CreateAccountModal({ isOpen, onClose, onAccountCreated }) {
                 </div>
 
                 {/* Step 2: Fund Account */}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[rgba(255,107,26,0.2)] border border-[rgba(255,137,70,0.4)] flex items-center justify-center font-bold text-foreground">
+                <div className="flex gap-3 sm:gap-4">
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[rgba(255,107,26,0.2)] border border-[rgba(255,137,70,0.4)] flex items-center justify-center text-sm sm:text-base font-bold text-foreground">
                     2
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-2">Fund Account</h4>
-                    <p className="text-sm text-muted mb-3">
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2">Fund Account</h4>
+                    <p className="text-xs sm:text-sm text-muted mb-3">
                       Open{' '}
                       <a
                         href="https://faucet.ztarknet.cash"
@@ -234,7 +234,7 @@ export function CreateAccountModal({ isOpen, onClose, onAccountCreated }) {
                     </p>
                     <button
                       onClick={handleOpenFaucet}
-                      className="w-full py-3 px-4 rounded-full font-semibold tracking-wide border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:bg-[rgba(255,107,26,0.15)] hover:-translate-y-0.5"
+                      className="w-full py-2.5 sm:py-3 px-4 rounded-full text-sm sm:text-base font-semibold tracking-wide border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:bg-[rgba(255,107,26,0.15)] hover:-translate-y-0.5"
                     >
                       Open Faucet
                     </button>
@@ -242,13 +242,13 @@ export function CreateAccountModal({ isOpen, onClose, onAccountCreated }) {
                 </div>
 
                 {/* Step 3: Wait for Funds */}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[rgba(255,107,26,0.2)] border border-[rgba(255,137,70,0.4)] flex items-center justify-center font-bold text-foreground">
+                <div className="flex gap-3 sm:gap-4">
+                  <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[rgba(255,107,26,0.2)] border border-[rgba(255,137,70,0.4)] flex items-center justify-center text-sm sm:text-base font-bold text-foreground">
                     3
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Wait for funds</h4>
-                    <p className="text-sm text-muted">
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-1">Wait for funds</h4>
+                    <p className="text-xs sm:text-sm text-muted">
                       Wait a few seconds for the funds to be sent from the faucet
                     </p>
                   </div>

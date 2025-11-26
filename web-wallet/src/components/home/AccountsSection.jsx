@@ -55,35 +55,35 @@ export function AccountsSection({ onAccountSelect, selectedAddress, onCreateAcco
 
   return (
     <div
-      className="flex flex-col max-h-[800px] border border-[rgba(255,137,70,0.2)] rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,137,70,0.05),0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-[16px] overflow-hidden"
+      className="flex flex-col max-h-[600px] sm:max-h-[800px] border border-[rgba(255,137,70,0.2)] rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,137,70,0.05),0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-[16px] overflow-hidden"
       style={{
         background: 'radial-gradient(circle at top left, rgba(255, 107, 26, 0.08), rgba(8, 8, 12, 0.9) 60%)'
       }}
     >
       {/* Header */}
-      <div className="p-6 border-b border-[rgba(255,137,70,0.2)]">
-        <h2 className="text-2xl font-bold text-foreground">Accounts</h2>
+      <div className="p-4 sm:p-6 border-b border-[rgba(255,137,70,0.2)]">
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground">Accounts</h2>
       </div>
 
       {/* Account List */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2">
         {accounts.length === 0 ? (
-          <div className="text-center text-muted py-8">
-            <p>No accounts yet</p>
-            <p className="text-sm mt-2">Create your first account below</p>
+          <div className="text-center text-muted py-6 sm:py-8">
+            <p className="text-sm sm:text-base">No accounts yet</p>
+            <p className="text-xs sm:text-sm mt-2">Create your first account below</p>
           </div>
         ) : (
           accounts.map((account) => (
             <button
               key={account.keyId}
               onClick={() => handleAccountClick(account)}
-              className={`w-full text-left p-4 rounded-lg transition-all duration-200 border ${
+              className={`w-full text-left p-3 sm:p-4 rounded-lg transition-all duration-200 border ${
                 selectedAddress === account.address
                   ? 'bg-[rgba(255,107,26,0.2)] border-[rgba(255,137,70,0.4)]'
                   : 'bg-[rgba(255,107,26,0.05)] border-[rgba(255,137,70,0.1)] hover:bg-[rgba(255,107,26,0.1)] hover:border-[rgba(255,137,70,0.2)]'
               }`}
             >
-              <div className="font-medium text-foreground">{account.username}</div>
+              <div className="text-sm sm:text-base font-medium text-foreground">{account.username}</div>
               <div className="text-xs text-muted mt-1 font-mono truncate">
                 {account.address}
               </div>
@@ -93,10 +93,10 @@ export function AccountsSection({ onAccountSelect, selectedAddress, onCreateAcco
       </div>
 
       {/* Create Account Button */}
-      <div className="p-4 border-t border-[rgba(255,137,70,0.2)]">
+      <div className="p-3 sm:p-4 border-t border-[rgba(255,137,70,0.2)]">
         <button
           onClick={onCreateAccount}
-          className="w-full py-3 px-4 rounded-full font-semibold tracking-wide border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:bg-[rgba(255,107,26,0.15)] hover:-translate-y-0.5"
+          className="w-full py-2.5 sm:py-3 px-4 rounded-full text-sm sm:text-base font-semibold tracking-wide border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:bg-[rgba(255,107,26,0.15)] hover:-translate-y-0.5"
         >
           + Create Account
         </button>

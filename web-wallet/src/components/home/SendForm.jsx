@@ -71,7 +71,7 @@ export function SendForm({ accountAddress, initialValues = null }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 min-w-0">
       {/* Token Selector (placeholder for now) */}
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">

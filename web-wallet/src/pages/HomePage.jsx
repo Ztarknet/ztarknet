@@ -102,11 +102,11 @@ export function HomePage() {
   };
 
   return (
-    <main className="px-8 py-8">
+    <main className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       <div className="max-w-[1600px] w-full mx-auto">
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           {/* Left 1/3: Accounts Section */}
-          <div className="w-full lg:w-1/3 lg:min-w-[300px]">
+          <div className="w-full lg:w-1/3 lg:min-w-[260px] lg:max-w-[420px]">
             <AccountsSection
               key={refreshKey}
               onAccountSelect={handleAccountSelect}
@@ -116,7 +116,7 @@ export function HomePage() {
           </div>
 
           {/* Right 2/3: Multiple Sections */}
-          <div className="flex-1 w-full space-y-6">
+          <div className="flex-1 w-full min-w-0 space-y-4 sm:space-y-6">
             {/* Top Right Action Buttons */}
             <AccountActionButtons
               accountAddress={selectedAddress}

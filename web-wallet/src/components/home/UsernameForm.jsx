@@ -106,7 +106,7 @@ export function UsernameForm({ accountAddress }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 min-w-0">
       {/* Current Username */}
       {username && (
         <div className="p-4 rounded-lg bg-[rgba(255,107,26,0.1)] border border-[rgba(255,137,70,0.2)]">
