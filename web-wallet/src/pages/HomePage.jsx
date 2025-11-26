@@ -134,7 +134,7 @@ export function HomePage() {
             />
 
             {/* Apps Grid */}
-            <AppsGrid />
+            <AppsGrid selectedAddress={selectedAddress} />
           </div>
         </div>
       </div>

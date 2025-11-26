@@ -17,7 +17,8 @@ export function Header() {
 
   const navLinks = [
     { name: 'Landing', href: 'https://ztarknet.cash', external: true },
-    { name: 'Explorer', href: 'https://explorer.ztarknet.cash', external: true },
+    { name: 'Zcash Explorer', href: 'https://explorer.ztarknet.cash/', external: true },
+    { name: 'Ztarknet Explorer', href: 'https://explorer-zstarknet.d.karnot.xyz/', external: true },
     { name: 'Faucet', href: 'https://faucet.ztarknet.cash', external: true },
   ];
 
