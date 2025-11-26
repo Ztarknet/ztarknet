@@ -9,6 +9,7 @@ import { CreateAccountModal } from '@/components/home/CreateAccountModal';
 import { DeleteAccountModal } from '@/components/home/DeleteAccountModal';
 import { AccountSettingsModal } from '@/components/home/AccountSettingsModal';
 import { ImportAccountModal } from '@/components/home/ImportAccountModal';
+import { SendModal } from '@/components/home/SendModal';
 
 export function HomePage() {
   const { connectStorageAccount, storePrivateKey, deployAccount, username, getUsernameForAddress, getAvailableKeys, getPrivateKey } = useZtarknetConnector();
@@ -18,9 +19,10 @@ export function HomePage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isSendModalOpen, setIsSendModalOpen] = useState(false);
+  const [sendModalParams, setSendModalParams] = useState({ toAddress: '', amount: '' });
   const [settingsAccount, setSettingsAccount] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [deepLinkParams, setDeepLinkParams] = useState(null);
   const [optimisticBalanceOffset, setOptimisticBalanceOffset] = useState(0);
   const [optimisticTxCount, setOptimisticTxCount] = useState(0);
 
@@ -31,15 +33,13 @@ export function HomePage() {
     const toAddress = params.get('to');
     const amount = params.get('amount');
 
-    // Store deep link parameters to pass to ActionTabs
+    // Open SendModal if it's a send action
     if (action === 'send' && toAddress) {
-      setDeepLinkParams({
-        tab: 'send',
-        sendValues: {
-          to: toAddress,
-          amount: amount || ''
-        }
+      setSendModalParams({
+        toAddress: toAddress,
+        amount: amount || ''
       });
+      setIsSendModalOpen(true);
     }
   }, []);
 
@@ -62,8 +62,14 @@ export function HomePage() {
   }, [getAvailableKeys, getPrivateKey, selectedAddress]);
 
   const handleAccountSelect = async (privateKey, address) => {
+    // Clear the username first to prevent showing wrong username
+    setSelectedUsername(null);
+
+    // Connect to account
     await connectStorageAccount(privateKey);
+
     setSelectedAddress(address);
+
     // Reset optimistic values when switching accounts
     setOptimisticBalanceOffset(0);
     setOptimisticTxCount(0);
@@ -175,8 +181,6 @@ export function HomePage() {
             {/* Action Tabs (Send, Receive, Fund, Username, History) */}
             <ActionTabs
               accountAddress={selectedAddress}
-              initialTab={deepLinkParams?.tab}
-              initialSendValues={deepLinkParams?.sendValues}
               onTransactionSent={handleTransactionSent}
               onUsernameChanged={handleUsernameChanged}
               optimisticUsername={selectedUsername}
@@ -214,6 +218,13 @@ export function HomePage() {
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
         onAccountImported={handleAccountImported}
+      />
+
+      <SendModal
+        isOpen={isSendModalOpen}
+        onClose={() => setIsSendModalOpen(false)}
+        toAddress={sendModalParams.toAddress}
+        amount={sendModalParams.amount}
       />
     </main>
   );

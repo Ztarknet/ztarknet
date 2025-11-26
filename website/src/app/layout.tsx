@@ -21,6 +21,10 @@ export const metadata: Metadata = {
   title: "Ztarknet — Starknet L2 anchored to Zcash",
   description:
     "Ztarknet is a cypherpunk proof-of-concept exploring a Starknet-style Layer 2 that settles on Zcash via a Transparent Zcash Extension (TZE) verifier for Circle STARK proofs.",
+  icons: {
+    icon: "/ztarknet-logo.png",
+    apple: "/ztarknet-logo.png",
+  },
   keywords: [
     "Ztarknet",
     "Starknet",
