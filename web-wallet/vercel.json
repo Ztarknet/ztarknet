@@ -1,0 +1,35 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "env": {
+    "VITE_FEE_TOKEN": "0x1ad102b4c4b3e40a51b6fb8a446275d600555bd63a95cdceed3e5cef8a6bc1d",
+    "VITE_ZTARKNET_ACCOUNT_CLASS_HASH": "0x01484c93b9d6cf61614d698ed069b3c6992c32549194fc3465258c2194734189",
+    "VITE_ZTARKNET_NETWORK": "ZTARKNET_TESTNET",
+    "VITE_USERNAME_REGISTRY_CONTRACT_ADDRESS": "0x58ea7c38b6d250ea19afa6917570bf8c97c0ae8a3a438a29e3cc3552a51ddfa"
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}
