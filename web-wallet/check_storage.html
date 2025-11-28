@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Storage Checker</title></head>
+<body>
+<h1>LocalStorage Keys</h1>
+<pre id="output"></pre>
+<script>
+let output = '';
+for (let i = 0; i < localStorage.length; i++) {
+  const key = localStorage.key(i);
+  const value = localStorage.getItem(key);
+  output += `${key}:\n${value}\n\n`;
+}
+document.getElementById('output').textContent = output;
+</script>
+</body>
+</html>

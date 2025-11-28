@@ -42,6 +42,10 @@ export {
   getTransactionInputs,
   getTransactionInput,
   getInputSources,
+  // Transaction Graph - Count
+  countTransactions,
+  countOutputs,
+  countInputs,
   // Transaction Graph - Graph
   getTransactionGraph,
 } from './tx_graph.js';
@@ -62,6 +66,9 @@ export {
   getAccountTransactionCount,
   getAccountTransaction,
   getTransactionAccounts,
+  // Accounts - Count
+  countAccounts,
+  countAccountTransactions,
 } from './accounts.js';
 
 export {
@@ -109,4 +116,10 @@ export {
   getFactsByInnerProgramHash,
   getRecentFacts,
   getStateTransition,
+  // STARKS - Count
+  countVerifiers,
+  countStarkProofs,
+  countFacts,
+  // STARKS - Aggregations
+  getSumProofSizesByVerifier,
 } from './starks.js';

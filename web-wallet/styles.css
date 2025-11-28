@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -52,7 +52,7 @@
   }
 
   .skeleton::after {
-    content: "";
+    content: '';
     @apply absolute top-0 right-0 bottom-0 left-0;
     transform: translateX(-100%);
     background: linear-gradient(
@@ -69,15 +69,6 @@
     @apply select-none rounded;
     color: transparent !important;
     background: rgba(255, 137, 70, 0.15);
-  }
-
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
   }
 
   /* Reveal on scroll animations */
