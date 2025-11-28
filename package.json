@@ -1,0 +1,34 @@
+{
+  "name": "ztarknet",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "typecheck": "turbo typecheck",
+    "dev:website": "turbo dev --filter=@ztarknet/website",
+    "dev:explorer": "turbo dev --filter=@ztarknet/explorer"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@workspace/typescript-config": "workspace:*",
+    "turbo": "^2.5.5",
+    "typescript": "5.7.3"
+  },
+  "overrides": {
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  },
+  "packageManager": "bun@1.1.38",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,360 @@
+# TypeScript Standards for Ztarknet Monorepo
+
+## Critical Rules (MUST Follow)
+
+### React 19 Patterns
+
+**❌ NEVER import React for JSX:**
+```typescript
+// BAD
+import React, { useState } from 'react';
+
+// GOOD
+import { useState, useEffect } from 'react';
+```
+
+**✅ React 19 doesn't require the React import for JSX transformation.**
+
+### Component Props - Always Define Interfaces
+
+**❌ Implicit any in props:**
+```typescript
+export function AccountPage({ address }) {
+  // address implicitly has 'any' type
+}
+```
+
+**✅ Explicit interface:**
+```typescript
+interface AccountPageProps {
+  address: string;
+}
+
+export function AccountPage({ address }: AccountPageProps) {
+  // Fully typed
+}
+```
+
+### useState - Always Provide Type Parameters
+
+**❌ Untyped state:**
+```typescript
+const [account, setAccount] = useState(null);
+const [transactions, setTransactions] = useState([]);
+const [loading, setLoading] = useState(true);
+```
+
+**✅ Explicitly typed state:**
+```typescript
+import type { AccountData } from '../types/zindex';
+import type { RpcTransaction } from '../types/transaction';
+
+const [account, setAccount] = useState<AccountData | null>(null);
+const [transactions, setTransactions] = useState<RpcTransaction[]>([]);
+const [loading, setLoading] = useState<boolean>(true);
+```
+
+**Note:** Simple primitives with initial values can use type inference:
+```typescript
+const [loading, setLoading] = useState(false); // infers boolean
+const [count, setCount] = useState(0); // infers number
+```
+
+### Error Handling - Type Guards Required
+
+**❌ Unknown error without guards:**
+```typescript
+catch (err) {
+  console.error('Error:', err);
+  setError(err.message); // err is unknown, this fails
+}
+```
+
+**✅ Proper error handling:**
+```typescript
+catch (err: unknown) {
+  if (err instanceof Error) {
+    console.error('Error:', err.message);
+    setError(err.message);
+  } else {
+    console.error('Error:', err);
+    setError('An error occurred');
+  }
+}
+```
+
+### Array Callbacks - Type All Parameters
+
+**❌ Implicit any in callbacks:**
+```typescript
+transactions.map((tx, index) => (
+  <TransactionCard key={tx.txid} tx={tx} />
+))
+
+proofs.filter(proof => proof.verified)
+```
+
+**✅ Explicitly typed callbacks:**
+```typescript
+import type { RpcTransaction } from '../types/transaction';
+import type { StarkProof } from '../types/zindex';
+
+transactions.map((tx: RpcTransaction, index: number) => (
+  <TransactionCard key={tx.txid} tx={tx} />
+))
+
+proofs.filter((proof: StarkProof) => proof.verified)
+```
+
+### Type Predicates for Filtering Nulls
+
+**✅ Use type predicates when filtering null/undefined:**
+```typescript
+const validTxs = txData.filter((tx): tx is RpcTransaction => tx !== null);
+```
+
+This narrows the type correctly from `(RpcTransaction | null)[]` to `RpcTransaction[]`.
+
+## Available Types in the Codebase
+
+### Transaction Types
+**Location:** `apps/explorer/src/types/transaction.ts`
+
+```typescript
+import type {
+  Transaction,           // Generic transaction type
+  RpcTransaction,       // Alias for Transaction (RPC format)
+  ZindexTransaction,    // Alias for Transaction (Zindex format)
+  TransactionInput,     // Vin
+  TransactionOutput,    // Vout
+  Vin,                  // Alias for TransactionInput
+  Vout,                 // Alias for TransactionOutput
+  ScriptSig,
+  ScriptPubKey,
+  TransactionStats,
+  TransactionKind,
+  TzeData,
+  StarkVerifyPrecondition,
+  StarkVerifyWitness,
+  CompactSizeResult
+} from '../types/transaction';
+```
+
+**Key Properties:**
+- `RpcTransaction` has `height` property (NOT `blockheight`)
+- Use `tx.height` consistently, not `tx.blockheight`
+
+### Zindex API Types
+**Location:** `apps/explorer/src/types/zindex.ts`
+
+```typescript
+import type {
+  AccountData,           // Account information
+  VerifierData,         // Verifier information
+  StarkProof,           // STARK proof data
+  ZtarknetFact,         // Ztarknet fact/state data
+  Transaction,          // Transaction from Zindex
+  BlockSummary,         // Block summary
+  PaginationParams,     // For API pagination
+  QueryParams,          // For API queries
+  TZEGraphNode,
+  TZETransaction,
+  TransactionGraphNode
+} from '../types/zindex';
+```
+
+### Block Types
+**Location:** `apps/explorer/src/types/block.ts`
+
+```typescript
+import type { BlockData } from '../types/block';
+```
+
+### RPC Types
+**Location:** `apps/explorer/src/services/rpc.ts`
+
+```typescript
+import { getBlock, getBlockHash, getRawTransaction, type BlockData } from '@services/rpc';
+```
+
+**Note:** `BlockData` is exported from `rpc.ts`, includes optional `valuePools` property.
+
+## Common Patterns & Solutions
+
+### Pattern 1: Skeleton Loading States
+
+```typescript
+// Skeleton with empty object cast
+Array.from({ length: 3 }).map((_: unknown, index: number) => (
+  <TransactionCard key={index} tx={{} as RpcTransaction} isLoading={true} />
+))
+```
+
+### Pattern 2: Sorting with Optional Properties
+
+```typescript
+validTxs.sort((a: RpcTransaction, b: RpcTransaction) => 
+  (b.height || 0) - (a.height || 0)
+);
+```
+
+### Pattern 3: Vite Environment Variables
+
+**❌ Direct access fails:**
+```typescript
+const endpoint = import.meta.env.VITE_RPC_ENDPOINT; // Error: Property 'env' does not exist
+```
+
+**✅ Proper typing:**
+```typescript
+const endpoint = (import.meta as { env?: { VITE_RPC_ENDPOINT?: string } }).env?.VITE_RPC_ENDPOINT || 'default-url';
+```
+
+### Pattern 4: Extending Interfaces for Compatibility
+
+```typescript
+// PaginationParams needs to be compatible with QueryParams
+export interface PaginationParams extends Record<string, string | number | boolean | undefined | null> {
+  limit?: number;
+  offset?: number;
+}
+```
+
+### Pattern 5: Type-Safe Promise.all with Error Handling
+
+```typescript
+const txPromises = txids.map((txid: string) =>
+  getRawTransaction(txid).catch((err: unknown) => {
+    if (err instanceof Error) {
+      console.error(`Error fetching transaction ${txid}:`, err.message);
+    } else {
+      console.error(`Error fetching transaction ${txid}:`, err);
+    }
+    return null;
+  })
+);
+
+const txData = await Promise.all(txPromises);
+const validTxs = txData.filter((tx): tx is RpcTransaction => tx !== null);
+```
+
+## Import Patterns
+
+### Workspace Imports
+```typescript
+import { Button } from '@workspace/ui/components/button';
+import { formatZEC } from '@utils/formatters';
+import { getAccount } from '@services/zindex/accounts';
+```
+
+### Type-Only Imports
+**Always use `import type` for types to ensure they're removed at compile time:**
+
+```typescript
+// ✅ GOOD
+import type { AccountData } from '../types/zindex';
+import type { RpcTransaction } from '../types/transaction';
+
+// ❌ BAD - imports runtime code
+import { AccountData } from '../types/zindex';
+```
+
+## Component-Specific Patterns
+
+### forwardRef Components
+
+```typescript
+import { forwardRef } from 'react';
+
+interface ButtonProps {
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary';
+}
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, variant = 'primary' }, ref) => (
+    <button ref={ref} className={variant}>
+      {children}
+    </button>
+  )
+);
+
+Button.displayName = 'Button';
+```
+
+### Inline Style Types
+
+```typescript
+<div style={{
+  background: 'radial-gradient(circle, rgba(255, 107, 26, 0.05), rgba(8, 8, 12, 0.9) 80%)'
+} satisfies React.CSSProperties}>
+```
+
+## Migration Checklist
+
+When adding TypeScript to a new file:
+
+- [ ] Remove `import React` if only using JSX
+- [ ] Add props interface for components
+- [ ] Type all `useState` hooks
+- [ ] Add error handling with type guards
+- [ ] Type all array callback parameters
+- [ ] Import types with `import type`
+- [ ] Use existing types from `types/` directory
+- [ ] Verify `height` vs `blockheight` usage
+- [ ] Handle Vite env variables correctly
+- [ ] Use type predicates for filter operations
+- [ ] Test with `bun run build`
+
+## Verification Commands
+
+```bash
+# Check specific package
+bun run build --filter=@ztarknet/explorer
+
+# Check full monorepo
+bun run build
+
+# Run linting
+bun run lint
+
+# Type check only
+bun run typecheck
+```
+
+## Common Errors & Solutions
+
+### Error: 'React' is declared but its value is never read
+**Solution:** Remove the React import, React 19 doesn't need it for JSX.
+
+### Error: Parameter 'x' implicitly has an 'any' type
+**Solution:** Add explicit type annotation: `(x: XType) => {...}`
+
+### Error: Type 'X' is not assignable to type 'SetStateAction<null>'
+**Solution:** Add type parameter to useState: `useState<X | null>(null)`
+
+### Error: Property 'env' does not exist on type 'ImportMeta'
+**Solution:** Use type assertion: `(import.meta as { env?: { VAR?: string } }).env?.VAR`
+
+### Error: Property 'blockheight' does not exist on type 'Transaction'
+**Solution:** Use `height` instead of `blockheight` for RpcTransaction types.
+
+## Code Quality Standards
+
+All TypeScript code MUST:
+- Compile with zero errors under strict mode
+- Have no `any` types (use `unknown` with type guards instead)
+- Have no `@ts-ignore` or `@ts-expect-error` comments
+- Pass Biome linting without errors
+- Follow React 19 patterns (no React import for JSX)
+- Use proper error handling with type guards
+
+## References
+
+- **React 19 Changes:** No React import needed for JSX
+- **Strict Mode:** All code compiles with TypeScript strict mode
+- **Type Definitions:** Located in `apps/explorer/src/types/`
+- **Biome Config:** Root `biome.json` for linting rules
+- **Main Standards:** See `.cursorrules` at repo root
+
+
