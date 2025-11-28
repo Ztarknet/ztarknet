@@ -7,6 +7,9 @@ This directory contains project-specific rules for AI-assisted development with 
 ### `typescript.rule`
 **Comprehensive TypeScript Standards for Ztarknet Monorepo**
 
+### `design-system.rule`
+**Complete Design System & UI/UX Guidelines for Ztarknet**
+
 Created from the successful TypeScript migration (Nov 2025) that took the codebase from 186 errors to 0 errors.
 
 **What's Inside:**
@@ -33,6 +36,37 @@ Created from the successful TypeScript migration (Nov 2025) that took the codeba
 - All patterns are battle-tested
 - Includes examples from real migration
 - Covers edge cases (import.meta.env, blockheight vs height, etc.)
+
+### `design-system.rule`
+**Complete Design System & UI/UX Guidelines**
+
+Extracted from the website implementation (Nov 2025) to ensure visual consistency across all apps.
+
+**What's Inside:**
+- 🎨 Color palette (Ztarknet Orange #ff6b1a, dark backgrounds)
+- 🔤 Typography (Space Grotesk, JetBrains Mono)
+- 🎴 Glass card patterns and layouts
+- ✨ Interactive effects (GlowingEffect, reveal-on-scroll)
+- 🔘 Button variants and states
+- 📐 Spacing system and responsive breakpoints
+- 🎬 Animation standards and durations
+- ♿ Accessibility requirements (ARIA, keyboard navigation)
+- 🖼️ Visual effects (glows, shadows, borders)
+- 📱 Responsive design patterns
+
+**When to Use:**
+- Creating new pages or components
+- Styling any UI element
+- Adding animations or effects
+- Ensuring brand consistency
+- Reviewing design implementations
+
+**Key Highlights:**
+- Living document based on apps/website/
+- Complete with copy-paste code examples
+- Accessibility-first approach
+- Mobile-first responsive patterns
+- Brand voice and visual philosophy
 
 ## Using These Rules
 
