@@ -43,9 +43,9 @@ export {
   getTransactionInput,
   getInputSources,
   // Transaction Graph - Count
-  countTransactions,
-  countOutputs,
-  countInputs,
+  // countTransactions, // TODO: Add when migrating latest upstream changes
+  // countOutputs,
+  // countInputs,
   // Transaction Graph - Graph
   getTransactionGraph,
 } from './tx_graph.js';
@@ -67,8 +67,8 @@ export {
   getAccountTransaction,
   getTransactionAccounts,
   // Accounts - Count
-  countAccounts,
-  countAccountTransactions,
+  // countAccounts, // TODO: Add when migrating latest upstream changes
+  // countAccountTransactions,
 } from './accounts.js';
 
 export {
@@ -117,9 +117,9 @@ export {
   getRecentFacts,
   getStateTransition,
   // STARKS - Count
-  countVerifiers,
-  countStarkProofs,
-  countFacts,
+  // countVerifiers, // TODO: Add when migrating latest upstream changes
+  // countStarkProofs,
+  // countFacts,
   // STARKS - Aggregations
-  getSumProofSizesByVerifier,
+  // getSumProofSizesByVerifier,
 } from './starks.js';
