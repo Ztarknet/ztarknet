@@ -4,6 +4,7 @@ import { TransactionsList } from '@components/transactions/TransactionsList';
 import { useChainHeight } from '@hooks/useBlockPolling';
 import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
 import { RPC_ENDPOINT } from '@services/rpc';
+import { GlowingEffect } from '@workspace/ui/components/glowing-effect';
 
 const MAX_BLOCKS = 7;
 
@@ -12,7 +13,7 @@ export function MainPage() {
   useRevealOnScroll();
 
   return (
-    <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+    <div className="container-custom section-padding flex-1">
       {error && (
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Error: {error}
@@ -21,7 +22,7 @@ export function MainPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12 min-h-40">
         <StatCard
           label="Chain Height"
           value={chainHeight.toLocaleString()}
@@ -43,58 +44,58 @@ export function MainPage() {
       </div>
 
       <section id="latest-blocks" className="mb-12">
-        <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">
-          Latest Blocks
-        </h2>
+        <h2 className="heading-section mb-6">Latest Blocks</h2>
         <BlocksList initialBlocks={MAX_BLOCKS} />
       </section>
 
       <section id="latest-transactions" className="mb-12">
-        <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">
-          Latest Transactions
-        </h2>
+        <h2 className="heading-section mb-6">Latest Transactions</h2>
         <TransactionsList />
       </section>
 
       <section id="developer-info">
-        <div
-          className="p-8 rounded-2xl border border-[rgba(255,137,70,0.3)] shadow-[0_20px_45px_rgba(0,0,0,0.35)]"
-          style={{
-            background:
-              'radial-gradient(circle at top left, rgba(255, 107, 26, 0.12), rgba(5, 5, 7, 0.95)), rgba(10, 10, 14, 0.9)',
-          }}
-        >
-          <h2 className="text-[1.6rem] mb-5 text-foreground">Developer Information</h2>
+        <div className="group relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300">
+          <GlowingEffect
+            spread={40}
+            glow={true}
+            disabled={false}
+            proximity={64}
+            inactiveZone={0.01}
+          />
+          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[rgba(12,12,18,0.9)] to-[rgba(6,6,9,0.8)] p-6 md:p-8 shadow-[0_18px_36px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]">
+            {/* Gradient overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,137,70,0.08)] via-[rgba(255,255,255,0.03)] to-[rgba(255,167,70,0.05)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
 
-          <div className="mb-5">
-            <span className="block text-[0.85rem] font-mono uppercase tracking-widest text-[rgba(255,137,70,0.7)] mb-2">
-              RPC Endpoint
-            </span>
-            <div className="text-base font-mono text-foreground break-all leading-relaxed">
-              <code className="bg-black/40 px-2 py-0.5 rounded text-accent-strong">
-                {RPC_ENDPOINT}
-              </code>
-            </div>
-          </div>
+            <div className="relative z-10">
+              <h2 className="text-2xl mb-5 text-foreground font-bold">Developer Information</h2>
 
-          <div className="mb-5">
-            <span className="block text-[0.85rem] font-mono uppercase tracking-widest text-[rgba(255,137,70,0.7)] mb-2">
-              Default Miner Address
-            </span>
-            <div className="text-base font-mono text-foreground break-all leading-relaxed">
-              Use the default mnemonic to claim coinbase rewards. This serves as a faucet for
-              developers testing on the network. All miners use the same coinbase address by
-              default, allowing you to claim rewards using the shared mnemonic phrase.
-            </div>
-          </div>
+              <div className="mb-5">
+                <span className="eyebrow mb-2">RPC Endpoint</span>
+                <div className="text-base font-mono text-foreground break-all leading-relaxed">
+                  <code className="bg-[rgba(255,255,255,0.05)] px-2 py-0.5 rounded text-accent">
+                    {RPC_ENDPOINT}
+                  </code>
+                </div>
+              </div>
 
-          <div className="mb-0">
-            <span className="block text-[0.85rem] font-mono uppercase tracking-widest text-[rgba(255,137,70,0.7)] mb-2">
-              Network Type
-            </span>
-            <div className="text-base font-mono text-foreground break-all leading-relaxed">
-              <code className="bg-black/40 px-2 py-0.5 rounded text-accent-strong">regtest</code> -
-              Regression test network for development
+              <div className="mb-5">
+                <span className="eyebrow mb-2">Default Miner Address</span>
+                <div className="text-base text-[rgba(255,255,255,0.7)] break-all leading-relaxed">
+                  Use the default mnemonic to claim coinbase rewards. This serves as a faucet for
+                  developers testing on the network. All miners use the same coinbase address by
+                  default, allowing you to claim rewards using the shared mnemonic phrase.
+                </div>
+              </div>
+
+              <div className="mb-0">
+                <span className="eyebrow mb-2">Network Type</span>
+                <div className="text-base text-[rgba(255,255,255,0.7)] break-all leading-relaxed">
+                  <code className="bg-[rgba(255,255,255,0.05)] px-2 py-0.5 rounded text-accent">
+                    regtest
+                  </code>{' '}
+                  - Regression test network for development
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -22,45 +22,42 @@ export function StatCard({
 }: StatCardProps) {
   if (isLoading) {
     return (
-      <div
-        className="pt-7 pr-5 pb-5 pl-7 border border-[rgba(255,137,70,0.2)] rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,137,70,0.05),0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 skeleton"
-        style={{
-          background:
-            'radial-gradient(circle at top left, rgba(255, 107, 26, 0.08), rgba(8, 8, 12, 0.9) 60%)',
-        }}
-      >
-        <span className="block text-xs font-mono tracking-widest uppercase text-[rgba(255,137,70,0.64)] mb-3 skeleton-text">
-          {label}
-        </span>
-        <div className="text-[2rem] font-bold text-foreground mb-1.5 font-mono skeleton-text">
-          Loading...
+      <div className="group relative w-full h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300">
+        <div className="relative flex w-full h-full flex-col gap-3 overflow-hidden rounded-xl bg-gradient-to-br from-[rgba(12,12,18,0.9)] to-[rgba(6,6,9,0.8)] p-6 shadow-[0_18px_36px_rgba(0,0,0,0.35)]">
+          {/* Placeholder for gradient overlay - same structure as loaded */}
+          <div className="absolute inset-0 bg-transparent rounded-xl pointer-events-none" />
+
+          <div className="relative flex flex-1 flex-col gap-3 z-10">
+            <span className="eyebrow">{label}</span>
+            <div className="stat-value skeleton-text">Loading...</div>
+            <div className="text-sm text-[rgba(255,255,255,0.7)] leading-relaxed skeleton-text">
+              {description}
+            </div>
+          </div>
         </div>
-        <div className="text-sm text-muted leading-relaxed m-0 skeleton-text">{description}</div>
       </div>
     );
   }
 
   const ValueTag = renderAsCode ? 'code' : 'div';
-  const className = valueClassName
-    ? `text-[2rem] font-bold text-foreground mb-1.5 font-mono ${valueClassName}`
-    : 'text-[2rem] font-bold text-foreground mb-1.5 font-mono';
+  const baseValueClass = 'stat-value';
+  const finalValueClass = valueClassName ? `${baseValueClass} ${valueClassName}` : baseValueClass;
 
   return (
-    <div
-      className="reveal-on-scroll reveal-from-left relative pt-7 pr-5 pb-5 pl-7 border border-[rgba(255,137,70,0.2)] rounded-2xl shadow-[inset_0_0_0_1px_rgba(255,137,70,0.05),0_16px_40px_rgba(0,0,0,0.3)] backdrop-blur-[16px] transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(255,107,26,0.3),inset_0_0_0_1px_rgba(255,137,70,0.1)]"
-      style={{
-        background:
-          'radial-gradient(circle at top left, rgba(255, 107, 26, 0.08), rgba(8, 8, 12, 0.9) 60%)',
-      }}
-    >
-      <GlowingEffect proximity={64} spread={30} />
-      <span className="block text-xs font-mono tracking-widest uppercase text-[rgba(255,137,70,0.64)] mb-3">
-        {label}
-      </span>
-      <ValueTag className={className} style={valueStyle}>
-        {value}
-      </ValueTag>
-      <div className="text-sm text-muted leading-relaxed m-0">{description}</div>
+    <div className="group relative w-full h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-2 md:rounded-3xl md:p-3 transition-all duration-300">
+      <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} />
+      <div className="relative flex w-full h-full flex-col gap-3 overflow-hidden rounded-xl bg-gradient-to-br from-[rgba(12,12,18,0.9)] to-[rgba(6,6,9,0.8)] p-6 shadow-[0_18px_36px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]">
+        {/* Gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,137,70,0.08)] via-[rgba(255,255,255,0.03)] to-[rgba(255,167,70,0.05)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
+
+        <div className="relative flex flex-1 flex-col gap-3 z-10">
+          <span className="eyebrow">{label}</span>
+          <ValueTag className={finalValueClass} style={valueStyle}>
+            {value}
+          </ValueTag>
+          <div className="text-sm text-[rgba(255,255,255,0.7)] leading-relaxed">{description}</div>
+        </div>
+      </div>
     </div>
   );
 }

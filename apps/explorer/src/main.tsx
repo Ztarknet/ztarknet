@@ -1,3 +1,5 @@
+import './globals.css';
+
 import { Header } from '@components/common/Header';
 import { AccountPage } from '@pages/AccountPage';
 import { BlockPage } from '@pages/BlockPage';

@@ -257,11 +257,9 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
         extensionView = (
           <div className="p-0">
             <div className="flex flex-col gap-2 mb-4">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">
-                Genesis State
-              </span>
+              <span className="field-label">Genesis State</span>
               <code
-                className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
+                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
                 onClick={() => copyToClipboard(precondition.root)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -277,11 +275,9 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
               </code>
             </div>
             <div className="flex flex-col gap-2 mb-4">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">
-                OS Program Hash
-              </span>
+              <span className="field-label">OS Program Hash</span>
               <code
-                className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
+                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
                 onClick={() => copyToClipboard(precondition.osProgramHash)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -297,11 +293,9 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
               </code>
             </div>
             <div className="flex flex-col gap-2 mb-0">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">
-                Bootloader Program Hash
-              </span>
+              <span className="field-label">Bootloader Program Hash</span>
               <code
-                className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
+                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
                 onClick={() => copyToClipboard(precondition.bootloaderProgramHash)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -334,16 +328,14 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
         extensionView = (
           <div className="p-0">
             <div className="flex flex-col gap-2 mb-4">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">
-                Old State Root
-              </span>
+              <span className="field-label">Old State Root</span>
               {loadingOldState ? (
-                <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]">
+                <code className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]">
                   Loading...
                 </code>
               ) : oldStateRoot ? (
                 <code
-                  className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
+                  className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
                   onClick={() => copyToClipboard(oldStateRoot)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -358,18 +350,16 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
                   {oldStateRoot}
                 </code>
               ) : (
-                <code className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]">
+                <code className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]">
                   Unable to fetch
                 </code>
               )}
             </div>
 
             <div className="flex flex-col gap-2 mb-4">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">
-                New State Root
-              </span>
+              <span className="field-label">New State Root</span>
               <code
-                className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
+                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
                 onClick={() => copyToClipboard(newStatePrecondition.root)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -386,11 +376,9 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
             </div>
 
             <div className="flex flex-col gap-2 mb-4">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">
-                OS Program Hash
-              </span>
+              <span className="field-label">OS Program Hash</span>
               <code
-                className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
+                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
                 onClick={() => copyToClipboard(newStatePrecondition.osProgramHash)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -407,11 +395,9 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
             </div>
 
             <div className="flex flex-col gap-2 mb-4">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">
-                Bootloader Program Hash
-              </span>
+              <span className="field-label">Bootloader Program Hash</span>
               <code
-                className="font-mono text-[0.85rem] text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
+                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
                 onClick={() => copyToClipboard(newStatePrecondition.bootloaderProgramHash)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -429,9 +415,7 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
 
             {witness?.proofData && (
               <div className="flex flex-col gap-2 mb-0">
-                <span className="text-xs text-[rgba(255,137,70,0.64)] font-semibold uppercase tracking-wider">
-                  Proof
-                </span>
+                <span className="field-label">Proof</span>
                 <div className="flex flex-col gap-2.5">
                   <code
                     className={`font-mono text-xs text-foreground break-all cursor-pointer py-3 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)] leading-relaxed overflow-y-auto ${
@@ -511,9 +495,7 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
         <div className="flex flex-col gap-2 pb-2">
           <div className="flex justify-between items-center gap-3">
             <div className="flex items-center gap-3">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-medium font-mono uppercase tracking-wider">
-                Verifier
-              </span>
+              <span className="field-label">Verifier</span>
               {loadingVerifier ? (
                 <span className="font-mono text-sm text-muted">Loading...</span>
               ) : verifierName ? (
@@ -564,9 +546,7 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
         <div className="flex flex-col gap-2 pb-4 mb-4 border-b border-[rgba(255,107,26,0.1)]">
           <div className="flex justify-between items-center gap-3">
             <div className="flex items-center gap-3">
-              <span className="text-xs text-[rgba(255,137,70,0.64)] font-medium font-mono uppercase tracking-wider">
-                Mode
-              </span>
+              <span className="field-label">Mode</span>
               <span className="font-mono text-sm text-accent-strong font-semibold">{modeName}</span>
             </div>
           </div>

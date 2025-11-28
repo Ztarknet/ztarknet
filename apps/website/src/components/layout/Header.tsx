@@ -109,7 +109,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-full bg-black border-l-[rgba(255,107,26,0.2)] backdrop-blur-xl pt-[72px]"
+              className="w-full bg-black border-l-[rgba(255,107,26,0.2)] backdrop-blur-xl pt-20"
             >
               <SheetHeader className="hidden">
                 <SheetTitle className="text-left text-foreground flex items-center gap-3">

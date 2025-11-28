@@ -64,6 +64,14 @@
     background: radial-gradient(circle at top right, #0e0912 0%, #040405 60%);
     color: var(--foreground);
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code,
+  pre,
+  .font-mono {
+    font-family: var(--font-mono);
   }
 
   /* Text selection styles */
@@ -124,7 +132,7 @@
     max-width: var(--max-width);
   }
 
-  /* Section padding - use instead of py-[120px] */
+  /* Section padding - use instead of pt-[120px] pb-[120px] */
   .section-padding {
     padding-top: var(--section-padding);
     padding-bottom: var(--section-padding);
@@ -146,6 +154,20 @@
     color: var(--foreground);
   }
 
+  /* Badge for transaction types */
+  .badge {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    min-width: 5rem;
+    text-align: center;
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.25rem;
+  }
+
   .eyebrow {
     @apply inline-flex items-center gap-2 uppercase tracking-[0.2em] text-xs;
     color: rgba(255, 107, 26, 0.7);
@@ -154,6 +176,11 @@
   .accent-text {
     color: var(--accent);
     text-shadow: 0 0 18px rgba(255, 107, 26, 0.45);
+  }
+
+  .field-label {
+    @apply text-xs uppercase tracking-wider;
+    color: rgba(255, 107, 26, 0.6);
   }
 
   .glass-card {
@@ -193,6 +220,76 @@
     filter: blur(40px);
     z-index: -2;
     pointer-events: none;
+  }
+
+  /* Skeleton loading styles */
+  .skeleton {
+    pointer-events: none;
+  }
+
+  .skeleton-text {
+    color: transparent;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.5) 25%,
+      rgba(255, 107, 26, 0.15) 50%,
+      rgba(0, 0, 0, 0.5) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    border-radius: 4px;
+  }
+
+  .skeleton-box {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 137, 70, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .skeleton-box::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 107, 26, 0.08) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .skeleton-line {
+    height: 1rem;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.5) 25%,
+      rgba(255, 107, 26, 0.12) 50%,
+      rgba(0, 0, 0, 0.5) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    border-radius: 6px;
+  }
+
+  .skeleton-line-lg {
+    height: 2rem;
+  }
+
+  .skeleton-line-sm {
+    height: 0.75rem;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 }
 

@@ -50,7 +50,7 @@ export function Hero() {
             <dt className="text-xs tracking-[0.12em] uppercase text-[rgba(255,137,70,0.8)]">
               Proof System
             </dt>
-            <dd className="mt-1.5 text-[0.95rem] text-foreground font-mono">
+            <dd className="mt-1.5 text-base text-foreground font-mono">
               Circle STARKs (Stwo/Cairo)
             </dd>
           </div>
@@ -58,7 +58,7 @@ export function Hero() {
             <dt className="text-xs tracking-[0.12em] uppercase text-[rgba(255,137,70,0.8)]">
               L2 Runtime
             </dt>
-            <dd className="mt-1.5 text-[0.95rem] text-foreground font-mono">
+            <dd className="mt-1.5 text-base text-foreground font-mono">
               Madara (Rust Starknet client)
             </dd>
           </div>
@@ -66,12 +66,12 @@ export function Hero() {
             <dt className="text-xs tracking-[0.12em] uppercase text-[rgba(255,137,70,0.8)]">
               L1 Settlement
             </dt>
-            <dd className="mt-1.5 text-[0.95rem] text-foreground font-mono">Zcash TZE verifier</dd>
+            <dd className="mt-1.5 text-base text-foreground font-mono">Zcash TZE verifier</dd>
           </div>
         </dl>
       </div>
 
-      <div className="grid gap-[18px] content-start">
+      <div className="grid gap-5 content-start">
         <div
           className="group reveal-on-scroll relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgb(8,8,12)] p-2 md:rounded-3xl md:p-3 transition-all duration-300"
           style={{ '--reveal-delay': '0ms' } as React.CSSProperties}

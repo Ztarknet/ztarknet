@@ -20,7 +20,7 @@ export function Architecture() {
   useRevealOnScroll();
 
   return (
-    <section className="py-[120px] px-8" id="architecture">
+    <section className="section-padding px-8" id="architecture">
       <div className="max-w-container mx-auto">
         <div className="mb-12">
           <p className="eyebrow">How it fits together</p>
@@ -58,7 +58,7 @@ export function Architecture() {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[rgb(255,137,70)] to-transparent w-[20%] h-full animate-[beamMove_6s_ease-in-out_infinite] opacity-100" />
                     </div>
                     {/* Step 1 - Mobile version */}
-                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                    <div className="w-full max-w-44 relative z-10 md:hidden">
                       <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                           <Database className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -70,7 +70,7 @@ export function Architecture() {
                       </div>
                     </div>
                     {/* Step 1 - Desktop version */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
+                    <div className="flex flex-col items-center text-center max-w-36 relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <Database className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -80,7 +80,7 @@ export function Architecture() {
                     {/* Spacer for mobile */}
                     <div className="h-6 relative z-10 md:hidden" />
                     {/* Step 2 - Mobile version */}
-                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                    <div className="w-full max-w-44 relative z-10 md:hidden">
                       <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                           <Zap className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -92,7 +92,7 @@ export function Architecture() {
                       </div>
                     </div>
                     {/* Step 2 - Desktop version */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
+                    <div className="flex flex-col items-center text-center max-w-36 relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <Zap className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -102,7 +102,7 @@ export function Architecture() {
                     {/* Spacer for mobile */}
                     <div className="h-6 relative z-10 md:hidden" />
                     {/* Step 3 - Mobile version */}
-                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                    <div className="w-full max-w-44 relative z-10 md:hidden">
                       <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                           <Sparkles className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -114,7 +114,7 @@ export function Architecture() {
                       </div>
                     </div>
                     {/* Step 3 - Desktop version */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
+                    <div className="flex flex-col items-center text-center max-w-36 relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <Sparkles className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -124,7 +124,7 @@ export function Architecture() {
                     {/* Spacer for mobile */}
                     <div className="h-6 relative z-10 md:hidden" />
                     {/* Step 4 - Mobile version */}
-                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                    <div className="w-full max-w-44 relative z-10 md:hidden">
                       <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                           <Shield className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -136,7 +136,7 @@ export function Architecture() {
                       </div>
                     </div>
                     {/* Step 4 - Desktop version */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
+                    <div className="flex flex-col items-center text-center max-w-36 relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <Shield className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -146,7 +146,7 @@ export function Architecture() {
                     {/* Spacer for mobile */}
                     <div className="h-6 relative z-10 md:hidden" />
                     {/* Step 5 - Mobile version */}
-                    <div className="w-full max-w-[180px] relative z-10 md:hidden">
+                    <div className="w-full max-w-44 relative z-10 md:hidden">
                       <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                           <CheckCircle className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -158,7 +158,7 @@ export function Architecture() {
                       </div>
                     </div>
                     {/* Step 5 - Desktop version */}
-                    <div className="flex flex-col items-center text-center max-w-[140px] relative z-10 hidden md:flex">
+                    <div className="flex flex-col items-center text-center max-w-36 relative z-10 hidden md:flex">
                       <div className="w-16 h-16 rounded-xl border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] flex items-center justify-center mb-3 transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                         <CheckCircle className="h-8 w-8 text-[rgb(255,137,70)]" />
                       </div>
@@ -180,7 +180,7 @@ export function Architecture() {
               proximity={64}
               inactiveZone={0.01}
             />
-            <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-[30px] shadow-[0_18px_36px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]">
+            <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-8 shadow-[0_18px_36px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]">
               {/* Gradient overlay on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,137,70,0.08)] via-[rgba(255,255,255,0.03)] to-[rgba(255,167,70,0.05)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
 
@@ -213,7 +213,7 @@ export function Architecture() {
               proximity={64}
               inactiveZone={0.01}
             />
-            <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-[30px] shadow-[0_18px_36px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]">
+            <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-8 shadow-[0_18px_36px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]">
               {/* Gradient overlay on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,137,70,0.08)] via-[rgba(255,255,255,0.03)] to-[rgba(255,167,70,0.05)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
 
@@ -242,7 +242,7 @@ export function Architecture() {
               proximity={64}
               inactiveZone={0.01}
             />
-            <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-[30px] shadow-[0_18px_36px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]">
+            <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-xl bg-gradient-to-br from-[rgb(12,12,18)] to-[rgb(6,6,9)] p-8 shadow-[0_18px_36px_rgba(0,0,0,0.35)] transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]">
               {/* Gradient overlay on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,137,70,0.08)] via-[rgba(255,255,255,0.03)] to-[rgba(255,167,70,0.05)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
 

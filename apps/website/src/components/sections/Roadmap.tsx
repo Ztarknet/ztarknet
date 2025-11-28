@@ -9,7 +9,7 @@ export function Roadmap() {
   useRevealOnScroll();
 
   return (
-    <section className="py-[120px] px-8">
+    <section className="section-padding px-8">
       <div className="max-w-container mx-auto">
         <div className="mb-12">
           <p className="eyebrow">Impact surface</p>
@@ -39,7 +39,7 @@ export function Roadmap() {
                   <div className="w-fit rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] p-2 transition-all duration-300 group-hover:border-[rgba(255,137,70,0.5)] group-hover:bg-[rgba(255,137,70,0.1)] [&_svg]:transition-colors [&_svg]:duration-300 group-hover:[&_svg]:text-[rgba(255,137,70,1)]">
                     <CheckCircle className="h-4 w-4 text-[rgba(255,137,70,0.8)]" />
                   </div>
-                  <span className="text-[1.6rem] font-mono text-[rgba(255,137,70,0.8)] transition-colors duration-300 group-hover:text-[rgba(255,137,70,1)]">
+                  <span className="text-2xl font-mono text-[rgba(255,137,70,0.8)] transition-colors duration-300 group-hover:text-[rgba(255,137,70,1)]">
                     01
                   </span>
                 </div>
@@ -74,7 +74,7 @@ export function Roadmap() {
                   </div>
 
                   {/* Step 1 - Completed */}
-                  <div className="w-full max-w-[180px] relative z-10">
+                  <div className="w-full max-w-44 relative z-10">
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                         <CheckCircle className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -92,7 +92,7 @@ export function Roadmap() {
                   <div className="h-6 relative z-10" />
 
                   {/* Step 2 - In Progress */}
-                  <div className="w-full max-w-[180px] relative z-10">
+                  <div className="w-full max-w-44 relative z-10">
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                         <Play className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -108,7 +108,7 @@ export function Roadmap() {
                   <div className="h-6 relative z-10" />
 
                   {/* Step 3 - Upcoming */}
-                  <div className="w-full max-w-[180px] relative z-10">
+                  <div className="w-full max-w-44 relative z-10">
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                         <Database className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -144,7 +144,7 @@ export function Roadmap() {
                   <div className="w-fit rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] p-2 transition-all duration-300 group-hover:border-[rgba(255,137,70,0.5)] group-hover:bg-[rgba(255,137,70,0.1)] [&_svg]:transition-colors [&_svg]:duration-300 group-hover:[&_svg]:text-[rgba(255,137,70,1)]">
                     <Play className="h-4 w-4 text-[rgba(255,137,70,0.8)]" />
                   </div>
-                  <span className="text-[1.6rem] font-mono text-[rgba(255,137,70,0.8)] transition-colors duration-300 group-hover:text-[rgba(255,137,70,1)]">
+                  <span className="text-2xl font-mono text-[rgba(255,137,70,0.8)] transition-colors duration-300 group-hover:text-[rgba(255,137,70,1)]">
                     02
                   </span>
                 </div>
@@ -179,7 +179,7 @@ export function Roadmap() {
                   <div className="w-fit rounded-lg border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] p-2 transition-all duration-300 group-hover:border-[rgba(255,137,70,0.5)] group-hover:bg-[rgba(255,137,70,0.1)] [&_svg]:transition-colors [&_svg]:duration-300 group-hover:[&_svg]:text-[rgba(255,137,70,1)]">
                     <Database className="h-4 w-4 text-[rgba(255,137,70,0.8)]" />
                   </div>
-                  <span className="text-[1.6rem] font-mono text-[rgba(255,137,70,0.8)] transition-colors duration-300 group-hover:text-[rgba(255,137,70,1)]">
+                  <span className="text-2xl font-mono text-[rgba(255,137,70,0.8)] transition-colors duration-300 group-hover:text-[rgba(255,137,70,1)]">
                     03
                   </span>
                 </div>

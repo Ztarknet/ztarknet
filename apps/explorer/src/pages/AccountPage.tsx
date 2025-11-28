@@ -419,7 +419,7 @@ export function AccountPage({ address }: AccountPageProps) {
 
   if (loading) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+      <div className="container-custom section-padding flex-1">
         <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3">
           <a
             href="#/"
@@ -429,9 +429,7 @@ export function AccountPage({ address }: AccountPageProps) {
           </a>
         </div>
 
-        <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight skeleton-text">
-          Loading Account...
-        </h2>
+        <h2 className="heading-section mb-6 skeleton-text">Loading Account...</h2>
 
         {/* Skeleton address display */}
         <div className="mb-8">
@@ -446,7 +444,7 @@ export function AccountPage({ address }: AccountPageProps) {
         </div>
 
         {/* Skeleton stat cards */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12 min-h-40">
           <StatCard label="Created At" value="---" description="Loading..." isLoading={true} />
           <StatCard label="Account Balance" value="---" description="ZEC" isLoading={true} />
           <StatCard
@@ -462,7 +460,7 @@ export function AccountPage({ address }: AccountPageProps) {
 
   if (error) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+      <div className="container-custom section-padding flex-1">
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Error: {error}
           <br />
@@ -479,7 +477,7 @@ export function AccountPage({ address }: AccountPageProps) {
 
   if (!account) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+      <div className="container-custom section-padding flex-1">
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Account not found
         </div>
@@ -502,7 +500,7 @@ export function AccountPage({ address }: AccountPageProps) {
   const txCount = transactionCount;
 
   return (
-    <div className="max-w-container mx-auto px-8 pt-[120px] pb-[120px] flex-1">
+    <div className="container-custom section-padding flex-1">
       <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3">
         <a
           href="#/"
@@ -513,7 +511,7 @@ export function AccountPage({ address }: AccountPageProps) {
       </div>
 
       {/* Account Title */}
-      <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">Account</h2>
+      <h2 className="heading-section mb-6">Account</h2>
 
       {/* Address Display */}
       <div className="mb-8">
@@ -528,7 +526,7 @@ export function AccountPage({ address }: AccountPageProps) {
       </div>
 
       {/* Account Statistics Cards */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12 min-h-40">
         <StatCard label="Created At" value={createdAt} description="First seen on chain" />
         <StatCard label="Account Balance" value={balance} description="ZEC" />
         <StatCard
@@ -544,7 +542,7 @@ export function AccountPage({ address }: AccountPageProps) {
       </div>
 
       {/* Transactions List */}
-      <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">
+      <h2 className="heading-section mb-6">
         {transactions.length}
         {txCount > transactions.length ? ` of ${txCount}` : ''} Transaction
         {transactions.length !== 1 ? 's' : ''}

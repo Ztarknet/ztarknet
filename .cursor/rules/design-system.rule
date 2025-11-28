@@ -5,6 +5,137 @@ This document defines the design system and UI/UX patterns used across all Ztark
 
 ---
 
+## ⚠️ CRITICAL: Use Design Tokens, NOT Hardcoded Values
+
+### Mandatory Rule for AI Agents
+**NEVER hardcode sizes, colors, spacing, or any visual values.** Always use the CSS variables, Tailwind classes, and design tokens defined in this system.
+
+### Why This Matters
+- Hardcoded values break consistency across apps
+- Design changes require updating every hardcoded value
+- The design system exists to be USED, not ignored
+- Tailwind and Shadcn provide a complete scale — use it
+
+### What to Use
+
+#### Colors — Use CSS Variables
+```css
+/* ✅ CORRECT */
+color: var(--foreground);
+background: var(--background);
+border-color: var(--accent);
+
+/* ❌ WRONG - Never hardcode colors */
+color: #f4f4f6;
+background: #040405;
+border-color: #ff6b1a;
+```
+
+#### Spacing — Use Tailwind Scale
+```tsx
+/* ✅ CORRECT — Use Tailwind spacing classes */
+<div className="p-4 gap-6 mb-8">  {/* 16px, 24px, 32px */}
+<div className="p-6 gap-4 mb-12"> {/* 24px, 16px, 48px */}
+
+/* ❌ WRONG — Never use arbitrary values */
+<div className="p-[18px] gap-[22px] mb-[47px]">
+<div style={{ padding: '18px', marginBottom: '47px' }}>
+```
+
+#### Font Sizes — Use Tailwind Typography Scale
+```tsx
+/* ✅ CORRECT */
+<p className="text-sm">   {/* 14px */}
+<p className="text-base"> {/* 16px */}
+<p className="text-lg">   {/* 18px */}
+<h2 className="text-2xl"> {/* 24px */}
+<h1 className="text-4xl"> {/* 36px */}
+
+/* ❌ WRONG */
+<p className="text-[17px]">
+<p style={{ fontSize: '17px' }}>
+```
+
+#### Border Radius — Use Tailwind Scale
+```tsx
+/* ✅ CORRECT */
+<div className="rounded-md">  {/* 6px */}
+<div className="rounded-lg">  {/* 8px */}
+<div className="rounded-xl">  {/* 12px */}
+<div className="rounded-2xl"> {/* 16px */}
+
+/* ❌ WRONG */
+<div className="rounded-[14px]">
+```
+
+#### Layout Widths — Use CSS Variables
+```css
+/* ✅ CORRECT */
+max-width: var(--max-width);
+
+/* ❌ WRONG */
+max-width: 1224px;
+```
+
+### Tailwind Spacing Scale Reference
+| Class | Size | Pixels |
+|-------|------|--------|
+| `1` | 0.25rem | 4px |
+| `2` | 0.5rem | 8px |
+| `3` | 0.75rem | 12px |
+| `4` | 1rem | 16px |
+| `5` | 1.25rem | 20px |
+| `6` | 1.5rem | 24px |
+| `8` | 2rem | 32px |
+| `10` | 2.5rem | 40px |
+| `12` | 3rem | 48px |
+| `16` | 4rem | 64px |
+| `20` | 5rem | 80px |
+| `24` | 6rem | 96px |
+
+### Tailwind Font Size Scale Reference
+| Class | Size |
+|-------|------|
+| `text-xs` | 12px |
+| `text-sm` | 14px |
+| `text-base` | 16px |
+| `text-lg` | 18px |
+| `text-xl` | 20px |
+| `text-2xl` | 24px |
+| `text-3xl` | 30px |
+| `text-4xl` | 36px |
+| `text-5xl` | 48px |
+
+### Tailwind Border Radius Scale Reference
+| Class | Radius |
+|-------|--------|
+| `rounded-sm` | 2px |
+| `rounded` | 4px |
+| `rounded-md` | 6px |
+| `rounded-lg` | 8px |
+| `rounded-xl` | 12px |
+| `rounded-2xl` | 16px |
+| `rounded-3xl` | 24px |
+| `rounded-full` | 9999px |
+
+### When Arbitrary Values Are Acceptable
+Only use arbitrary values (`[]`) for:
+1. **Clamp functions** for responsive typography: `text-[clamp(2rem,5vw,3.8rem)]`
+2. **Complex gradients** that can't be expressed otherwise
+3. **Specific rgba colors** with transparency: `bg-[rgba(255,107,26,0.1)]`
+4. **Calc expressions** for precise layouts: `max-w-[calc(100%-64px)]`
+
+**Even then, prefer extracting to CSS custom properties or Tailwind config.**
+
+### AI Agent Checklist Before Writing Styles
+- [ ] Am I using a CSS variable for this color?
+- [ ] Am I using a Tailwind spacing class (not arbitrary)?
+- [ ] Am I using a Tailwind font-size class (not arbitrary)?
+- [ ] Am I using a Tailwind border-radius class (not arbitrary)?
+- [ ] If I need a custom value, can it be added to the design system instead?
+
+---
+
 ## 🎨 Color Palette
 
 ### Brand Colors (Primary)
@@ -159,15 +290,28 @@ Always include the noise overlay for texture:
 
 ### Container Widths
 ```css
---max-width: 1160px;
+--max-width: 1224px;
 
-.container-custom,
-.max-w-container {
+.container-custom {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 16px; /* Mobile: has padding */
+}
+
+@media (min-width: 1280px) {
+  .container-custom {
+    padding: 0; /* Desktop: no padding, aligns with header */
+  }
+}
+
+.max-w-container {
+  max-width: var(--max-width);
 }
 ```
+
+**Usage**:
+- Use `.container-custom` for page content — handles responsive padding automatically
+- Use `.max-w-container` when you only need max-width (e.g., header NavBody)
 
 ---
 
@@ -506,7 +650,7 @@ border: 1px solid rgba(255, 137, 70, 0.5); /* Hover/Active */
 - ❌ Don't skip letter-spacing on uppercase text
 
 ### Layout
-- ❌ Don't exceed max-width of 1160px for content
+- ❌ Don't exceed max-width of 1224px for content (use `var(--max-width)`)
 - ❌ Don't use arbitrary padding values (stick to spacing scale)
 - ❌ Don't forget mobile responsiveness
 - ❌ Don't use fixed widths (use max-width instead)
@@ -549,7 +693,7 @@ When creating a new page or component:
 - [ ] All SVGs have aria-label and role="img"
 - [ ] Keyboard navigation works (tab, enter, space)
 - [ ] Responsive on mobile, tablet, desktop
-- [ ] Uses max-width container (1160px)
+- [ ] Uses `.container-custom` class (max-width: 1224px with responsive padding)
 - [ ] Follows spacing scale (no arbitrary values)
 - [ ] Smooth animations (300ms ease)
 - [ ] Tested with real content
@@ -587,10 +731,10 @@ import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
 
 ### Section Container
 ```tsx
-<section className="max-w-container mx-auto py-20 px-8 md:px-0">
+<section className="container-custom py-20">
   <div className="flex flex-col gap-4 mb-12">
     <p className="eyebrow">Section Label</p>
-    <h2 className="text-[2.5rem] font-bold tracking-tight">Title</h2>
+    <h2 className="text-4xl font-bold tracking-tight">Title</h2>
   </div>
   {/* Content */}
 </section>

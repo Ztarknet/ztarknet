@@ -9,7 +9,7 @@ export function Thesis() {
   useRevealOnScroll();
 
   return (
-    <section className="py-[120px] px-8 bg-[rgba(6,6,8,0.75)]" id="thesis">
+    <section className="section-padding px-8 bg-[rgba(6,6,8,0.75)]" id="thesis">
       <div className="max-w-container mx-auto">
         <div className="mb-12">
           <p className="eyebrow">Why Ztarknet</p>

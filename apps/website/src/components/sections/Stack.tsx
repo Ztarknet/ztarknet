@@ -10,7 +10,7 @@ export function Stack() {
   useRevealOnScroll();
 
   return (
-    <section className="py-[120px] px-8 bg-[rgb(6,6,8)]" id="stack">
+    <section className="section-padding px-8 bg-[rgb(6,6,8)]" id="stack">
       <div className="max-w-container mx-auto">
         <div className="mb-12">
           <p className="eyebrow">PoC stack</p>
@@ -39,7 +39,7 @@ export function Stack() {
           />
 
           {/* Architecture Stack Diagram */}
-          <li className="min-h-[16rem] list-none reveal-on-scroll md:[grid-area:2/1/4/7] xl:[grid-area:1/9/3/13]">
+          <li className="min-h-64 list-none reveal-on-scroll md:[grid-area:2/1/4/7] xl:[grid-area:1/9/3/13]">
             <div className="relative h-full rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgb(8,8,12)] p-2 md:rounded-3xl md:p-3">
               <GlowingEffect
                 spread={40}
@@ -58,7 +58,7 @@ export function Stack() {
                   </div>
 
                   {/* Layer 1: Zcash L1 */}
-                  <div className="w-full max-w-[180px] relative z-10">
+                  <div className="w-full max-w-44 relative z-10">
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                         <Shield className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -74,7 +74,7 @@ export function Stack() {
                   <div className="h-6 relative z-10" />
 
                   {/* Layer 2: TZE Tx Builder */}
-                  <div className="w-full max-w-[180px] relative z-10">
+                  <div className="w-full max-w-44 relative z-10">
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                         <Send className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -90,7 +90,7 @@ export function Stack() {
                   <div className="h-6 relative z-10" />
 
                   {/* Layer 3: Stwo/Cairo */}
-                  <div className="w-full max-w-[180px] relative z-10">
+                  <div className="w-full max-w-44 relative z-10">
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                         <Cpu className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -106,7 +106,7 @@ export function Stack() {
                   <div className="h-6 relative z-10" />
 
                   {/* Layer 4: Madara */}
-                  <div className="w-full max-w-[180px] relative z-10">
+                  <div className="w-full max-w-44 relative z-10">
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)] transition-all duration-300 hover:border-[rgb(123,71,45)] hover:bg-[rgb(33,23,20)]">
                       <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgb(82,47,30)] bg-[rgb(21,15,15)]">
                         <Server className="h-4 w-4 text-[rgb(255,137,70)]" />
@@ -186,7 +186,7 @@ const GridItem = ({ area, icon, title, description, link, linkText }: GridItemPr
   );
 
   return (
-    <li className={`min-h-[16rem] list-none reveal-on-scroll ${area}`}>
+    <li className={`min-h-64 list-none reveal-on-scroll ${area}`}>
       {link ? (
         <Link href={link} target="_blank" rel="noreferrer" className="block h-full">
           {content}

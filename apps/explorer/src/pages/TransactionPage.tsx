@@ -51,8 +51,8 @@ export function TransactionPage({ txid }: TransactionPageProps) {
 
   if (loading) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
-        <div className="mb-6 flex flex-row gap-3">
+      <div className="container-custom section-padding flex-1 w-full">
+        <div className="mb-6 flex flex-row gap-3 w-full">
           <a
             href="#/"
             className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
@@ -61,23 +61,51 @@ export function TransactionPage({ txid }: TransactionPageProps) {
           </a>
         </div>
 
-        <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight skeleton-text">
-          Transaction
-        </h2>
-        <HashDisplay hash="" isLoading={true} />
-
-        {/* Skeleton block info cards */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
-          <StatCard label="Block Height" value="---" description="Loading..." isLoading={true} />
-          <StatCard label="Block Hash" value="--------------" description="" isLoading={true} />
-          <StatCard label="Block Time" value="---" description="Loading..." isLoading={true} />
+        {/* Skeleton title */}
+        <div className="flex items-center gap-4 mb-6">
+          <div className="skeleton-line skeleton-line-lg w-40" />
+          <div className="skeleton-line w-20 h-6" />
         </div>
 
-        <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight skeleton-text">
-          Transaction Details
-        </h2>
-        <div className="p-6 bg-[rgba(8,8,12,0.9)] border border-[rgba(255,137,70,0.15)] rounded-xl mt-6 skeleton">
-          <div className="skeleton-text">Loading transaction data...</div>
+        {/* Skeleton hash */}
+        <div className="skeleton-box p-4 mb-8">
+          <div className="skeleton-line w-full" />
+        </div>
+
+        {/* Skeleton block info cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12 min-h-40">
+          <StatCard label="Block Height" value="---" description="Loading..." isLoading={true} />
+          <StatCard label="Block Hash" value="--------------" description="" isLoading={true} />
+          <StatCard label="Confirmations" value="---" description="Loading..." isLoading={true} />
+        </div>
+
+        {/* Skeleton transaction details title */}
+        <div className="flex items-center gap-4 mb-6">
+          <div className="skeleton-line skeleton-line-lg w-56" />
+        </div>
+
+        {/* Skeleton transaction details */}
+        <div className="skeleton-box p-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-4">
+              <div className="skeleton-line skeleton-line-sm w-16" />
+              <div className="skeleton-box p-4">
+                <div className="flex flex-col gap-3">
+                  <div className="skeleton-line w-full" />
+                  <div className="skeleton-line skeleton-line-sm w-24" />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-4">
+              <div className="skeleton-line skeleton-line-sm w-20" />
+              <div className="skeleton-box p-4">
+                <div className="flex flex-col gap-3">
+                  <div className="skeleton-line w-full" />
+                  <div className="skeleton-line skeleton-line-sm w-32" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -85,7 +113,7 @@ export function TransactionPage({ txid }: TransactionPageProps) {
 
   if (error) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+      <div className="container-custom section-padding flex-1 w-full">
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Error: {error}
           <br />
@@ -102,7 +130,7 @@ export function TransactionPage({ txid }: TransactionPageProps) {
 
   if (!tx) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+      <div className="container-custom section-padding flex-1 w-full">
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Transaction not found
         </div>
@@ -118,11 +146,14 @@ export function TransactionPage({ txid }: TransactionPageProps) {
     standard: 'bg-accent text-background',
   };
 
-  const valueStyle: CSSProperties = { fontSize: '1rem', wordBreak: 'break-all' };
+  const valueStyle: CSSProperties = {
+    fontSize: '1rem',
+    wordBreak: 'break-all',
+  };
 
   return (
-    <div className="max-w-container mx-auto px-8 pt-[120px] pb-[120px] flex-1">
-      <div className="mb-6 flex flex-row gap-3">
+    <div className="container-custom section-padding flex-1 w-full">
+      <div className="mb-6 flex flex-row gap-3 w-full">
         <a
           href="#/"
           className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
@@ -140,10 +171,8 @@ export function TransactionPage({ txid }: TransactionPageProps) {
       </div>
 
       <div className="flex items-center gap-4 mb-4">
-        <h2 className="text-[1.8rem] font-bold text-foreground tracking-tight m-0">Transaction</h2>
-        <span
-          className={`text-[0.65rem] font-mono uppercase tracking-wider font-bold whitespace-nowrap min-w-[80px] text-center inline-block py-1 px-2.5 rounded ${TX_KIND_STYLES[txKind] || TX_KIND_STYLES.standard}`}
-        >
+        <h2 className="heading-section m-0">Transaction</h2>
+        <span className={`badge font-bold ${TX_KIND_STYLES[txKind] || TX_KIND_STYLES.standard}`}>
           {txKind}
         </span>
       </div>
@@ -151,7 +180,7 @@ export function TransactionPage({ txid }: TransactionPageProps) {
 
       {/* Block info cards */}
       {block && (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12 min-h-40">
           <StatCard
             label="Block Height"
             value={block.height.toLocaleString()}
@@ -169,9 +198,7 @@ export function TransactionPage({ txid }: TransactionPageProps) {
       )}
 
       {/* Transaction Details */}
-      <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">
-        Transaction Details
-      </h2>
+      <h2 className="heading-section mb-6">Transaction Details</h2>
       <TransactionDetails tx={tx as RpcTransaction} txKind={txKind} />
     </div>
   );

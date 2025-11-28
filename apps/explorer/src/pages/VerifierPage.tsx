@@ -188,7 +188,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
 
   if (loading) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+      <div className="container-custom section-padding flex-1">
         <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3">
           <a
             href="#/"
@@ -198,9 +198,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
           </a>
         </div>
 
-        <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight skeleton-text">
-          Loading Verifier...
-        </h2>
+        <h2 className="heading-section mb-6 skeleton-text">Loading Verifier...</h2>
 
         {/* Skeleton program hashes */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -235,7 +233,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
         </div>
 
         {/* Skeleton stat cards */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-12 min-h-[160px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12 min-h-40">
           <StatCard label="Total Proofs" value="---" description="Loading..." isLoading={true} />
           <StatCard label="Total Proofs Sizes" value="---" description="MB" isLoading={true} />
           <StatCard label="Bridge Balance" value="---" description="ZEC" isLoading={true} />
@@ -246,7 +244,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
 
   if (error) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+      <div className="container-custom section-padding flex-1">
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Error: {error}
           <br />
@@ -263,7 +261,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
 
   if (!verifier) {
     return (
-      <div className="max-w-container mx-auto md:px-8 px-4 pt-[120px] pb-[120px] flex-1">
+      <div className="container-custom section-padding flex-1">
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Verifier not found
         </div>
@@ -299,7 +297,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
     : '0.00';
 
   return (
-    <div className="max-w-container mx-auto px-8 pt-[120px] pb-[120px] flex-1">
+    <div className="container-custom section-padding flex-1">
       <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3">
         <a
           href="#/"
@@ -310,12 +308,12 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
       </div>
 
       {/* Verifier Name */}
-      <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">
+      <h2 className="heading-section mb-6">
         {verifier.verifier_name || `Verifier ${verifier.verifier_id}`}
       </h2>
 
       {/* Verifier Statistics Cards */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-8 min-h-[160px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 min-h-40">
         <StatCard
           label="Total Proofs"
           value={proofs.length.toLocaleString()}
@@ -358,7 +356,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
       </div>
 
       {/* TZE Transactions List */}
-      <h2 className="text-[1.8rem] font-bold mb-6 text-foreground tracking-tight">
+      <h2 className="heading-section mb-6">
         {transactions.length} TZE Transaction{transactions.length !== 1 ? 's' : ''}
       </h2>
       <div className="flex flex-col gap-4">
