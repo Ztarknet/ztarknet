@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@workspace/ui/components/button';
 import { NavBody, NavItems, Navbar } from '@workspace/ui/components/resizable-navbar';
 import {
@@ -9,15 +11,17 @@ import {
   SheetTrigger,
 } from '@workspace/ui/components/sheet';
 import { Github, Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: 'Blocks', link: '#latest-blocks' },
-    { name: 'Transactions', link: '#latest-transactions' },
-    { name: 'Developers', link: '#developer-info' },
+    { name: 'Blocks', link: '/#latest-blocks' },
+    { name: 'Transactions', link: '/#latest-transactions' },
+    { name: 'Developers', link: '/#developer-info' },
     { name: 'Homepage', link: 'https://ztarknet.cash' },
   ];
 
@@ -31,13 +35,13 @@ export function Header() {
       <Navbar className="fixed top-3 lg:top-6 px-4 lg:px-8 hidden lg:block">
         <NavBody className="border border-[rgba(255,107,26,0.2)] !bg-black/90 backdrop-blur-xl !shadow-[0_0_24px_rgba(255,107,26,0.1)] hover:border-[rgba(255,107,26,0.4)] transition-colors !px-3 !py-2.5 max-w-container">
           {/* Logo */}
-          <a
-            href="#top"
+          <Link
+            href="/"
             className="relative z-20 inline-flex items-center gap-3 font-bold tracking-widest uppercase text-sm ml-2"
           >
-            <img src="/ztarknet-logo.png" alt="Ztarknet logo" width={40} height={40} />
+            <Image src="/ztarknet-logo.png" alt="Ztarknet logo" width={40} height={40} />
             <span className="text-foreground">Ztarknet Explorer</span>
-          </a>
+          </Link>
 
           {/* Navigation Items */}
           <NavItems
@@ -68,13 +72,13 @@ export function Header() {
 
       {/* Mobile Navigation (Classic with Sheet) */}
       <nav className="lg:hidden flex items-center justify-between px-3 py-2.5 fixed top-3 left-0 right-0 z-[200] bg-black border border-[rgba(255,107,26,0.2)] rounded-full mx-8 backdrop-blur-xl">
-        <a
-          href="#top"
+        <Link
+          href="/"
           className="inline-flex items-center gap-3 font-bold tracking-widest uppercase text-sm"
         >
-          <img src="/ztarknet-logo.png" alt="Ztarknet logo" width={32} height={32} />
+          <Image src="/ztarknet-logo.png" alt="Ztarknet logo" width={32} height={32} />
           <span className="text-foreground">Ztarknet</span>
-        </a>
+        </Link>
 
         <div className="flex items-center gap-2">
           {/* GitHub Icon Button */}
@@ -108,7 +112,7 @@ export function Header() {
             >
               <SheetHeader className="hidden">
                 <SheetTitle className="text-left text-foreground flex items-center gap-3">
-                  <img src="/ztarknet-logo.png" alt="Ztarknet logo" width={32} height={32} />
+                  <Image src="/ztarknet-logo.png" alt="Ztarknet logo" width={32} height={32} />
                   Ztarknet Explorer
                 </SheetTitle>
               </SheetHeader>

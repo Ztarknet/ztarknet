@@ -61,6 +61,7 @@
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    overflow-y: auto;
     background: radial-gradient(circle at top right, #0e0912 0%, #040405 60%);
     color: var(--foreground);
     font-family: var(--font-sans);
@@ -290,6 +291,23 @@
     100% {
       background-position: -200% 0;
     }
+  }
+
+  /* New block/tx arrival animation - subtle flash */
+  @keyframes new-item-flash {
+    0% {
+      border-color: rgba(255, 137, 70, 0.25);
+    }
+    40% {
+      border-color: rgba(255, 167, 100, 0.6);
+    }
+    100% {
+      border-color: rgba(255, 137, 70, 0.25);
+    }
+  }
+
+  .animate-new-block {
+    animation: new-item-flash 1.5s ease-in-out forwards;
   }
 }
 

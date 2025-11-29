@@ -1,7 +1,10 @@
+'use client';
+
 import { getOutputSpenders } from '@/services/zindex/tx_graph';
-import { formatZEC } from '@utils/formatters';
+import type { RpcTransaction, Vin, Vout, ZindexTransaction } from '@/types/transaction';
+import { formatZEC } from '@/utils/formatters';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import type { RpcTransaction, Vin, Vout, ZindexTransaction } from '../../types/transaction';
 
 interface TransactionIOViewProps {
   tx: RpcTransaction | ZindexTransaction;
@@ -13,6 +16,7 @@ interface OutputSpender {
 }
 
 export function TransactionIOView({ tx }: TransactionIOViewProps) {
+  const router = useRouter();
   const [spenders, setSpenders] = useState<Record<number, string>>({});
   const [loadingSpenders, setLoadingSpenders] = useState<boolean>(false);
 
@@ -49,14 +53,14 @@ export function TransactionIOView({ tx }: TransactionIOViewProps) {
 
   const handleInputClick = (input: Vin) => {
     if (input.txid && !input.coinbase) {
-      window.location.hash = `#/tx/${input.txid}`;
+      router.push(`/tx/${input.txid}`);
     }
   };
 
   const handleOutputClick = (output: Vout) => {
     const spendingTxid = spenders[output.n];
     if (spendingTxid) {
-      window.location.hash = `#/tx/${spendingTxid}`;
+      router.push(`/tx/${spendingTxid}`);
     }
   };
 
@@ -71,7 +75,7 @@ export function TransactionIOView({ tx }: TransactionIOViewProps) {
           {tx.vin?.map((input: Vin, idx: number) => (
             <div
               key={input.txid ? `${input.txid}-${input.vout}` : `coinbase-${idx}`}
-              className={`reveal-on-scroll p-4 bg-white/[0.02] border border-white/5 rounded-lg flex flex-col gap-2 ${
+              className={`p-4 bg-white/[0.02] border border-white/5 rounded-lg flex flex-col gap-2 ${
                 !input.coinbase ? 'cursor-pointer hover:border-white/10 transition-colors' : ''
               }`}
               onClick={() => handleInputClick(input)}
@@ -132,7 +136,7 @@ export function TransactionIOView({ tx }: TransactionIOViewProps) {
             return (
               <div
                 key={output.n}
-                className={`reveal-on-scroll p-4 bg-white/[0.02] border border-white/5 rounded-lg flex flex-col gap-2 transition-colors ${
+                className={`p-4 bg-white/[0.02] border border-white/5 rounded-lg flex flex-col gap-2 transition-colors ${
                   isSpent ? 'cursor-pointer hover:border-white/10' : ''
                 }`}
                 onClick={() => handleOutputClick(output)}

@@ -1,29 +1,26 @@
-import { StatCard } from '@components/common/StatCard';
-import { TransactionCard } from '@components/transactions/TransactionCard';
-import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
-import { getRawTransaction } from '@services/rpc';
+'use client';
+
+import { StatCard } from '@/components/common/StatCard';
+import { TransactionCard } from '@/components/transactions/TransactionCard';
+import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
+import { getRawTransaction } from '@/services/rpc';
 import {
   getRecentFacts,
   getStarkProofsByVerifier,
   getVerifier,
   getVerifierByName,
-} from '@services/zindex/starks';
-import { formatZEC } from '@utils/formatters';
+} from '@/services/zindex/starks';
+import type { RpcTransaction } from '@/types/transaction';
+import type { StarkProof, VerifierData, ZtarknetFact } from '@/types/zindex';
+import { formatZEC } from '@/utils/formatters';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import type { RpcTransaction } from '../types/transaction';
-import type { StarkProof, VerifierData } from '../types/zindex';
 
-interface VerifierPageProps {
+interface VerifierPageContentProps {
   verifierId: string;
 }
 
-interface ZtarknetFact {
-  inner_program_hash?: string;
-  program_hash?: string;
-  new_state?: string;
-}
-
-export function VerifierPage({ verifierId }: VerifierPageProps) {
+export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
   const [verifier, setVerifier] = useState<VerifierData | null>(null);
   const [proofs, setProofs] = useState<StarkProof[]>([]);
   const [latestFact, setLatestFact] = useState<ZtarknetFact | null>(null);
@@ -47,7 +44,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
           // Fetch by name first
           try {
             verifierData = await getVerifierByName(verifierId);
-          } catch (e) {
+          } catch {
             // Fall back to ID if name fails
             verifierData = await getVerifier(verifierId);
           }
@@ -55,7 +52,7 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
           // Fetch by ID first
           try {
             verifierData = await getVerifier(verifierId);
-          } catch (e) {
+          } catch {
             // Fall back to name if ID fails
             verifierData = await getVerifierByName(verifierId);
           }
@@ -84,7 +81,8 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
         try {
           const factsData = await getRecentFacts({ limit: 1 });
           if (Array.isArray(factsData) && factsData.length > 0) {
-            setLatestFact(factsData[0]);
+            const firstFact = factsData[0];
+            setLatestFact(firstFact ?? null);
           } else {
             setLatestFact(null);
           }
@@ -190,12 +188,12 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
     return (
       <div className="container-custom section-padding flex-1">
         <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3">
-          <a
-            href="#/"
+          <Link
+            href="/"
             className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
           >
             ← Back to Blocks
-          </a>
+          </Link>
         </div>
 
         <h2 className="heading-section mb-6 skeleton-text">Loading Verifier...</h2>
@@ -248,12 +246,12 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Error: {error}
           <br />
-          <a
-            href="#/"
+          <Link
+            href="/"
             className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.4)] text-foreground hover:border-accent hover:-translate-y-0.5 mt-5"
           >
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -299,12 +297,12 @@ export function VerifierPage({ verifierId }: VerifierPageProps) {
   return (
     <div className="container-custom section-padding flex-1">
       <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3">
-        <a
-          href="#/"
+        <Link
+          href="/"
           className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
         >
           ← Back to Blocks
-        </a>
+        </Link>
       </div>
 
       {/* Verifier Name */}

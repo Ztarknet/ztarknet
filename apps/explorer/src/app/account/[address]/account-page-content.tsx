@@ -1,16 +1,18 @@
-import { StatCard } from '@components/common/StatCard';
-import { TransactionCard } from '@components/transactions/TransactionCard';
-import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
-import { getRawTransaction } from '@services/rpc';
+'use client';
+
+import { StatCard } from '@/components/common/StatCard';
+import { TransactionCard } from '@/components/transactions/TransactionCard';
+import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
+import { getRawTransaction } from '@/services/rpc';
 import {
   getAccount,
   getAccountTransactionCount,
   getAccountTransactions,
-} from '@services/zindex/accounts';
-import { useCallback } from 'react';
-import { useEffect, useState } from 'react';
-import type { RpcTransaction } from '../types/transaction';
-import type { AccountData, Transaction } from '../types/zindex';
+} from '@/services/zindex/accounts';
+import type { RpcTransaction } from '@/types/transaction';
+import type { AccountData, Transaction } from '@/types/zindex';
+import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
 
 interface BalanceHistoryPoint {
   index: number;
@@ -62,7 +64,10 @@ function BalanceChart({ data, isLoading = false }: BalanceChartProps) {
     .join(' ');
 
   // Create area path for gradient fill
-  const areaPath = `${linePath} L ${points[points.length - 1].x} ${height - padding.bottom} L ${padding.left} ${height - padding.bottom} Z`;
+  const lastPoint = points[points.length - 1];
+  const areaPath = lastPoint
+    ? `${linePath} L ${lastPoint.x} ${height - padding.bottom} L ${padding.left} ${height - padding.bottom} Z`
+    : '';
 
   return (
     <div className="w-full border border-[rgba(255,137,70,0.2)] rounded-2xl bg-[rgba(8,8,12,0.9)] p-6 overflow-hidden">
@@ -157,11 +162,11 @@ function BalanceChart({ data, isLoading = false }: BalanceChartProps) {
 
 const PAGE_SIZE = 10;
 
-interface AccountPageProps {
+interface AccountPageContentProps {
   address: string;
 }
 
-export function AccountPage({ address }: AccountPageProps) {
+export function AccountPageContent({ address }: AccountPageContentProps) {
   const [account, setAccount] = useState<AccountData | null>(null);
   const [transactions, setTransactions] = useState<RpcTransaction[]>([]);
   const [transactionCount, setTransactionCount] = useState<number>(0);
@@ -184,7 +189,7 @@ export function AccountPage({ address }: AccountPageProps) {
         let accountData: Awaited<ReturnType<typeof getAccount>> | undefined;
         try {
           accountData = await getAccount(address);
-        } catch (e) {
+        } catch {
           throw new Error(`Account not found: ${address}`);
         }
 
@@ -198,7 +203,7 @@ export function AccountPage({ address }: AccountPageProps) {
         try {
           const countData = await getAccountTransactionCount(address);
           setTransactionCount(typeof countData === 'number' ? countData : countData?.count || 0);
-        } catch (countError) {
+        } catch {
           // Transaction count endpoint may not be available, default to 0
           setTransactionCount(0);
         }
@@ -232,13 +237,6 @@ export function AccountPage({ address }: AccountPageProps) {
         }
       }
     }
-
-    // Calculate sent: sum of inputs from this address
-    // Note: For coinbase txs, vin[0].coinbase exists and there's no address
-    // For regular txs, we'd need to look up the previous tx output (complex)
-    // For now, we can estimate sent by checking if any vin references this address
-    // But since we don't have that data readily, we'll use a simpler approach:
-    // If it's a 'send' type from zindex, the sent amount ≈ total input - change back
 
     // For simplicity, return the net change (received is in ZEC, convert to zatoshis)
     return {
@@ -421,12 +419,12 @@ export function AccountPage({ address }: AccountPageProps) {
     return (
       <div className="container-custom section-padding flex-1">
         <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3">
-          <a
-            href="#/"
+          <Link
+            href="/"
             className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
           >
             ← Back to Blocks
-          </a>
+          </Link>
         </div>
 
         <h2 className="heading-section mb-6 skeleton-text">Loading Account...</h2>
@@ -464,12 +462,12 @@ export function AccountPage({ address }: AccountPageProps) {
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
           Error: {error}
           <br />
-          <a
-            href="#/"
+          <Link
+            href="/"
             className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.4)] text-foreground hover:border-accent hover:-translate-y-0.5 mt-5"
           >
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -502,12 +500,12 @@ export function AccountPage({ address }: AccountPageProps) {
   return (
     <div className="container-custom section-padding flex-1">
       <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3">
-        <a
-          href="#/"
+        <Link
+          href="/"
           className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
         >
           ← Back to Blocks
-        </a>
+        </Link>
       </div>
 
       {/* Account Title */}

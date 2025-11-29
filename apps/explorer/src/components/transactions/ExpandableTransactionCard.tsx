@@ -1,10 +1,13 @@
-import { TZEDetailsView } from '@components/transactions/TZEDetailsView';
-import { TransactionIOView } from '@components/transactions/TransactionIOView';
-import { formatSize, formatZEC } from '@utils/formatters';
-import { getTransactionKind, getTransactionStats } from '@utils/tx-parser';
+'use client';
+
+import { TZEDetailsView } from '@/components/transactions/TZEDetailsView';
+import { TransactionIOView } from '@/components/transactions/TransactionIOView';
+import type { Transaction, TransactionKind } from '@/types/transaction';
+import { formatSize, formatZEC } from '@/utils/formatters';
+import { getTransactionKind, getTransactionStats } from '@/utils/tx-parser';
 import { GlowingEffect } from '@workspace/ui/components/glowing-effect';
+import Link from 'next/link';
 import { useState } from 'react';
-import type { Transaction, TransactionKind } from '../../types/transaction';
 
 const TX_KIND_STYLES: Record<TransactionKind, string> = {
   coinbase: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
@@ -24,17 +27,10 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
 
   return (
     <div key={tx.txid || index} className="flex flex-col gap-0">
-      <div
-        className="group cursor-pointer relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-1 md:p-1.5 transition-all duration-300"
+      <button
+        type="button"
+        className="group cursor-pointer relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-1 md:p-1.5 transition-all duration-300 text-left w-full"
         onClick={() => setIsExpanded(!isExpanded)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setIsExpanded(!isExpanded);
-          }
-        }}
-        role="button"
-        tabIndex={0}
       >
         <GlowingEffect
           spread={40}
@@ -118,17 +114,10 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
             </div>
           </div>
         </div>
-      </div>
+      </button>
 
-      {/* Expandable section with height animation */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateRows: isExpanded ? '1fr' : '0fr',
-          transition: 'grid-template-rows 0.3s ease-out',
-        }}
-      >
-        <div style={{ overflow: 'hidden' }}>
+      {/* Expandable section */}
+      {isExpanded && (
           <div className="p-6 bg-[rgba(6,6,9,0.9)] border border-[rgba(255,137,70,0.1)] border-t-0 rounded-b-xl -mt-2">
             <TransactionIOView tx={tx} />
 
@@ -137,16 +126,15 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
 
             {/* View Full Transaction Button */}
             <div className="mt-8 text-right">
-              <a
-                href={`#/tx/${tx.txid}`}
+            <Link
+              href={`/tx/${tx.txid}`}
                 className="inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium py-2 px-4 border border-[rgba(255,137,70,0.2)] text-foreground hover:border-[rgba(255,137,70,0.4)] hover:text-accent transition-colors"
               >
                 View Full Transaction →
-              </a>
-            </div>
+            </Link>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

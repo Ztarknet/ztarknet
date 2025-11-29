@@ -1,64 +1,42 @@
-import { HashDisplay } from '@components/common/HashDisplay';
-import { StatCard } from '@components/common/StatCard';
-import { TransactionDetails } from '@components/transactions/TransactionDetails';
-import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
-import { type BlockData, getBlock, getRawTransaction } from '@services/rpc';
-import { formatTime } from '@utils/formatters';
-import { getTransactionKind } from '@utils/tx-parser';
-import { type CSSProperties, useEffect, useState } from 'react';
-import type { RpcTransaction, Transaction, TransactionKind } from '../types/transaction';
+'use client';
 
-interface TransactionPageProps {
+import { HashDisplay } from '@/components/common/HashDisplay';
+import { StatCard } from '@/components/common/StatCard';
+import { TransactionDetails } from '@/components/transactions/TransactionDetails';
+import { useBlock, useTransaction } from '@/hooks/queries';
+import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
+import type { RpcTransaction, TransactionKind } from '@/types/transaction';
+import { formatTime } from '@/utils/formatters';
+import { getTransactionKind } from '@/utils/tx-parser';
+import Link from 'next/link';
+import type { CSSProperties } from 'react';
+
+interface TransactionPageContentProps {
   txid: string;
 }
 
-export function TransactionPage({ txid }: TransactionPageProps) {
-  const [tx, setTx] = useState<Transaction | null>(null);
-  const [block, setBlock] = useState<BlockData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export function TransactionPageContent({ txid }: TransactionPageContentProps) {
+  const { data: tx, isLoading: loadingTx, error: txError } = useTransaction(txid);
+
+  // Get block details if transaction has a blockhash
+  const blockhash = tx && typeof tx !== 'string' ? tx.blockhash : undefined;
+  const { data: block, isLoading: loadingBlock } = useBlock(blockhash ?? '', 1);
+
   useRevealOnScroll();
 
-  useEffect(() => {
-    async function fetchTransaction() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Get transaction details
-        const txData = await getRawTransaction(txid);
-        setTx(txData);
-
-        // Get block details if transaction is in a block
-        if (typeof txData !== 'string' && txData.blockhash) {
-          const blockData = await getBlock(txData.blockhash);
-          setBlock(blockData);
-        }
-
-        setLoading(false);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Failed to fetch transaction');
-        }
-        setLoading(false);
-      }
-    }
-
-    fetchTransaction();
-  }, [txid]);
+  const loading = loadingTx || (blockhash && loadingBlock);
+  const error = txError;
 
   if (loading) {
     return (
       <div className="container-custom section-padding flex-1 w-full">
         <div className="mb-6 flex flex-row gap-3 w-full">
-          <a
-            href="#/"
+          <Link
+            href="/"
             className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
           >
             ← Back to Blocks
-          </a>
+          </Link>
         </div>
 
         {/* Skeleton title */}
@@ -115,14 +93,14 @@ export function TransactionPage({ txid }: TransactionPageProps) {
     return (
       <div className="container-custom section-padding flex-1 w-full">
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
-          Error: {error}
+          Error: {error instanceof Error ? error.message : 'Unknown error'}
           <br />
-          <a
-            href="#/"
+          <Link
+            href="/"
             className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.4)] text-foreground hover:border-accent hover:-translate-y-0.5 mt-5"
           >
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -154,19 +132,19 @@ export function TransactionPage({ txid }: TransactionPageProps) {
   return (
     <div className="container-custom section-padding flex-1 w-full">
       <div className="mb-6 flex flex-row gap-3 w-full">
-        <a
-          href="#/"
+        <Link
+          href="/"
           className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
         >
           ← Back to Blocks
-        </a>
+        </Link>
         {block && (
-          <a
-            href={`#/block/${block.hash}`}
+          <Link
+            href={`/block/${block.hash}`}
             className="w-fit inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
           >
             View Block
-          </a>
+          </Link>
         )}
       </div>
 

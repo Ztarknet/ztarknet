@@ -1,22 +1,24 @@
-import { BlocksList } from '@components/blocks/BlocksList';
-import { StatCard } from '@components/common/StatCard';
-import { TransactionsList } from '@components/transactions/TransactionsList';
-import { useChainHeight } from '@hooks/useBlockPolling';
-import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
-import { RPC_ENDPOINT } from '@services/rpc';
+'use client';
+
+import { BlocksList } from '@/components/blocks/BlocksList';
+import { StatCard } from '@/components/common/StatCard';
+import { TransactionsList } from '@/components/transactions/TransactionsList';
+import { useChainHeight } from '@/hooks/queries';
+import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
+import { RPC_ENDPOINT } from '@/services/rpc';
 import { GlowingEffect } from '@workspace/ui/components/glowing-effect';
 
 const MAX_BLOCKS = 7;
 
-export function MainPage() {
-  const { chainHeight, loading, error } = useChainHeight();
+export function MainPageContent() {
+  const { data: chainHeight, isLoading: loading, error } = useChainHeight();
   useRevealOnScroll();
 
   return (
     <div className="container-custom section-padding flex-1">
       {error && (
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6">
-          Error: {error}
+          Error: {error instanceof Error ? error.message : 'Unknown error'}
           <br />
           Make sure the RPC endpoint is accessible.
         </div>
@@ -25,7 +27,7 @@ export function MainPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12 min-h-40">
         <StatCard
           label="Chain Height"
-          value={chainHeight.toLocaleString()}
+          value={chainHeight?.toLocaleString() ?? '---'}
           description="Total blocks mined"
           isLoading={loading}
         />

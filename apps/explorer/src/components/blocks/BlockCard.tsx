@@ -1,6 +1,10 @@
-import { formatSize, formatTime, formatZEC, getBlockReward } from '@utils/formatters';
+'use client';
+
+import { useRelativeTime } from '@/hooks/useRelativeTime';
+import type { BlockData } from '@/types/block';
+import { formatSize, formatZEC, getBlockReward } from '@/utils/formatters';
 import { GlowingEffect } from '@workspace/ui/components/glowing-effect';
-import type { BlockData } from '../../types/block';
+import Link from 'next/link';
 
 interface BlockCardProps {
   block?: BlockData;
@@ -8,6 +12,7 @@ interface BlockCardProps {
 }
 
 export function BlockCard({ block, isLoading = false }: BlockCardProps) {
+  const relativeTime = useRelativeTime(block?.time);
   if (isLoading) {
     return (
       <div className="group relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-1 md:p-1.5 transition-all duration-300">
@@ -62,8 +67,8 @@ export function BlockCard({ block, isLoading = false }: BlockCardProps) {
   const reward = getBlockReward(block);
 
   return (
-    <a
-      href={`#/block/${block.hash}`}
+    <Link
+      href={`/block/${block.hash}`}
       className="group block no-underline relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-1 md:p-1.5 transition-all duration-300"
     >
       <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} />
@@ -73,8 +78,8 @@ export function BlockCard({ block, isLoading = false }: BlockCardProps) {
             <span className="text-lg font-bold text-accent font-mono whitespace-nowrap">
               Block #{block.height.toLocaleString()}
             </span>
-            <span className="text-xs text-[rgba(255,255,255,0.5)] font-mono whitespace-nowrap">
-              {formatTime(block.time)}
+            <span className="text-xs text-[rgba(255,255,255,0.5)] font-mono whitespace-nowrap tabular-nums">
+              {relativeTime}
             </span>
           </div>
 
@@ -107,6 +112,6 @@ export function BlockCard({ block, isLoading = false }: BlockCardProps) {
           </div>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

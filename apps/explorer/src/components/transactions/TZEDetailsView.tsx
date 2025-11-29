@@ -1,7 +1,16 @@
-import { getRawTransaction } from '@services/rpc';
-import { getVerifier } from '@services/zindex/starks';
-import { getTzeInputsByPrevOutput } from '@services/zindex/tze_graph';
-import { copyToClipboard } from '@utils/formatters';
+'use client';
+
+import { CopyableCode } from '@/components/common/CopyableCode';
+import { getRawTransaction } from '@/services/rpc';
+import { getVerifier } from '@/services/zindex/starks';
+import { getTzeInputsByPrevOutput } from '@/services/zindex/tze_graph';
+import type {
+  RpcTransaction,
+  Transaction,
+  Vin,
+  Vout,
+  ZindexTransaction,
+} from '@/types/transaction';
 import {
   type StarkVerifyWitness,
   type TzeData,
@@ -10,15 +19,9 @@ import {
   parseStarkVerifyPrecondition,
   parseStarkVerifyWitness,
   parseTZEData,
-} from '@utils/tze-parser';
+} from '@/utils/tze-parser';
+import Link from 'next/link';
 import { type ReactElement, useEffect, useState } from 'react';
-import type {
-  RpcTransaction,
-  Transaction,
-  Vin,
-  Vout,
-  ZindexTransaction,
-} from '../../types/transaction';
 
 interface TZEDetailsViewProps {
   tx: RpcTransaction | ZindexTransaction;
@@ -122,7 +125,7 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
 
       try {
         setLoadingVerifier(true);
-        const { getStarkProofsByTransaction } = await import('@services/zindex/starks');
+        const { getStarkProofsByTransaction } = await import('@/services/zindex/starks');
 
         // Get STARK proofs for this transaction
         const proofsData = await getStarkProofsByTransaction(tx.txid);
@@ -258,57 +261,15 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
           <div className="p-0">
             <div className="flex flex-col gap-2 mb-4">
               <span className="field-label">Genesis State</span>
-              <code
-                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
-                onClick={() => copyToClipboard(precondition.root)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    copyToClipboard(precondition.root);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                title="Click to copy"
-              >
-                {precondition.root}
-              </code>
+              <CopyableCode value={precondition.root} />
             </div>
             <div className="flex flex-col gap-2 mb-4">
               <span className="field-label">OS Program Hash</span>
-              <code
-                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
-                onClick={() => copyToClipboard(precondition.osProgramHash)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    copyToClipboard(precondition.osProgramHash);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                title="Click to copy"
-              >
-                {precondition.osProgramHash}
-              </code>
+              <CopyableCode value={precondition.osProgramHash} />
             </div>
             <div className="flex flex-col gap-2 mb-0">
               <span className="field-label">Bootloader Program Hash</span>
-              <code
-                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
-                onClick={() => copyToClipboard(precondition.bootloaderProgramHash)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    copyToClipboard(precondition.bootloaderProgramHash);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                title="Click to copy"
-              >
-                {precondition.bootloaderProgramHash}
-              </code>
+              <CopyableCode value={precondition.bootloaderProgramHash} />
             </div>
           </div>
         );
@@ -330,112 +291,48 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
             <div className="flex flex-col gap-2 mb-4">
               <span className="field-label">Old State Root</span>
               {loadingOldState ? (
-                <code className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]">
+                <span className="font-mono text-sm text-foreground break-all py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)]">
                   Loading...
-                </code>
+                </span>
               ) : oldStateRoot ? (
-                <code
-                  className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
-                  onClick={() => copyToClipboard(oldStateRoot)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      copyToClipboard(oldStateRoot);
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  title="Click to copy"
-                >
-                  {oldStateRoot}
-                </code>
+                <CopyableCode value={oldStateRoot} />
               ) : (
-                <code className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]">
+                <span className="font-mono text-sm text-foreground break-all py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)]">
                   Unable to fetch
-                </code>
+                </span>
               )}
             </div>
 
             <div className="flex flex-col gap-2 mb-4">
               <span className="field-label">New State Root</span>
-              <code
-                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
-                onClick={() => copyToClipboard(newStatePrecondition.root)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    copyToClipboard(newStatePrecondition.root);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                title="Click to copy"
-              >
-                {newStatePrecondition.root}
-              </code>
+              <CopyableCode value={newStatePrecondition.root} />
             </div>
 
             <div className="flex flex-col gap-2 mb-4">
               <span className="field-label">OS Program Hash</span>
-              <code
-                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
-                onClick={() => copyToClipboard(newStatePrecondition.osProgramHash)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    copyToClipboard(newStatePrecondition.osProgramHash);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                title="Click to copy"
-              >
-                {newStatePrecondition.osProgramHash}
-              </code>
+              <CopyableCode value={newStatePrecondition.osProgramHash} />
             </div>
 
             <div className="flex flex-col gap-2 mb-4">
               <span className="field-label">Bootloader Program Hash</span>
-              <code
-                className="font-mono text-sm text-foreground break-all cursor-pointer py-2 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)]"
-                onClick={() => copyToClipboard(newStatePrecondition.bootloaderProgramHash)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    copyToClipboard(newStatePrecondition.bootloaderProgramHash);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                title="Click to copy"
-              >
-                {newStatePrecondition.bootloaderProgramHash}
-              </code>
+              <CopyableCode value={newStatePrecondition.bootloaderProgramHash} />
             </div>
 
             {witness?.proofData && (
               <div className="flex flex-col gap-2 mb-0">
                 <span className="field-label">Proof</span>
                 <div className="flex flex-col gap-2.5">
-                  <code
-                    className={`font-mono text-xs text-foreground break-all cursor-pointer py-3 px-3 bg-black/30 rounded-md border border-[rgba(255,107,26,0.1)] transition-all duration-200 hover:bg-black/50 hover:border-[rgba(255,107,26,0.3)] leading-relaxed overflow-y-auto ${
+                  <CopyableCode
+                    value={witness.proofData}
+                    truncated={
+                      expandedProof
+                        ? witness.proofData
+                        : `${witness.proofData.slice(0, 120)}...${witness.proofData.slice(-120)}`
+                    }
+                    className={`text-xs py-3 leading-relaxed overflow-y-auto ${
                       expandedProof ? 'max-h-[600px]' : 'max-h-[200px]'
                     }`}
-                    onClick={() => copyToClipboard(witness.proofData)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        copyToClipboard(witness.proofData);
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    title="Click to copy"
-                  >
-                    {expandedProof
-                      ? witness.proofData
-                      : `${witness.proofData.slice(0, 120)}...${witness.proofData.slice(-120)}`}
-                  </code>
+                  />
                   <div className="flex items-center justify-end gap-3">
                     <span className="text-xs text-muted font-mono">{witness.proofSizeMB} MB</span>
                     <button
@@ -499,8 +396,8 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
               {loadingVerifier ? (
                 <span className="font-mono text-sm text-muted">Loading...</span>
               ) : verifierName ? (
-                <a
-                  href={`#/verifier/${verifierName}`}
+                <Link
+                  href={`/verifier/${verifierName}`}
                   className="inline-flex items-center gap-1.5 font-mono text-sm text-accent-strong font-semibold hover:text-accent transition-colors duration-200 no-underline group"
                 >
                   {verifierName}
@@ -515,29 +412,29 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
                   >
                     <path d="M9 18l6-6-6-6" />
                   </svg>
-                </a>
+                </Link>
               ) : (
                 <span className="font-mono text-sm text-muted italic">Not available</span>
               )}
             </div>
             <div className="flex items-center gap-2">
               {tzeMode === 1 && spendingTzeInput && spendingTzeInput.txid && (
-                <a
-                  href={`#/tx/${spendingTzeInput.txid}`}
+                <Link
+                  href={`/tx/${spendingTzeInput.txid}`}
                   className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:-translate-x-0.5 whitespace-nowrap"
                   title="View the previous STARK Verify transaction"
                 >
                   ← View Prev Verify
-                </a>
+                </Link>
               )}
               {nextVerifyTx && (
-                <a
-                  href={`#/tx/${nextVerifyTx}`}
+                <Link
+                  href={`/tx/${nextVerifyTx}`}
                   className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:translate-x-0.5 whitespace-nowrap"
                   title="View the next STARK Verify transaction"
                 >
                   View Next Verify →
-                </a>
+                </Link>
               )}
             </div>
           </div>

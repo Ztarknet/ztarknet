@@ -5,14 +5,14 @@
  */
 
 // Re-export common utilities
-export * from './zindex.js';
+export * from './zindex';
 
 // Re-export all module functions
-export * as blocks from './blocks.js';
-export * as txGraph from './tx_graph.js';
-export * as accounts from './accounts.js';
-export * as tzeGraph from './tze_graph.js';
-export * as starks from './starks.js';
+export * as blocks from './blocks';
+export * as txGraph from './tx_graph';
+export * as accounts from './accounts';
+export * as tzeGraph from './tze_graph';
+export * as starks from './starks';
 
 // Individual named exports for convenience
 export {
@@ -25,7 +25,7 @@ export {
   getRecentBlocks,
   getBlockCount,
   getLatestBlock,
-} from './blocks.js';
+} from './blocks';
 
 export {
   // Transaction Graph - Transactions
@@ -48,7 +48,7 @@ export {
   // countInputs,
   // Transaction Graph - Graph
   getTransactionGraph,
-} from './tx_graph.js';
+} from './tx_graph';
 
 export {
   // Accounts
@@ -69,7 +69,7 @@ export {
   // Accounts - Count
   // countAccounts, // TODO: Add when migrating latest upstream changes
   // countAccountTransactions,
-} from './accounts.js';
+} from './accounts';
 
 export {
   // TZE Inputs
@@ -91,7 +91,7 @@ export {
   getUnspentTzeOutputsByTypeAndMode,
   getSpentTzeOutputs,
   getTzeOutputsByValue,
-} from './tze_graph.js';
+} from './tze_graph';
 
 export {
   // Verifiers
@@ -122,4 +122,4 @@ export {
   // countFacts,
   // STARKS - Aggregations
   // getSumProofSizesByVerifier,
-} from './starks.js';
+} from './starks';

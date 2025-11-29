@@ -8,11 +8,8 @@ import type { QueryParams, ZindexResponse } from '../../types/zindex';
 
 /**
  * Get the Zindex API endpoint from environment or use default
- * Supports Vite environment variable override
  */
-export const ZINDEX_ENDPOINT =
-  (import.meta as { env?: { VITE_ZINDEX_ENDPOINT?: string } }).env?.VITE_ZINDEX_ENDPOINT ||
-  'https://zindex.ztarknet.cash';
+export const ZINDEX_ENDPOINT = process.env.NEXT_PUBLIC_ZINDEX_URL || 'https://zindex.ztarknet.cash';
 
 /**
  * Base API paths

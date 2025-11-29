@@ -1,7 +1,10 @@
-import { formatSize, formatZEC } from '@utils/formatters';
-import { getTransactionKind, getTransactionStats } from '@utils/tx-parser';
+'use client';
+
+import type { Transaction, TransactionKind } from '@/types/transaction';
+import { formatSize, formatZEC } from '@/utils/formatters';
+import { getTransactionKind, getTransactionStats } from '@/utils/tx-parser';
 import { GlowingEffect } from '@workspace/ui/components/glowing-effect';
-import type { Transaction, TransactionKind } from '../../types/transaction';
+import Link from 'next/link';
 
 const TX_KIND_STYLES: Record<TransactionKind, string> = {
   coinbase: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
@@ -101,8 +104,8 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
   const txKind = getTransactionKind(tx);
 
   return (
-    <a
-      href={`#/tx/${tx.txid}`}
+    <Link
+      href={`/tx/${tx.txid}`}
       className="group block no-underline relative rounded-2xl border border-[rgba(255,137,70,0.25)] bg-[rgba(8,8,12,0.8)] p-1 md:p-1.5 transition-all duration-300"
     >
       <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} />
@@ -181,6 +184,6 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
           </div>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

@@ -13,7 +13,8 @@ export function getTransactionKind(tx: Transaction): TransactionKind {
 
   // Otherwise use RPC format detection
   // Check if coinbase
-  if (tx.vin && tx.vin.length > 0 && tx.vin[0].coinbase) {
+  const firstVin = tx.vin?.[0];
+  if (tx.vin && tx.vin.length > 0 && firstVin?.coinbase) {
     return 'coinbase';
   }
 

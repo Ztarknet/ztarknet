@@ -1,63 +1,32 @@
-import { HashDisplay } from '@components/common/HashDisplay';
-import { StatCard } from '@components/common/StatCard';
-import { ExpandableTransactionCard } from '@components/transactions/ExpandableTransactionCard';
-import { useRevealOnScroll } from '@hooks/useRevealOnScroll';
-import { type BlockData, getBlock, getBlockHash } from '@services/rpc';
-import { formatSize, formatTime, formatZEC, getBlockReward } from '@utils/formatters';
-import { useEffect, useState } from 'react';
-import type { RpcTransaction } from '../types/transaction';
+'use client';
 
-interface BlockPageProps {
+import { HashDisplay } from '@/components/common/HashDisplay';
+import { StatCard } from '@/components/common/StatCard';
+import { ExpandableTransactionCard } from '@/components/transactions/ExpandableTransactionCard';
+import { useBlock } from '@/hooks/queries';
+import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
+import type { RpcTransaction } from '@/types/transaction';
+import { formatSize, formatTime, formatZEC, getBlockReward } from '@/utils/formatters';
+import Link from 'next/link';
+
+interface BlockPageContentProps {
   blockId: string;
 }
 
-export function BlockPage({ blockId }: BlockPageProps) {
-  const [block, setBlock] = useState<BlockData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export function BlockPageContent({ blockId }: BlockPageContentProps) {
+  const { data: block, isLoading: loading, error } = useBlock(blockId);
   useRevealOnScroll();
-
-  useEffect(() => {
-    async function fetchBlock() {
-      try {
-        setLoading(true);
-        let blockHash = blockId;
-
-        // If blockId is a number (height), get the hash first
-        if (/^\d+$/.test(blockId)) {
-          blockHash = await getBlockHash(blockId);
-        }
-
-        // Fetch block with verbosity 2 (includes transaction data)
-        const blockData = await getBlock(blockHash, 2);
-        setBlock(blockData);
-        setLoading(false);
-        setError(null);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          console.error('Error fetching block:', err.message);
-          setError(err.message);
-        } else {
-          console.error('Error fetching block:', err);
-          setError('Failed to fetch block');
-        }
-        setLoading(false);
-      }
-    }
-
-    fetchBlock();
-  }, [blockId]);
 
   if (loading) {
     return (
       <div className="container-custom section-padding flex-1 w-full">
         <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3 w-full">
-          <a
-            href="#/"
+          <Link
+            href="/"
             className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
           >
             ← Back to Blocks
-          </a>
+          </Link>
           <div className="flex gap-3">
             <button
               type="button"
@@ -124,14 +93,14 @@ export function BlockPage({ blockId }: BlockPageProps) {
     return (
       <div className="container-custom section-padding flex-1 w-full">
         <div className="p-6 bg-red-600/10 border border-red-600/30 rounded-xl text-red-200 font-mono mb-6 w-full">
-          Error: {error}
+          Error: {error instanceof Error ? error.message : 'Unknown error'}
           <br />
-          <a
-            href="#/"
+          <Link
+            href="/"
             className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.4)] text-foreground hover:border-accent hover:-translate-y-0.5 mt-5"
           >
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -153,27 +122,27 @@ export function BlockPage({ blockId }: BlockPageProps) {
   return (
     <div className="container-custom section-padding flex-1 w-full">
       <div className="mb-6 flex flex-row flex-wrap justify-between items-center gap-3 w-full">
-        <a
-          href="#/"
+        <Link
+          href="/"
           className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
         >
           ← Back to Blocks
-        </a>
+        </Link>
         <div className="flex gap-3">
-          <a
-            href={`#/block/${block.height - 1}`}
+          <Link
+            href={`/block/${block.height - 1}`}
             className={`inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5 ${
               block.height <= 0 ? 'opacity-50 pointer-events-none' : ''
             }`}
           >
             ← Previous Block
-          </a>
-          <a
-            href={`#/block/${block.height + 1}`}
+          </Link>
+          <Link
+            href={`/block/${block.height + 1}`}
             className="inline-flex items-center justify-center gap-2.5 rounded-full text-sm font-semibold tracking-wide py-2.5 px-5 border transition-all duration-200 cursor-pointer border-[rgba(255,107,26,0.3)] text-foreground hover:border-accent hover:-translate-y-0.5"
           >
             Next Block →
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -194,8 +163,8 @@ export function BlockPage({ blockId }: BlockPageProps) {
         />
         <StatCard
           label="Block Size"
-          value={block.size ? formatSize(block.size).split(' ')[0] : 'N/A'}
-          description={block.size ? formatSize(block.size).split(' ')[1] : ''}
+          value={block.size ? (formatSize(block.size).split(' ')[0] ?? 'N/A') : 'N/A'}
+          description={block.size ? (formatSize(block.size).split(' ')[1] ?? '') : ''}
         />
       </div>
 

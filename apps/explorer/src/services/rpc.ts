@@ -33,15 +33,21 @@ export interface BlockData {
   valuePools?: ValuePool[];
 }
 
-const RPC_ENDPOINT =
-  (import.meta as { env?: { VITE_RPC_ENDPOINT?: string } }).env?.VITE_RPC_ENDPOINT ||
-  'https://rpc.regtest.ztarknet.cash';
+// Use local API route to avoid CORS issues
+const RPC_ENDPOINT = '/api/rpc';
+
+// Export the actual RPC endpoint for display purposes
+export const RPC_ENDPOINT_DISPLAY =
+  process.env.NEXT_PUBLIC_RPC_ENDPOINT || 'https://rpc.regtest.ztarknet.cash';
 
 // Low-level RPC helper function
 async function rpcCall<T>(method: string, params: unknown[] = []): Promise<T> {
   try {
     const response = await fetch(RPC_ENDPOINT, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         jsonrpc: '1.0',
         id: 'explorer',
@@ -120,4 +126,5 @@ export async function getBlocks(heights: number[], verbosity = 1): Promise<Block
   return await Promise.all(promises);
 }
 
-export { RPC_ENDPOINT };
+// Export display endpoint for UI
+export { RPC_ENDPOINT_DISPLAY as RPC_ENDPOINT };

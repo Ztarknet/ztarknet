@@ -1,9 +1,11 @@
-import { TZEDetailsView } from '@components/transactions/TZEDetailsView';
-import { TransactionIOView } from '@components/transactions/TransactionIOView';
-import { formatSize, formatZEC } from '@utils/formatters';
-import { getTransactionStats } from '@utils/tx-parser';
+'use client';
+
+import { TZEDetailsView } from '@/components/transactions/TZEDetailsView';
+import { TransactionIOView } from '@/components/transactions/TransactionIOView';
+import type { Transaction, TransactionKind } from '@/types/transaction';
+import { formatSize, formatZEC } from '@/utils/formatters';
+import { getTransactionStats } from '@/utils/tx-parser';
 import { GlowingEffect } from '@workspace/ui/components/glowing-effect';
-import type { Transaction, TransactionKind } from '../../types/transaction';
 
 interface TransactionDetailsProps {
   tx: Transaction;
