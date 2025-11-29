@@ -1,5 +1,6 @@
 'use client';
 
+import { DecodingText } from '@/components/common/DecodingText';
 import type { Transaction, TransactionKind } from '@/types/transaction';
 import { formatSize, formatZEC } from '@/utils/formatters';
 import { getTransactionKind, getTransactionStats } from '@/utils/tx-parser';
@@ -27,8 +28,8 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
             <span className="badge border bg-accent/20 text-accent border-accent/30 skeleton-text">
               ---
             </span>
-            <code className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis whitespace-normal break-all bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md skeleton-text">
-              ----------------------------------------------------------------
+            <code className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis whitespace-normal break-all bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md">
+              <DecodingText text="" isLoading={true} />
             </code>
             <div className="flex flex-row justify-between gap-3 overflow-x-auto">
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
@@ -63,8 +64,8 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
             <span className="badge border bg-accent/20 text-accent border-accent/30 skeleton-text">
               ---
             </span>
-            <code className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis whitespace-nowrap bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md skeleton-text">
-              ----------------------------------------------------------------
+            <code className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis whitespace-nowrap bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md">
+              <DecodingText text="" isLoading={true} />
             </code>
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Inputs</span>
@@ -119,7 +120,7 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
             className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis whitespace-normal break-all bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md"
             title={tx.txid}
           >
-            {tx.txid}
+            <DecodingText text={tx.txid} decodeDuration={600} />
           </code>
           <div className="flex flex-row justify-between gap-3 overflow-x-auto">
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
@@ -156,7 +157,7 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
             className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis whitespace-nowrap bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md"
             title={tx.txid}
           >
-            {tx.txid}
+            <DecodingText text={tx.txid} decodeDuration={600} />
           </code>
           <div className="flex flex-col gap-0.5 whitespace-nowrap">
             <span className="field-label">Inputs</span>

@@ -1,5 +1,6 @@
 'use client';
 
+import { DecodingText } from '@/components/common/DecodingText';
 import { useRelativeTime } from '@/hooks/useRelativeTime';
 import type { BlockData } from '@/types/block';
 import { formatSize, formatZEC, getBlockReward } from '@/utils/formatters';
@@ -27,8 +28,8 @@ export function BlockCard({ block, isLoading = false }: BlockCardProps) {
               </span>
             </div>
 
-            <code className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis md:whitespace-nowrap whitespace-normal break-all bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md self-center skeleton-text">
-              ----------------------------------------------------------------
+            <code className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis md:whitespace-nowrap whitespace-normal break-all bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md self-center">
+              <DecodingText text="" isLoading={true} />
             </code>
 
             <div className="md:contents grid grid-cols-3 gap-3">
@@ -87,7 +88,7 @@ export function BlockCard({ block, isLoading = false }: BlockCardProps) {
             className="text-xs font-mono text-[rgba(255,255,255,0.7)] overflow-hidden text-ellipsis md:whitespace-nowrap whitespace-normal break-all bg-[rgba(255,255,255,0.05)] py-1.5 px-3 rounded-md self-center"
             title={block.hash}
           >
-            {block.hash}
+            <DecodingText text={block.hash} decodeDuration={600} />
           </code>
 
           <div className="md:contents grid grid-cols-3 gap-3">
