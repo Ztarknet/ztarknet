@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="apps/website/public/favicon.svg" alt="Ztarknet logo" width="160" />
+  <img src="apps/website/public/logo.svg" alt="Ztarknet logo" width="320" />
   <h1>Ztarknet 🛡️🐺 </h1>
   <p>Starknet-based L2 for Zcash</p>
   <p>
