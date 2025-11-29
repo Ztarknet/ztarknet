@@ -10,12 +10,29 @@ export const metadata: Metadata = {
   title: 'Ztarknet Explorer',
   description: 'Explore blocks, transactions, and accounts on the Ztarknet blockchain',
   icons: {
-    icon: '/ztarknet-logo.png',
+    icon: '/favicon.svg',
+    apple: '/favicon.svg',
   },
+  metadataBase: new URL('https://explorer.ztarknet.cash'),
   openGraph: {
     title: 'Ztarknet Explorer',
     description: 'Explore blocks, transactions, and accounts on the Ztarknet blockchain',
     type: 'website',
+    siteName: 'Ztarknet Explorer',
+    images: [
+      {
+        url: '/social.png',
+        width: 1200,
+        height: 630,
+        alt: 'Ztarknet Explorer - Blockchain Explorer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ztarknet Explorer',
+    description: 'Explore blocks, transactions, and accounts on the Ztarknet blockchain',
+    images: ['/social.png'],
   },
 };
 
