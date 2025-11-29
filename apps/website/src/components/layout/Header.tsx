@@ -36,10 +36,7 @@ export function Header() {
       <Navbar className="fixed top-3 lg:top-6 px-4 lg:px-8 hidden lg:block">
         <NavBody className="border border-[rgba(255,107,26,0.2)] !bg-black/90 backdrop-blur-xl !shadow-[0_0_24px_rgba(255,107,26,0.1)] hover:border-[rgba(255,107,26,0.4)] transition-colors !px-3 !py-2.5 max-w-container">
           {/* Logo */}
-          <Link
-            href="#top"
-            className="relative z-20 inline-flex items-center ml-2"
-          >
+          <Link href="#top" className="relative z-20 inline-flex items-center ml-2">
             <Image src="/logo.svg" alt="Ztarknet logo" width={160} height={28} />
           </Link>
 
@@ -72,10 +69,7 @@ export function Header() {
 
       {/* Mobile Navigation (Classic with Sheet) */}
       <nav className="lg:hidden flex items-center justify-between px-3 py-2.5 fixed top-3 left-0 right-0 z-[200] bg-black border border-[rgba(255,107,26,0.2)] rounded-full mx-8 backdrop-blur-xl">
-        <Link
-          href="#top"
-          className="inline-flex items-center"
-        >
+        <Link href="#top" className="inline-flex items-center">
           <Image src="/logo.svg" alt="Ztarknet logo" width={120} height={22} />
         </Link>
 

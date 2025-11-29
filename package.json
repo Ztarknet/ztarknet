@@ -13,7 +13,8 @@
     "format": "turbo format",
     "typecheck": "turbo typecheck",
     "dev:website": "turbo dev --filter=@ztarknet/website",
-    "dev:explorer": "turbo dev --filter=@ztarknet/explorer"
+    "dev:explorer": "turbo dev --filter=@ztarknet/explorer",
+    "dev:wallet": "turbo dev --filter=@ztarknet/wallet"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

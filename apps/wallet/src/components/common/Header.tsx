@@ -19,9 +19,9 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: 'Blocks', link: '/#latest-blocks' },
-    { name: 'Transactions', link: '/#latest-transactions' },
-    { name: 'Developers', link: '/#developer-info' },
+    { name: 'Explorer', link: 'https://explorer.ztarknet.cash' },
+    { name: 'Faucet', link: 'https://faucet.ztarknet.cash' },
+    { name: 'Docs', link: 'https://docs.ztarknet.cash' },
     { name: 'Homepage', link: 'https://ztarknet.cash' },
   ];
 
@@ -53,7 +53,7 @@ export function Header() {
               className="hover:bg-[rgba(255,107,26,0.1)] hover:text-[var(--accent)]"
             >
               <a
-                href="https://github.com/AbdelStark/ztarknet"
+                href="https://github.com/cosmictaco/ztarknet"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2"
@@ -80,7 +80,7 @@ export function Header() {
             asChild
             className="hover:bg-[rgba(255,107,26,0.1)] hover:text-[var(--accent)]"
           >
-            <a href="https://github.com/AbdelStark/ztarknet" target="_blank" rel="noreferrer">
+            <a href="https://github.com/cosmictaco/ztarknet" target="_blank" rel="noreferrer">
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
             </a>
@@ -125,7 +125,7 @@ export function Header() {
                 </nav>
                 <Button variant="primary" asChild className="w-full">
                   <a
-                    href="https://github.com/AbdelStark/ztarknet"
+                    href="https://github.com/cosmictaco/ztarknet"
                     target="_blank"
                     rel="noreferrer"
                     onClick={handleLinkClick}
