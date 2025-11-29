@@ -5,8 +5,10 @@ import { TransactionCard } from '@/components/transactions/TransactionCard';
 import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
 import { getRawTransaction } from '@/services/rpc';
 import {
+  countStarkProofs,
   getRecentFacts,
   getStarkProofsByVerifier,
+  getSumProofSizesByVerifier,
   getVerifier,
   getVerifierByName,
 } from '@/services/zindex/starks';
@@ -14,7 +16,9 @@ import type { RpcTransaction } from '@/types/transaction';
 import type { StarkProof, VerifierData, ZtarknetFact } from '@/types/zindex';
 import { formatZEC } from '@/utils/formatters';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+const PAGE_SIZE = 10;
 
 interface VerifierPageContentProps {
   verifierId: string;
@@ -25,16 +29,35 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
   const [proofs, setProofs] = useState<StarkProof[]>([]);
   const [latestFact, setLatestFact] = useState<ZtarknetFact | null>(null);
   const [transactions, setTransactions] = useState<RpcTransaction[]>([]);
+  const [totalProofCount, setTotalProofCount] = useState<number>(0);
+  const [totalProofSizeMB, setTotalProofSizeMB] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingTransactions, setLoadingTransactions] = useState<boolean>(true);
+  const [loadingMoreProofs, setLoadingMoreProofs] = useState<boolean>(false);
+  const [proofsOffset, setProofsOffset] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+
+  // Track which transaction IDs we've already fetched to avoid refetching
+  const fetchedTxIdsRef = useRef(new Set<string>());
+
   useRevealOnScroll();
+
+  // Calculate if all proofs are loaded
+  const allProofsLoaded = totalProofCount > 0 && proofs.length >= totalProofCount;
+  // Total TZE count is proofs + 1 for init transaction
+  const totalTzeCount = totalProofCount + 1;
 
   useEffect(() => {
     async function fetchVerifier() {
       try {
         setLoading(true);
         setError(null);
+
+        // Reset state for new verifier
+        fetchedTxIdsRef.current.clear();
+        setTransactions([]);
+        setProofs([]);
+        setProofsOffset(0);
 
         // Determine if verifierId looks like a name (starts with "verifier_") or an ID
         const isName = verifierId.startsWith('verifier_');
@@ -64,10 +87,29 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
 
         setVerifier(verifierData);
 
-        // Fetch proofs for this verifier
+        // Fetch total proof count for this verifier first
+        let proofCount = 0;
         try {
-          const proofsData = await getStarkProofsByVerifier(verifierData.verifier_id);
+          const countData = await countStarkProofs({ verifier_id: verifierData.verifier_id });
+          proofCount = countData?.count || 0;
+          setTotalProofCount(proofCount);
+        } catch (countError: unknown) {
+          if (countError instanceof Error) {
+            console.error('Error fetching proof count:', countError.message);
+          } else {
+            console.error('Error fetching proof count:', countError);
+          }
+          setTotalProofCount(0);
+        }
+
+        // Fetch initial page of proofs for this verifier
+        try {
+          const proofsData = await getStarkProofsByVerifier(verifierData.verifier_id, {
+            limit: PAGE_SIZE,
+            offset: 0,
+          });
           setProofs(Array.isArray(proofsData) ? proofsData : []);
+          setProofsOffset(PAGE_SIZE);
         } catch (proofsError: unknown) {
           if (proofsError instanceof Error) {
             console.error('Error fetching proofs:', proofsError.message);
@@ -75,6 +117,20 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
             console.error('Error fetching proofs:', proofsError);
           }
           setProofs([]);
+        }
+
+        // Fetch total proof sizes for this verifier
+        try {
+          const sumData = await getSumProofSizesByVerifier(verifierData.verifier_id);
+          const totalBytes = sumData?.total_size || 0;
+          setTotalProofSizeMB(totalBytes / (1024 * 1024));
+        } catch (sumError: unknown) {
+          if (sumError instanceof Error) {
+            console.error('Error fetching proof sizes:', sumError.message);
+          } else {
+            console.error('Error fetching proof sizes:', sumError);
+          }
+          setTotalProofSizeMB(0);
         }
 
         // Fetch recent facts for this verifier (to get program hashes and state root)
@@ -133,14 +189,16 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
           ? [...new Set([initTxId, ...proofTxIds])]
           : [...new Set(proofTxIds)];
 
-        if (allTxIds.length === 0) {
-          setTransactions([]);
+        // Filter to only fetch txIds we haven't already fetched
+        const txIdsToFetch = allTxIds.filter((txid) => !fetchedTxIdsRef.current.has(txid));
+
+        if (txIdsToFetch.length === 0) {
           setLoadingTransactions(false);
           return;
         }
 
         // Fetch each transaction
-        const txPromises = allTxIds.map((txid: string) =>
+        const txPromises = txIdsToFetch.map((txid: string) =>
           getRawTransaction(txid).catch((err: unknown) => {
             if (err instanceof Error) {
               console.error(`Error fetching transaction ${txid}:`, err.message);
@@ -153,23 +211,35 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
 
         const txData = await Promise.all(txPromises);
 
-        // Filter out null values
-        const validTxs = txData.filter((tx): tx is RpcTransaction => tx !== null);
-
-        // Sort by block height (most recent first), with init transaction at the bottom
-        validTxs.sort((a: RpcTransaction, b: RpcTransaction) => {
-          const aIsInit = a.txid === initTxId;
-          const bIsInit = b.txid === initTxId;
-
-          // If one is init and other isn't, init goes to bottom
-          if (aIsInit && !bIsInit) return 1;
-          if (!aIsInit && bIsInit) return -1;
-
-          // Otherwise sort by block height (most recent first)
-          return (b.height || 0) - (a.height || 0);
+        // Filter out null values and mark as fetched
+        const validNewTxs = txData.filter((tx): tx is RpcTransaction => {
+          if (tx !== null) {
+            fetchedTxIdsRef.current.add(tx.txid);
+            return true;
+          }
+          return false;
         });
 
-        setTransactions(validTxs);
+        // Append new transactions to existing ones
+        setTransactions((prev) => {
+          const combined = [...prev, ...validNewTxs];
+
+          // Sort by block height (most recent first), with init transaction at the bottom
+          combined.sort((a: RpcTransaction, b: RpcTransaction) => {
+            const aIsInit = a.txid === initTxId;
+            const bIsInit = b.txid === initTxId;
+
+            // If one is init and other isn't, init goes to bottom
+            if (aIsInit && !bIsInit) return 1;
+            if (!aIsInit && bIsInit) return -1;
+
+            // Otherwise sort by block height (most recent first)
+            return (b.height || 0) - (a.height || 0);
+          });
+
+          return combined;
+        });
+
         setLoadingTransactions(false);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -183,6 +253,35 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
 
     fetchTransactions();
   }, [verifier, proofs]);
+
+  // Load more proofs function
+  const loadMoreProofs = useCallback(async () => {
+    if (!verifier || loadingMoreProofs || allProofsLoaded) return;
+
+    try {
+      setLoadingMoreProofs(true);
+
+      const moreProofs = await getStarkProofsByVerifier(verifier.verifier_id, {
+        limit: PAGE_SIZE,
+        offset: proofsOffset,
+      });
+
+      if (Array.isArray(moreProofs) && moreProofs.length > 0) {
+        // Append new proofs
+        setProofs((prev) => [...prev, ...moreProofs]);
+        setProofsOffset((prev) => prev + PAGE_SIZE);
+      }
+
+      setLoadingMoreProofs(false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('Error loading more proofs:', err.message);
+      } else {
+        console.error('Error loading more proofs:', err);
+      }
+      setLoadingMoreProofs(false);
+    }
+  }, [verifier, loadingMoreProofs, allProofsLoaded, proofsOffset]);
 
   if (loading) {
     return (
@@ -267,23 +366,6 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
     );
   }
 
-  // Calculate total proof size from TZE transactions
-  const totalProofSizeMB = transactions
-    .reduce((sum: number, tx: RpcTransaction) => {
-      // Get size of TZE data from transaction
-      let currentSum = sum;
-      if (tx.vin) {
-        for (const input of tx.vin) {
-          if (input.scriptSig?.hex?.toLowerCase().startsWith('ff')) {
-            // TZE input found, add its size
-            currentSum += input.scriptSig.hex.length / 2 / (1024 * 1024); // Convert hex chars to bytes to MB
-          }
-        }
-      }
-      return currentSum;
-    }, 0)
-    .toFixed(2);
-
   // Get program hashes and state root from latest fact
   const osProgramHash = latestFact?.inner_program_hash || 'N/A';
   const bootloaderProgramHash = latestFact?.program_hash || 'N/A';
@@ -313,11 +395,11 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
       {/* Verifier Statistics Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 min-h-40">
         <StatCard
-          label="Total Proofs"
-          value={proofs.length.toLocaleString()}
-          description="STARK Proofs Verified"
+          label="Total TZE Txs"
+          value={totalTzeCount.toLocaleString()}
+          description="Verify + Initialize"
         />
-        <StatCard label="Total Proofs Sizes" value={totalProofSizeMB} description="MB" />
+        <StatCard label="Total Proofs Sizes" value={totalProofSizeMB.toFixed(2)} description="MB" />
         <StatCard label="Bridge Balance" value={bridgeBalance} description="ZEC" />
       </div>
 
@@ -355,7 +437,8 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
 
       {/* TZE Transactions List */}
       <h2 className="heading-section mb-6">
-        {transactions.length} TZE Transaction{transactions.length !== 1 ? 's' : ''}
+        {totalProofCount > 0 ? totalTzeCount : transactions.length} TZE Transaction
+        {totalTzeCount !== 1 ? 's' : ''}
       </h2>
       <div className="flex flex-col gap-4">
         {loadingTransactions ? (
@@ -366,7 +449,46 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
             <TransactionCard key={skeleton.skeletonId} tx={{} as RpcTransaction} isLoading={true} />
           ))
         ) : transactions.length > 0 ? (
-          transactions.map((tx: RpcTransaction) => <TransactionCard key={tx.txid} tx={tx} />)
+          <>
+            {transactions.map((tx: RpcTransaction) => (
+              <TransactionCard key={tx.txid} tx={tx} />
+            ))}
+
+            {/* Load More Button */}
+            {!allProofsLoaded && proofs.length > 0 && (
+              <button
+                type="button"
+                onClick={loadMoreProofs}
+                disabled={loadingMoreProofs}
+                className="mt-4 px-6 py-3 rounded-xl border border-[rgba(255,137,70,0.3)] bg-[rgba(255,137,70,0.05)] hover:bg-[rgba(255,137,70,0.1)] hover:border-[rgba(255,137,70,0.5)] transition-all duration-200 text-accent-strong font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingMoreProofs ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" aria-label="Loading">
+                      <title>Loading</title>
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Loading...
+                  </span>
+                ) : (
+                  'Load More TZE Transactions'
+                )}
+              </button>
+            )}
+          </>
         ) : (
           <div className="py-20 px-8 text-center bg-[rgba(8,8,12,0.9)] border border-[rgba(255,137,70,0.2)] rounded-2xl">
             <p className="text-xl text-muted font-mono m-0">

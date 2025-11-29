@@ -118,19 +118,19 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
 
       {/* Expandable section */}
       {isExpanded && (
-          <div className="p-6 bg-[rgba(6,6,9,0.9)] border border-[rgba(255,137,70,0.1)] border-t-0 rounded-b-xl -mt-2">
-            <TransactionIOView tx={tx} />
+        <div className="p-6 bg-[rgba(6,6,9,0.9)] border border-[rgba(255,137,70,0.1)] border-t-0 rounded-b-xl -mt-2">
+          <TransactionIOView tx={tx} />
 
-            {/* TZE Details - only show for TZE transactions */}
-            {txKind === 'tze' && <TZEDetailsView tx={tx} />}
+          {/* TZE Details - only show for TZE transactions */}
+          {txKind === 'tze' && <TZEDetailsView tx={tx} />}
 
-            {/* View Full Transaction Button */}
-            <div className="mt-8 text-right">
+          {/* View Full Transaction Button */}
+          <div className="mt-8 text-right">
             <Link
               href={`/tx/${tx.txid}`}
-                className="inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium py-2 px-4 border border-[rgba(255,137,70,0.2)] text-foreground hover:border-[rgba(255,137,70,0.4)] hover:text-accent transition-colors"
-              >
-                View Full Transaction →
+              className="inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium py-2 px-4 border border-[rgba(255,137,70,0.2)] text-foreground hover:border-[rgba(255,137,70,0.4)] hover:text-accent transition-colors"
+            >
+              View Full Transaction →
             </Link>
           </div>
         </div>

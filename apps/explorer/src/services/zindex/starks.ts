@@ -134,6 +134,27 @@ export async function getStarkProofsBySize(params: ProofSizeParams): Promise<Sta
   });
 }
 
+/**
+ * Count STARK proofs with optional filters
+ */
+export async function countStarkProofs(
+  params: Partial<{ verifier_id: string; block_height: number }> = {}
+): Promise<{ count: number }> {
+  return apiGet<{ count: number }>(`${STARKS_BASE}/proofs/count`, params);
+}
+
+/**
+ * Get sum of proof sizes for a specific verifier
+ */
+export async function getSumProofSizesByVerifier(
+  verifier_id: string
+): Promise<{ total_size: number }> {
+  if (!verifier_id) {
+    throw new Error('Verifier ID is required');
+  }
+  return apiGet<{ total_size: number }>(`${STARKS_BASE}/verifier/sum-proof-sizes`, { verifier_id });
+}
+
 // ==================== Ztarknet Facts ====================
 
 interface FactParams {

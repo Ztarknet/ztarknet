@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Hex characters for the scramble effect
 const HEX_CHARS = '0123456789abcdef';
@@ -34,9 +34,15 @@ export function DecodingText({
 }: DecodingTextProps) {
   const [displayText, setDisplayText] = useState<string>('');
   const [isDecoding, setIsDecoding] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
   const previousTextRef = useRef<string>('');
   const animationFrameRef = useRef<number | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Only start animations after client-side mount to avoid hydration mismatch
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Generate random hex string of given length
   const generateRandomHex = useCallback((length: number): string => {
@@ -47,12 +53,12 @@ export function DecodingText({
     return result;
   }, []);
 
-  // Scramble effect while loading
+  // Scramble effect while loading (only after mount to avoid hydration mismatch)
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading && isMounted) {
       // Show scrambling effect
       const scrambleLength = 64; // Standard hash length
-      
+
       intervalRef.current = setInterval(() => {
         setDisplayText(generateRandomHex(scrambleLength));
       }, scrambleSpeed);
@@ -63,11 +69,11 @@ export function DecodingText({
         }
       };
     }
-  }, [isLoading, scrambleSpeed, generateRandomHex]);
+  }, [isLoading, isMounted, scrambleSpeed, generateRandomHex]);
 
-  // Decode animation when text arrives
+  // Decode animation when text arrives (only after mount to avoid hydration mismatch)
   useEffect(() => {
-    if (!isLoading && text && text !== previousTextRef.current) {
+    if (!isLoading && text && text !== previousTextRef.current && isMounted) {
       // Clear any existing intervals
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -83,10 +89,10 @@ export function DecodingText({
       const animate = () => {
         const elapsed = Date.now() - startTime;
         const progress = Math.min(elapsed / decodeDuration, 1);
-        
+
         // Number of characters that should be revealed
         const revealedCount = Math.floor(progress * textLength);
-        
+
         // Build the display string
         let result = '';
         for (let i = 0; i < textLength; i++) {
@@ -98,7 +104,7 @@ export function DecodingText({
             result += HEX_CHARS[Math.floor(Math.random() * HEX_CHARS.length)];
           }
         }
-        
+
         setDisplayText(result);
 
         if (progress < 1) {
@@ -117,11 +123,12 @@ export function DecodingText({
           cancelAnimationFrame(animationFrameRef.current);
         }
       };
-    } else if (!isLoading && text && text === previousTextRef.current) {
+    }
+    if (!isLoading && text && text === previousTextRef.current && isMounted) {
       // Same text, no animation needed
       setDisplayText(text);
     }
-  }, [text, isLoading, decodeDuration]);
+  }, [text, isLoading, isMounted, decodeDuration]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -138,11 +145,17 @@ export function DecodingText({
   const baseClasses = truncate ? 'overflow-hidden text-ellipsis whitespace-nowrap' : '';
   const decodingClasses = isDecoding || isLoading ? 'text-accent/70' : '';
 
-  return (
-    <span className={`${baseClasses} ${decodingClasses} ${className}`}>
-      {displayText || (isLoading ? generateRandomHex(64) : text)}
-    </span>
-  );
+  // Use a fixed placeholder during SSR to avoid hydration mismatch
+  const content = (() => {
+    if (displayText) return displayText;
+    if (isLoading) {
+      // Return fixed placeholder during SSR, random only after mount
+      return isMounted ? generateRandomHex(64) : '0'.repeat(64);
+    }
+    return text;
+  })();
+
+  return <span className={`${baseClasses} ${decodingClasses} ${className}`}>{content}</span>;
 }
 
 /**
@@ -188,4 +201,3 @@ export function ScrambleText({
 
   return <span className={className}>{text}</span>;
 }
-
