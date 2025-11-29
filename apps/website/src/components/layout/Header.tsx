@@ -38,10 +38,9 @@ export function Header() {
           {/* Logo */}
           <Link
             href="#top"
-            className="relative z-20 inline-flex items-center gap-3 font-bold tracking-widest uppercase text-sm ml-2"
+            className="relative z-20 inline-flex items-center ml-2"
           >
-            <Image src="/ztarknet-logo.png" alt="Ztarknet logo" width={40} height={40} />
-            <span className="text-foreground">Ztarknet</span>
+            <Image src="/logo.svg" alt="Ztarknet logo" width={160} height={28} />
           </Link>
 
           {/* Navigation Items */}
@@ -75,10 +74,9 @@ export function Header() {
       <nav className="lg:hidden flex items-center justify-between px-3 py-2.5 fixed top-3 left-0 right-0 z-[200] bg-black border border-[rgba(255,107,26,0.2)] rounded-full mx-8 backdrop-blur-xl">
         <Link
           href="#top"
-          className="inline-flex items-center gap-3 font-bold tracking-widest uppercase text-sm"
+          className="inline-flex items-center"
         >
-          <Image src="/ztarknet-logo.png" alt="Ztarknet logo" width={32} height={32} />
-          <span className="text-foreground">Ztarknet</span>
+          <Image src="/logo.svg" alt="Ztarknet logo" width={120} height={22} />
         </Link>
 
         <div className="flex items-center gap-2">
@@ -112,9 +110,8 @@ export function Header() {
               className="w-full bg-black border-l-[rgba(255,107,26,0.2)] backdrop-blur-xl pt-20"
             >
               <SheetHeader className="hidden">
-                <SheetTitle className="text-left text-foreground flex items-center gap-3">
-                  <Image src="/ztarknet-logo.png" alt="Ztarknet logo" width={32} height={32} />
-                  Ztarknet
+                <SheetTitle className="text-left text-foreground flex items-center">
+                  <Image src="/logo.svg" alt="Ztarknet logo" width={120} height={22} />
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-6 mt-8">

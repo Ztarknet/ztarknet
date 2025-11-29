@@ -1,21 +1,6 @@
 import { FlickeringGrid } from '@workspace/ui/components/flickering-grid';
 import type { Metadata } from 'next';
-import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import './globals.css';
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-mono',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'Ztarknet — Starknet L2 anchored to Zcash',
@@ -83,10 +68,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>): React.ReactElement {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en">
       <head>
         <meta name="theme-color" content="#ff6b1a" />
         <link rel="canonical" href="https://ztarknet.xyz/" />
+        <link rel="stylesheet" href="https://use.typekit.net/ibz2aiz.css" />
       </head>
       <body>
         <div className="noise-overlay" aria-hidden="true" />

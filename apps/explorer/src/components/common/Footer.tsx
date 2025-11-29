@@ -35,10 +35,10 @@ export function Footer() {
           <div className="flex flex-col justify-between py-6 pl-8">
             {/* CTA Button */}
             <Link
-              href="#"
+              href="https://ztarknet.cash"
               className="inline-flex items-center justify-center px-5 py-4 bg-white rounded-full text-[#0B0A18] font-semibold text-base hover:bg-white/90 transition-colors w-fit"
             >
-              Launch the Engine
+              Back to Homepage
             </Link>
 
             {/* Copyright */}
@@ -51,3 +51,4 @@ export function Footer() {
     </footer>
   );
 }
+
