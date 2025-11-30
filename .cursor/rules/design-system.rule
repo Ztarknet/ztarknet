@@ -1,0 +1,785 @@
+# Ztarknet Design System Rules
+
+## Overview
+This document defines the design system and UI/UX patterns used across all Ztarknet applications (website, explorer, web-wallet). All AI agents and developers MUST follow these rules to maintain visual consistency and brand identity.
+
+---
+
+## ⚠️ CRITICAL: Use Design Tokens, NOT Hardcoded Values
+
+### Mandatory Rule for AI Agents
+**NEVER hardcode sizes, colors, spacing, or any visual values.** Always use the CSS variables, Tailwind classes, and design tokens defined in this system.
+
+### Why This Matters
+- Hardcoded values break consistency across apps
+- Design changes require updating every hardcoded value
+- The design system exists to be USED, not ignored
+- Tailwind and Shadcn provide a complete scale — use it
+
+### What to Use
+
+#### Colors — Use CSS Variables
+```css
+/* ✅ CORRECT */
+color: var(--foreground);
+background: var(--background);
+border-color: var(--accent);
+
+/* ❌ WRONG - Never hardcode colors */
+color: #f4f4f6;
+background: #040405;
+border-color: #ff6b1a;
+```
+
+#### Spacing — Use Tailwind Scale
+```tsx
+/* ✅ CORRECT — Use Tailwind spacing classes */
+<div className="p-4 gap-6 mb-8">  {/* 16px, 24px, 32px */}
+<div className="p-6 gap-4 mb-12"> {/* 24px, 16px, 48px */}
+
+/* ❌ WRONG — Never use arbitrary values */
+<div className="p-[18px] gap-[22px] mb-[47px]">
+<div style={{ padding: '18px', marginBottom: '47px' }}>
+```
+
+#### Font Sizes — Use Tailwind Typography Scale
+```tsx
+/* ✅ CORRECT */
+<p className="text-sm">   {/* 14px */}
+<p className="text-base"> {/* 16px */}
+<p className="text-lg">   {/* 18px */}
+<h2 className="text-2xl"> {/* 24px */}
+<h1 className="text-4xl"> {/* 36px */}
+
+/* ❌ WRONG */
+<p className="text-[17px]">
+<p style={{ fontSize: '17px' }}>
+```
+
+#### Border Radius — Use Tailwind Scale
+```tsx
+/* ✅ CORRECT */
+<div className="rounded-md">  {/* 6px */}
+<div className="rounded-lg">  {/* 8px */}
+<div className="rounded-xl">  {/* 12px */}
+<div className="rounded-2xl"> {/* 16px */}
+
+/* ❌ WRONG */
+<div className="rounded-[14px]">
+```
+
+#### Layout Widths — Use CSS Variables
+```css
+/* ✅ CORRECT */
+max-width: var(--max-width);
+
+/* ❌ WRONG */
+max-width: 1224px;
+```
+
+### Tailwind Spacing Scale Reference
+| Class | Size | Pixels |
+|-------|------|--------|
+| `1` | 0.25rem | 4px |
+| `2` | 0.5rem | 8px |
+| `3` | 0.75rem | 12px |
+| `4` | 1rem | 16px |
+| `5` | 1.25rem | 20px |
+| `6` | 1.5rem | 24px |
+| `8` | 2rem | 32px |
+| `10` | 2.5rem | 40px |
+| `12` | 3rem | 48px |
+| `16` | 4rem | 64px |
+| `20` | 5rem | 80px |
+| `24` | 6rem | 96px |
+
+### Tailwind Font Size Scale Reference
+| Class | Size |
+|-------|------|
+| `text-xs` | 12px |
+| `text-sm` | 14px |
+| `text-base` | 16px |
+| `text-lg` | 18px |
+| `text-xl` | 20px |
+| `text-2xl` | 24px |
+| `text-3xl` | 30px |
+| `text-4xl` | 36px |
+| `text-5xl` | 48px |
+
+### Tailwind Border Radius Scale Reference
+| Class | Radius |
+|-------|--------|
+| `rounded-sm` | 2px |
+| `rounded` | 4px |
+| `rounded-md` | 6px |
+| `rounded-lg` | 8px |
+| `rounded-xl` | 12px |
+| `rounded-2xl` | 16px |
+| `rounded-3xl` | 24px |
+| `rounded-full` | 9999px |
+
+### When Arbitrary Values Are Acceptable
+Only use arbitrary values (`[]`) for:
+1. **Clamp functions** for responsive typography: `text-[clamp(2rem,5vw,3.8rem)]`
+2. **Complex gradients** that can't be expressed otherwise
+3. **Specific rgba colors** with transparency: `bg-[rgba(255,107,26,0.1)]`
+4. **Calc expressions** for precise layouts: `max-w-[calc(100%-64px)]`
+
+**Even then, prefer extracting to CSS custom properties or Tailwind config.**
+
+### AI Agent Checklist Before Writing Styles
+- [ ] Am I using a CSS variable for this color?
+- [ ] Am I using a Tailwind spacing class (not arbitrary)?
+- [ ] Am I using a Tailwind font-size class (not arbitrary)?
+- [ ] Am I using a Tailwind border-radius class (not arbitrary)?
+- [ ] If I need a custom value, can it be added to the design system instead?
+
+---
+
+## 🎨 Color Palette
+
+### Brand Colors (Primary)
+```css
+--background: #040405        /* Deep black background */
+--foreground: #f4f4f6        /* Light text */
+--accent: #ff6b1a            /* Ztarknet Orange (primary) */
+--accent-strong: #ff8946     /* Brighter orange for emphasis */
+--muted: #777c8e             /* Muted text/secondary content */
+```
+
+### Surface Colors
+```css
+--card-bg: rgba(12, 13, 17, 0.85)      /* Semi-transparent card background */
+--card-border: rgba(255, 107, 26, 0.4) /* Orange border with transparency */
+```
+
+### Usage Guidelines
+- **Background**: Always use `#040405` as the main background
+- **Accent Orange** (`#ff6b1a`): Use for:
+  - Primary CTAs and buttons
+  - Links and interactive elements
+  - Borders and highlights
+  - Brand-related text
+- **Text**: 
+  - Primary text: `#f4f4f6` (--foreground)
+  - Secondary/muted: `#777c8e` (--muted)
+- **Transparency**: Always use rgba() for borders and overlays to maintain depth
+
+---
+
+## 🌈 Background & Atmosphere
+
+### Main Background Pattern
+```css
+body {
+  background: radial-gradient(
+    circle at top right, 
+    #0e0912 0%, 
+    #040405 60%
+  );
+}
+```
+
+### Ambient Glow Overlay
+```css
+body::before {
+  background: 
+    conic-gradient(
+      from 45deg at 10% 10%,
+      rgba(255, 107, 26, 0.1),
+      rgba(255, 107, 26, 0) 40%
+    ),
+    linear-gradient(
+      120deg,
+      rgba(255, 137, 70, 0.12) 0%,
+      rgba(255, 137, 70, 0) 40%,
+      rgba(255, 137, 70, 0.08) 70%,
+      rgba(255, 137, 70, 0) 100%
+    );
+}
+```
+
+### Noise Texture
+Always include the noise overlay for texture:
+```css
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg...");
+  opacity: 0.35;
+}
+```
+
+**RULE**: Never use flat backgrounds. Always layer: base gradient → glow overlay → noise texture.
+
+---
+
+## 🔤 Typography
+
+### Font Families
+```css
+--font-sans: 'Space Grotesk', system-ui, sans-serif
+--font-mono: 'JetBrains Mono', monospace
+```
+
+### Type Scale & Usage
+
+#### Headings
+- **Hero H1**: `clamp(2.75rem, 5vw, 3.8rem)` - line-height: 1.1, tracking: tight
+- **Section H2**: `2.5rem - 3rem` - font-weight: bold, tracking: tight
+- **Subsection H3**: `1.5rem - 2rem` - font-weight: semibold
+
+#### Body Text
+- **Large**: `1.125rem` (18px) - use for hero descriptions
+- **Base**: `1rem` (16px) - default body text
+- **Small**: `0.875rem` (14px) - secondary content
+- **Tiny**: `0.75rem` (12px) - labels, metadata
+
+#### Code/Monospace
+- Always use `font-mono` (JetBrains Mono) for:
+  - Addresses, hashes, technical identifiers
+  - Code blocks
+  - Numeric data (block heights, transaction IDs)
+
+### Text Styling Rules
+```css
+/* Accent text with glow */
+.accent-text {
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(255, 107, 26, 0.45);
+}
+
+/* Eyebrow/Label style */
+.eyebrow {
+  text-transform: uppercase;
+  tracking: 0.2em; /* widest */
+  font-size: 0.75rem;
+  color: rgba(255, 107, 26, 0.7);
+}
+```
+
+---
+
+## 🎴 Cards & Containers
+
+### Glass Card Pattern
+```css
+.glass-card {
+  padding: 24px;
+  background: rgba(12, 13, 17, 0.85); /* --card-bg */
+  border: 1px solid rgba(255, 137, 70, 0.2);
+  border-radius: 16px;
+  box-shadow: 
+    inset 0 0 0 1px rgba(255, 137, 70, 0.05),
+    0 16px 40px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(16px);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 137, 70, 0.5);
+}
+```
+
+**Card Anatomy**:
+1. Semi-transparent dark background (`rgba(12, 13, 17, 0.85)`)
+2. Orange border with low opacity (`rgba(255, 137, 70, 0.2)`)
+3. Inner glow (inset box-shadow)
+4. Outer shadow for depth
+5. Backdrop blur for glassmorphism effect
+6. Hover: lift up + brighten border
+
+### Container Widths
+```css
+--max-width: 1224px;
+
+.container-custom {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 16px; /* Mobile: has padding */
+}
+
+@media (min-width: 1280px) {
+  .container-custom {
+    padding: 0; /* Desktop: no padding, aligns with header */
+  }
+}
+
+.max-w-container {
+  max-width: var(--max-width);
+}
+```
+
+**Usage**:
+- Use `.container-custom` for page content — handles responsive padding automatically
+- Use `.max-w-container` when you only need max-width (e.g., header NavBody)
+
+---
+
+## ✨ Interactive Effects
+
+### GlowingEffect Component
+Use the `<GlowingEffect />` component for interactive hover glow:
+
+```tsx
+<div className="relative">
+  <GlowingEffect 
+    proximity={64}    // Glow activation distance
+    spread={30}       // Glow size
+    blur={0}          // Blur amount
+    variant="default" // or "white"
+    glow={true}       // Enable glow effect
+  />
+  {/* Your content */}
+</div>
+```
+
+**When to use**:
+- Cards that should respond to mouse proximity
+- Interactive sections
+- Important CTAs
+- Hero sections
+
+### Reveal on Scroll Animation
+```css
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+```
+
+**Usage**: Add `.reveal-on-scroll` class and use `useRevealOnScroll()` hook.
+
+### Hero Glow
+Position large ambient glow in hero sections:
+```css
+.hero-glow {
+  position: absolute;
+  right: -220px;
+  top: -80px;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(
+    circle, 
+    rgba(255, 137, 70, 0.25), 
+    rgba(4, 4, 5, 0)
+  );
+  filter: blur(40px);
+  z-index: -2;
+}
+```
+
+---
+
+## 🔘 Buttons
+
+### Button Variants
+
+#### Primary (CTA)
+```tsx
+<Button variant="primary">
+  Join the discussion
+</Button>
+```
+- Background: Orange gradient
+- Border: Bright orange
+- Glow effect on hover
+- Use for main actions
+
+#### Secondary
+```tsx
+<Button variant="secondary">
+  Learn more
+</Button>
+```
+- Background: Transparent/dark
+- Border: Orange with transparency
+- Subtle hover effect
+- Use for secondary actions
+
+### Button Rules
+1. Always specify `type="button"` unless it's a form submit
+2. Use `asChild` prop with `<Link>` for navigation buttons
+3. Include hover state with subtle transform
+4. Add loading state for async actions
+5. Disable state should reduce opacity to 0.5
+
+---
+
+## 🎭 Spacing System
+
+### Scale (Tailwind-based)
+- **xs**: 0.25rem (4px)
+- **sm**: 0.5rem (8px)
+- **md**: 1rem (16px)
+- **lg**: 1.5rem (24px)
+- **xl**: 2rem (32px)
+- **2xl**: 3rem (48px)
+- **3xl**: 4rem (64px)
+
+### Common Patterns
+```css
+/* Section spacing */
+section {
+  padding: 80px 0 120px; /* top, bottom */
+}
+
+/* Card padding */
+.card {
+  padding: 24px; /* Consistent card padding */
+}
+
+/* Gap in flex/grid */
+.flex, .grid {
+  gap: 16px; /* Default gap */
+}
+```
+
+---
+
+## 📐 Layout Patterns
+
+### Grid Layouts
+```tsx
+{/* Two-column hero */}
+<section className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-16">
+  {/* Content */}
+</section>
+
+{/* Stats/Cards grid */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+  {/* Cards */}
+</div>
+```
+
+### Responsive Breakpoints
+- **Mobile**: < 768px (default)
+- **Tablet**: 768px - 1024px (md:)
+- **Desktop**: > 1024px (lg:)
+- **Wide**: > 1280px (xl:)
+
+---
+
+## 🎬 Animations
+
+### Standard Durations
+- **Fast**: 150-200ms (micro-interactions)
+- **Medium**: 300ms (hover effects, state changes)
+- **Slow**: 600ms (reveal animations, page transitions)
+
+### Easing
+- **ease**: Default for most animations
+- **ease-out**: Exits and reveals
+- **ease-in-out**: Smooth two-way transitions
+
+### Key Animations
+```css
+@keyframes slideRight { /* Horizontal slide */ }
+@keyframes slideDown { /* Vertical slide */ }
+@keyframes beamMove { /* Light beam effect */ }
+@keyframes shimmer { /* Shimmer effect */ }
+```
+
+---
+
+## 🖼️ Visual Effects
+
+### Text Selection
+```css
+::selection {
+  background-color: rgb(255, 137, 70);
+  color: white;
+}
+```
+
+### Shadows
+```css
+/* Card shadow */
+box-shadow: 
+  inset 0 0 0 1px rgba(255, 137, 70, 0.05), /* Inner glow */
+  0 16px 40px rgba(0, 0, 0, 0.3);            /* Depth shadow */
+
+/* Hover enhancement */
+box-shadow: 0 0 25px rgba(255, 107, 26, 0.2);
+```
+
+### Border Glow
+```css
+border: 1px solid rgba(255, 137, 70, 0.2); /* Default */
+border: 1px solid rgba(255, 137, 70, 0.5); /* Hover/Active */
+```
+
+---
+
+## 🧩 Component Patterns
+
+### Navigation Header
+- Fixed position with backdrop blur
+- Border with orange glow
+- Smooth hover transitions
+- Responsive mobile menu with Sheet component
+
+### Footer
+- Minimal, dark background
+- Links with subtle hover states
+- Social icons with glow effect
+
+### Stat Cards
+```tsx
+<div className="glass-card">
+  <dt className="text-xs tracking-widest uppercase text-accent/80">
+    Label
+  </dt>
+  <dd className="text-3xl font-bold accent-text">
+    Value
+  </dd>
+</div>
+```
+
+### Section Headers
+```tsx
+<div className="flex flex-col gap-4">
+  <p className="eyebrow">Section Label</p>
+  <h2 className="text-[2.5rem] font-bold tracking-tight">
+    Section Title
+  </h2>
+  <p className="text-lg text-muted">
+    Description text
+  </p>
+</div>
+```
+
+---
+
+## ♿ Accessibility Rules
+
+### MUST DO
+1. ✅ All buttons must have `type="button"` attribute
+2. ✅ All SVG icons need `aria-label` and `role="img"`
+3. ✅ Interactive elements need keyboard handlers (`onKeyDown`)
+4. ✅ Focus states visible for keyboard navigation
+5. ✅ Color contrast ratio > 4.5:1 for text
+6. ✅ Alt text for all images
+7. ✅ Semantic HTML (headings hierarchy, landmarks)
+
+### Interactive Elements
+```tsx
+{/* Clickable div - needs keyboard support */}
+<div
+  onClick={handleClick}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  }}
+  role="button"
+  tabIndex={0}
+>
+  {/* Content */}
+</div>
+```
+
+---
+
+## 🎯 Brand Voice & Tone
+
+### Visual Communication
+- **Futuristic**: Dark theme, glows, technical aesthetic
+- **Professional**: Clean typography, structured layouts
+- **Innovative**: Modern animations, glassmorphism
+- **Technical**: Monospace fonts for data, precise spacing
+
+### Copy Style
+- **Headlines**: Bold, clear, technical
+- **Body**: Informative, precise, no marketing fluff
+- **Labels**: Uppercase, tracked, concise
+- **CTAs**: Action-oriented, direct
+
+---
+
+## 📱 Responsive Design Rules
+
+### Mobile-First Approach
+1. Design for mobile first (320px+)
+2. Enhance for tablet (768px+)
+3. Optimize for desktop (1024px+)
+
+### Common Patterns
+```tsx
+{/* Responsive text */}
+<h1 className="text-[clamp(2rem,5vw,3.8rem)]">Title</h1>
+
+{/* Responsive grid */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+  {/* Items */}
+</div>
+
+{/* Responsive padding */}
+<section className="px-4 md:px-8 lg:px-0">
+  {/* Content */}
+</section>
+```
+
+---
+
+## 🚫 DON'Ts - Common Mistakes to Avoid
+
+### Colors
+- ❌ Don't use pure white (#fff) - use --foreground (#f4f4f6)
+- ❌ Don't use pure black (#000) - use --background (#040405)
+- ❌ Don't use colors outside the palette
+- ❌ Don't use solid borders - always use rgba with transparency
+
+### Effects
+- ❌ Don't use excessive glow (keep opacity < 0.5)
+- ❌ Don't skip the backdrop-filter on glass cards
+- ❌ Don't use animations longer than 600ms
+- ❌ Don't animate expensive properties (use transform/opacity)
+
+### Typography
+- ❌ Don't use font sizes below 0.75rem (12px)
+- ❌ Don't use more than 2 font families
+- ❌ Don't use font-weight below 400
+- ❌ Don't skip letter-spacing on uppercase text
+
+### Layout
+- ❌ Don't exceed max-width of 1224px for content (use `var(--max-width)`)
+- ❌ Don't use arbitrary padding values (stick to spacing scale)
+- ❌ Don't forget mobile responsiveness
+- ❌ Don't use fixed widths (use max-width instead)
+
+---
+
+## ✅ DOs - Best Practices
+
+### When Creating New Components
+1. ✅ Use existing UI components from `@workspace/ui`
+2. ✅ Follow the glass card pattern for containers
+3. ✅ Add GlowingEffect for interactive elements
+4. ✅ Include reveal-on-scroll animations
+5. ✅ Test on mobile, tablet, and desktop
+6. ✅ Add proper TypeScript types
+7. ✅ Include accessibility attributes
+8. ✅ Use CSS variables for theme values
+
+### When Styling
+1. ✅ Use Tailwind utility classes
+2. ✅ Extract repeated patterns to CSS classes
+3. ✅ Use CSS variables for theme colors
+4. ✅ Add smooth transitions (300ms default)
+5. ✅ Include hover and focus states
+6. ✅ Test with different content lengths
+
+---
+
+## 🔧 Implementation Checklist
+
+When creating a new page or component:
+
+- [ ] Uses correct color palette (orange accent on dark background)
+- [ ] Includes background atmosphere (gradient + glow + noise)
+- [ ] Typography follows scale and uses correct fonts
+- [ ] Cards use glass-card pattern with proper shadows
+- [ ] Interactive elements have GlowingEffect
+- [ ] Sections have reveal-on-scroll animation
+- [ ] All buttons specify type="button"
+- [ ] All SVGs have aria-label and role="img"
+- [ ] Keyboard navigation works (tab, enter, space)
+- [ ] Responsive on mobile, tablet, desktop
+- [ ] Uses `.container-custom` class (max-width: 1224px with responsive padding)
+- [ ] Follows spacing scale (no arbitrary values)
+- [ ] Smooth animations (300ms ease)
+- [ ] Tested with real content
+
+---
+
+## 📚 Reference Components
+
+### Must-Use Shared Components
+```tsx
+// From @workspace/ui
+import { Button } from '@workspace/ui/components/button';
+import { GlowingEffect } from '@workspace/ui/components/glowing-effect';
+import { FlickeringGrid } from '@workspace/ui/components/flickering-grid';
+import { Navbar, NavBody, NavItems } from '@workspace/ui/components/resizable-navbar';
+import { Sheet, SheetContent, SheetTrigger } from '@workspace/ui/components/sheet';
+```
+
+### Custom Hooks
+```tsx
+import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
+```
+
+---
+
+## 🎨 Quick Copy-Paste Patterns
+
+### Glass Card with Glow
+```tsx
+<div className="relative glass-card reveal-on-scroll">
+  <GlowingEffect proximity={64} spread={30} />
+  {/* Content */}
+</div>
+```
+
+### Section Container
+```tsx
+<section className="container-custom py-20">
+  <div className="flex flex-col gap-4 mb-12">
+    <p className="eyebrow">Section Label</p>
+    <h2 className="text-4xl font-bold tracking-tight">Title</h2>
+  </div>
+  {/* Content */}
+</section>
+```
+
+### Stat Display
+```tsx
+<dl className="grid grid-cols-1 md:grid-cols-3 gap-5">
+  <div>
+    <dt className="text-xs tracking-widest uppercase text-accent/80">
+      Metric Name
+    </dt>
+    <dd className="text-3xl font-bold accent-text">
+      Value
+    </dd>
+  </div>
+</dl>
+```
+
+---
+
+## 🔄 Maintenance
+
+This design system is a **living document**. When adding new patterns:
+
+1. Document the pattern in this file
+2. Add examples from the codebase
+3. Explain when and why to use it
+4. Include accessibility considerations
+5. Show responsive behavior
+6. Provide copy-paste code
+
+**Last Updated**: Based on apps/website/ implementation (Nov 2024)
+
+---
+
+## 💡 Philosophy
+
+> **"Dark, technical, glowing, precise."**
+
+Every design decision should reinforce that Ztarknet is:
+- Technical and professional
+- Innovative and futuristic  
+- Privacy-focused and serious
+- Built by and for developers
+
+The orange glow isn't just aesthetic—it represents the light of innovation cutting through the darkness of traditional finance.
+

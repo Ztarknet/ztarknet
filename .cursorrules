@@ -1,0 +1,188 @@
+# ZTarknet Monorepo - Code Quality Standards
+
+## Critical: Production-Grade Code Only
+
+This is a production-critical repository. ALL code MUST meet professional standards.
+NO shortcuts, NO `any` types, NO bypassing linters or type checkers.
+
+## TypeScript Standards
+
+### Strict Mode Compliance
+- ALL TypeScript must compile with strict mode enabled
+- NO `any` types - use proper typing or `unknown` with type guards
+- NO `@ts-ignore` or `@ts-expect-error` comments
+- NO implicit `any` parameters or return types
+- ALL function parameters MUST have explicit types
+- ALL variables MUST have inferable or explicit types
+
+### Type Safety
+```typescript
+// ❌ BAD - implicit any
+function process(data) { }
+
+// ✅ GOOD - explicit types
+function process(data: ProcessData): Result { }
+
+// ❌ BAD - any type
+const items: any[] = []
+
+// ✅ GOOD - proper typing
+const items: BlockData[] = []
+
+// ❌ BAD - non-null assertion without validation
+const element = document.getElementById('root')!
+
+// ✅ GOOD - proper null checking
+const element = document.getElementById('root')
+if (!element) throw new Error('Root element not found')
+```
+
+### Error Handling
+```typescript
+// ❌ BAD - unknown error type
+catch (err) {
+  console.log(err.message) // err is unknown
+}
+
+// ✅ GOOD - proper error handling
+catch (error) {
+  if (error instanceof Error) {
+    console.error(error.message)
+  } else {
+    console.error('Unknown error:', error)
+  }
+}
+```
+
+## React 19 Standards
+
+### Component Patterns
+```typescript
+// ✅ Modern React 19 - no React import needed for JSX
+import { useState } from 'react'
+
+// ✅ Use forwardRef for components that need refs
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, ref) => <button ref={ref} {...props} />
+)
+Button.displayName = 'Button'
+
+// ✅ Proper interface definitions
+interface ComponentProps {
+  data: DataType
+  onAction: (id: string) => void
+  isLoading?: boolean
+}
+```
+
+### Hooks and State
+```typescript
+// ❌ BAD - no type inference
+const [data, setData] = useState([])
+
+// ✅ GOOD - explicit typing
+const [data, setData] = useState<BlockData[]>([])
+
+// ✅ GOOD - type inference from initial value
+const [count, setCount] = useState(0) // infers number
+```
+
+## Biome Compliance
+
+### Linting
+- ALL code MUST pass `bun run lint` without errors
+- Fix linting issues immediately, don't accumulate them
+- Use `biome check .` to verify before committing
+
+### Formatting
+- Use Biome for consistent formatting
+- No manual formatting overrides
+- Let Biome handle all code style
+
+## Monorepo Best Practices
+
+### Dependency Management
+- Use exact versions for React/React-DOM (currently 19.2.0)
+- Use workspace protocol for internal packages: `"@workspace/ui": "workspace:*"`
+- Keep dependencies consistent across packages
+- Use `overrides` in root package.json to enforce version consistency
+
+### Import Paths
+```typescript
+// ✅ Use workspace imports
+import { Button } from '@workspace/ui/components/button'
+
+// ✅ Use absolute paths for internal imports
+import { formatDate } from '@/utils/formatters'
+```
+
+## Code Review Checklist
+
+Before considering any code "done":
+
+- [ ] TypeScript compiles with zero errors
+- [ ] Biome lint passes with zero errors
+- [ ] No `any` types used
+- [ ] All function parameters have explicit types
+- [ ] All error handling uses proper type guards
+- [ ] No unused imports or variables
+- [ ] Proper null/undefined checking
+- [ ] Components use proper React 19 patterns
+- [ ] Tests pass (when applicable)
+- [ ] No console.log in production code (use proper logging)
+
+## Build Commands
+
+### Development
+```bash
+bun run dev:website   # Start website dev server
+bun run dev:explorer  # Start explorer dev server
+```
+
+### Production Validation
+```bash
+bun run build        # Build all packages
+bun run lint         # Lint all packages
+bun run typecheck    # Type check all packages
+```
+
+ALL commands MUST pass with zero errors before code is considered complete.
+
+## When Making Changes
+
+1. **Before editing:**
+   - Understand the existing types and interfaces
+   - Check for shared types in workspace packages
+
+2. **While editing:**
+   - Add types as you go, never use `any`
+   - Run TypeScript in watch mode to catch errors immediately
+   - Follow existing patterns in the codebase
+
+3. **After editing:**
+   - Run `bun run typecheck` to verify
+   - Run `bun run lint` to verify
+   - Run `bun run build` to verify
+   - Test the functionality manually
+
+## Agent Instructions
+
+When you are an AI agent working on this codebase:
+
+1. **NEVER bypass type safety** - if you don't know a type, research it or ask
+2. **NEVER use `any`** - use proper types or `unknown` with type guards
+3. **NEVER skip linting** - fix all lint errors before finishing
+4. **ALWAYS run builds** - ensure code compiles before considering work done
+5. **ALWAYS add proper types** - when migrating JS to TS, add full typing
+6. **FOLLOW React 19 patterns** - use modern patterns, no legacy code
+
+## Priority Order
+
+1. **Type Safety** - Most critical, no compromises
+2. **Build Success** - Must compile and build
+3. **Lint Compliance** - Must pass all lint rules
+4. **Code Quality** - Clean, maintainable, professional
+5. **Performance** - Optimize where appropriate
+
+Remember: This is production-critical infrastructure code. Quality over speed, always.
+
