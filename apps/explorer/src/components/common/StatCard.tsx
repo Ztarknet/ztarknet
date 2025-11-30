@@ -29,8 +29,11 @@ export function StatCard({
 
           <div className="relative flex flex-1 flex-col gap-3 z-10">
             <span className="eyebrow">{label}</span>
-            <div className="stat-value skeleton-text">Loading...</div>
-            <div className="text-sm text-[rgba(255,255,255,0.7)] leading-relaxed skeleton-text">
+            {/* Use min-height to reserve space for typical values */}
+            <div className="stat-value min-h-[2.25rem] min-w-[100px] relative">
+              <span className="absolute inset-0 bg-[rgba(255,255,255,0.1)] rounded animate-pulse" />
+            </div>
+            <div className="text-sm text-[rgba(255,255,255,0.7)] leading-relaxed">
               {description}
             </div>
           </div>

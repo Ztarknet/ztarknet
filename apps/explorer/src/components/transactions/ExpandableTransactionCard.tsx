@@ -15,6 +15,9 @@ const TX_KIND_STYLES: Record<TransactionKind, string> = {
   standard: 'bg-accent/20 text-accent border-accent/30',
 };
 
+// Fixed column widths for consistent layout (same as TransactionCard)
+const GRID_COLS_DESKTOP = 'md:grid-cols-[80px_1fr_60px_70px_110px_70px]';
+
 interface ExpandableTransactionCardProps {
   tx: Transaction;
   index: number;
@@ -54,25 +57,21 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
             <div className="flex flex-row justify-between gap-3 overflow-x-auto">
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Inputs</span>
-                <span className="text-base font-semibold text-foreground font-mono">
-                  {numInputs}
-                </span>
+                <span className="text-base font-semibold text-foreground font-mono">{numInputs}</span>
               </div>
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Outputs</span>
-                <span className="text-base font-semibold text-foreground font-mono">
-                  {numOutputs}
-                </span>
+                <span className="text-base font-semibold text-foreground font-mono">{numOutputs}</span>
               </div>
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Total Output</span>
-                <span className="text-base font-semibold text-foreground font-mono min-w-24 inline-block text-left">
+                <span className="text-base font-semibold text-foreground font-mono">
                   {formatZEC(totalOutput)} ZEC
                 </span>
               </div>
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Size</span>
-                <span className="text-base font-semibold text-foreground font-mono min-w-16 inline-block text-left">
+                <span className="text-base font-semibold text-foreground font-mono">
                   {formatSize(tx.size || 0)}
                 </span>
               </div>
@@ -80,7 +79,7 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
           </div>
 
           {/* Desktop Layout - md breakpoint and above */}
-          <div className="hidden md:grid md:grid-cols-[auto_minmax(250px,1fr)_repeat(4,auto)] gap-5 items-center w-full relative z-10">
+          <div className={`hidden md:grid ${GRID_COLS_DESKTOP} gap-5 items-center w-full relative z-10`}>
             <span className={`badge border ${TX_KIND_STYLES[txKind] || TX_KIND_STYLES.standard}`}>
               {txKind}
             </span>
@@ -96,19 +95,17 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
             </div>
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Outputs</span>
-              <span className="text-base font-semibold text-foreground font-mono">
-                {numOutputs}
-              </span>
+              <span className="text-base font-semibold text-foreground font-mono">{numOutputs}</span>
             </div>
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Total Output</span>
-              <span className="text-base font-semibold text-foreground font-mono min-w-24 inline-block text-left">
+              <span className="text-base font-semibold text-foreground font-mono">
                 {formatZEC(totalOutput)} ZEC
               </span>
             </div>
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Size</span>
-              <span className="text-base font-semibold text-foreground font-mono min-w-16 inline-block text-left">
+              <span className="text-base font-semibold text-foreground font-mono">
                 {formatSize(tx.size || 0)}
               </span>
             </div>
