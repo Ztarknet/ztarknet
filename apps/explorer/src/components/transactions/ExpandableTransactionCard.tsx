@@ -57,11 +57,15 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
             <div className="flex flex-row justify-between gap-3 overflow-x-auto">
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Inputs</span>
-                <span className="text-base font-semibold text-foreground font-mono">{numInputs}</span>
+                <span className="text-base font-semibold text-foreground font-mono">
+                  {numInputs}
+                </span>
               </div>
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Outputs</span>
-                <span className="text-base font-semibold text-foreground font-mono">{numOutputs}</span>
+                <span className="text-base font-semibold text-foreground font-mono">
+                  {numOutputs}
+                </span>
               </div>
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Total Output</span>
@@ -79,7 +83,9 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
           </div>
 
           {/* Desktop Layout - md breakpoint and above */}
-          <div className={`hidden md:grid ${GRID_COLS_DESKTOP} gap-5 items-center w-full relative z-10`}>
+          <div
+            className={`hidden md:grid ${GRID_COLS_DESKTOP} gap-5 items-center w-full relative z-10`}
+          >
             <span className={`badge border ${TX_KIND_STYLES[txKind] || TX_KIND_STYLES.standard}`}>
               {txKind}
             </span>
@@ -95,7 +101,9 @@ export function ExpandableTransactionCard({ tx, index }: ExpandableTransactionCa
             </div>
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Outputs</span>
-              <span className="text-base font-semibold text-foreground font-mono">{numOutputs}</span>
+              <span className="text-base font-semibold text-foreground font-mono">
+                {numOutputs}
+              </span>
             </div>
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Total Output</span>

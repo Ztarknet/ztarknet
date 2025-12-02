@@ -19,7 +19,7 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: 'Explorer', link: 'https://explorer.ztarknet.cash' },
+    { name: 'Explorer', link: 'https://explorer-zstarknet.d.karnot.xyz' },
     { name: 'Faucet', link: 'https://faucet.ztarknet.cash' },
     { name: 'Docs', link: 'https://docs.ztarknet.cash' },
     { name: 'Homepage', link: 'https://ztarknet.cash' },

@@ -54,8 +54,11 @@ export function AppsGrid({ selectedAddress }: AppsGridProps) {
 
     try {
       const availableKeys = getAvailableKeys();
-      const currentKeyId = availableKeys.find((keyId) =>
-        keyId.toLowerCase().endsWith(selectedAddress.toLowerCase())
+      const currentKeyId = availableKeys.find(
+        (keyId) =>
+          keyId &&
+          selectedAddress &&
+          keyId.toLowerCase().endsWith(selectedAddress?.toLowerCase() ?? '')
       );
 
       if (!currentKeyId) {

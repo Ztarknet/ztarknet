@@ -3,7 +3,7 @@
 import { BlocksList } from '@/components/blocks/BlocksList';
 import { StatCard } from '@/components/common/StatCard';
 import { TransactionsList } from '@/components/transactions/TransactionsList';
-import { useChainHeight } from '@/hooks/queries';
+import { useChainHeight, useStarkProofsCount, useTransactionCount } from '@/hooks/queries';
 import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
 import { RPC_ENDPOINT } from '@/services/rpc';
 import { GlowingEffect } from '@workspace/ui/components/glowing-effect';
@@ -12,6 +12,8 @@ const MAX_BLOCKS = 7;
 
 export function MainPageContent() {
   const { data: chainHeight, isLoading: loading, error } = useChainHeight();
+  const { data: totalTransactions, isLoading: txLoading } = useTransactionCount();
+  const { data: totalProofs, isLoading: proofsLoading } = useStarkProofsCount();
   useRevealOnScroll();
 
   return (
@@ -32,16 +34,20 @@ export function MainPageContent() {
           isLoading={loading}
         />
         <StatCard
-          label="Network Upgrade"
-          value="ZFuture"
-          description="Latest protocol version"
-          isLoading={loading}
+          label="Transactions"
+          value={
+            totalTransactions !== undefined && chainHeight !== undefined
+              ? (totalTransactions - chainHeight).toLocaleString()
+              : '---'
+          }
+          description="All-time transaction count"
+          isLoading={txLoading}
         />
         <StatCard
-          label="Transaction Version"
-          value="V6"
-          description="Current tx format"
-          isLoading={loading}
+          label="Proofs Verified"
+          value={totalProofs?.toLocaleString() ?? '---'}
+          description="Total STARK proofs verified"
+          isLoading={proofsLoading}
         />
       </div>
 

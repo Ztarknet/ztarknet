@@ -23,13 +23,17 @@ function calculateAccountAddress(privateKey: string): string {
  * Normalize address by removing padding and converting to lowercase
  */
 function normalizeAddress(address: string): string {
+  if (!address) return '';
   return `0x${address.slice(2).replace(/^0+/, '').toLowerCase()}`;
 }
 
 /**
  * Check if an account is connected to a specific app
  */
-export function isAccountConnectedToApp(appName: string, address: string): boolean {
+export function isAccountConnectedToApp(
+  appName: string | null | undefined,
+  address: string | null | undefined
+): boolean {
   if (typeof window === 'undefined') return false;
   if (!address || !appName) return false;
 
@@ -49,8 +53,8 @@ export function isAccountConnectedToApp(appName: string, address: string): boole
 /**
  * Store a private key for a specific app
  */
-export function storeAppPrivateKey(appName: string, privateKey: string): string {
-  if (typeof window === 'undefined') return '';
+export function storeAppPrivateKey(appName: string | null | undefined, privateKey: string): string {
+  if (typeof window === 'undefined' || !appName) return '';
 
   try {
     const network = getCurrentNetwork();
@@ -80,8 +84,11 @@ export function storeAppPrivateKey(appName: string, privateKey: string): string 
 /**
  * Get the private key for a specific app and account
  */
-export function getAppPrivateKey(appName: string, address: string): string | null {
-  if (typeof window === 'undefined') return null;
+export function getAppPrivateKey(
+  appName: string | null | undefined,
+  address: string | null | undefined
+): string | null {
+  if (typeof window === 'undefined' || !appName || !address) return null;
 
   try {
     const network = getCurrentNetwork();
@@ -98,8 +105,11 @@ export function getAppPrivateKey(appName: string, address: string): string | nul
 /**
  * Disconnect an account from a specific app
  */
-export function disconnectFromApp(appName: string, address: string): void {
-  if (typeof window === 'undefined') return;
+export function disconnectFromApp(
+  appName: string | null | undefined,
+  address: string | null | undefined
+): void {
+  if (typeof window === 'undefined' || !appName || !address) return;
 
   try {
     const network = getCurrentNetwork();

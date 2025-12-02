@@ -83,11 +83,14 @@ export default function HomePage() {
       setIsCreateModalOpen(true);
     } else if (!selectedAddress) {
       const firstKeyId = availableKeys[0];
+      if (!firstKeyId) return;
       const privateKey = getPrivateKey(firstKeyId);
       if (privateKey) {
         const parts = firstKeyId.split('.');
         const address = parts[parts.length - 1];
-        handleAccountSelect(privateKey, address);
+        if (address) {
+          handleAccountSelect(privateKey, address);
+        }
       }
     }
   }, [getAvailableKeys, getPrivateKey, selectedAddress, handleAccountSelect]);

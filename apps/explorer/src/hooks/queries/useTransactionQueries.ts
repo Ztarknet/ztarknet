@@ -1,7 +1,13 @@
 'use client';
 
 import { getRawTransaction } from '@/services/rpc';
-import { getRecentTransactions, getTransaction, getTransactionsByType } from '@/services/zindex';
+import {
+  countStarkProofs,
+  countTransactions,
+  getRecentTransactions,
+  getTransaction,
+  getTransactionsByType,
+} from '@/services/zindex';
 import { useQuery } from '@tanstack/react-query';
 
 interface TransactionData {
@@ -52,6 +58,38 @@ export function useRecentTransactions(filter = 'all', count = 10, pollInterval =
     },
     refetchInterval: pollInterval,
     staleTime: 1000,
+  });
+}
+
+/**
+ * Hook to get total transaction count
+ * Default: 30 seconds polling
+ */
+export function useTransactionCount(pollInterval = 30000) {
+  return useQuery({
+    queryKey: ['transactionCount'],
+    queryFn: async () => {
+      const result = await countTransactions();
+      return result?.count ?? 0;
+    },
+    refetchInterval: pollInterval,
+    staleTime: 10000,
+  });
+}
+
+/**
+ * Hook to get total STARK proofs count
+ * Default: 30 seconds polling
+ */
+export function useStarkProofsCount(pollInterval = 30000) {
+  return useQuery({
+    queryKey: ['starkProofsCount'],
+    queryFn: async () => {
+      const result = await countStarkProofs();
+      return result?.count ?? 0;
+    },
+    refetchInterval: pollInterval,
+    staleTime: 10000,
   });
 }
 

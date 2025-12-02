@@ -40,12 +40,23 @@ export const getNetworkConfig = (): ZtarknetConfig => {
 // Username registry contract address
 export const USERNAME_REGISTRY_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_USERNAME_REGISTRY_CONTRACT_ADDRESS ||
-  '0x011195b78f3765b1b8cfe841363e60f2335adf67af2443364d4b15cf8dff60ac';
+  '0x58ea7c38b6d250ea19afa6917570bf8c97c0ae8a3a438a29e3cc3552a51ddfa';
 
 // Fee token address
 export const FEE_TOKEN_ADDRESS =
   process.env.NEXT_PUBLIC_FEE_TOKEN ||
   '0x1ad102b4c4b3e40a51b6fb8a446275d600555bd63a95cdceed3e5cef8a6bc1d';
+
+// Explorer URL for viewing accounts and transactions
+export const EXPLORER_URL =
+  process.env.NEXT_PUBLIC_EXPLORER_URL || 'https://explorer-zstarknet.d.karnot.xyz';
+
+/**
+ * Get the explorer URL for a specific account address
+ */
+export const getAccountExplorerUrl = (address: string): string => {
+  return `${EXPLORER_URL}/contract/${address}#transactions`;
+};
 
 // App name for storage namespacing
 export const APP_NAME = 'webwallet';

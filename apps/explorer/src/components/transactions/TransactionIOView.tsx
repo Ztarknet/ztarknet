@@ -3,6 +3,7 @@
 import { getOutputSpenders } from '@/services/zindex/tx_graph';
 import type { RpcTransaction, Vin, Vout, ZindexTransaction } from '@/types/transaction';
 import { formatZEC } from '@/utils/formatters';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -183,12 +184,14 @@ export function TransactionIOView({ tx }: TransactionIOViewProps) {
                           Address{output.scriptPubKey.addresses.length > 1 ? 'es' : ''}
                         </span>
                         {output.scriptPubKey.addresses.map((addr: string) => (
-                          <code
+                          <Link
                             key={addr}
-                            className="text-sm text-foreground/80 font-mono break-all leading-tight"
+                            href={`/account/${addr}`}
+                            className="text-sm text-accent hover:text-accent-strong font-mono break-all leading-tight transition-colors"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             {addr}
-                          </code>
+                          </Link>
                         ))}
                       </div>
                     )}

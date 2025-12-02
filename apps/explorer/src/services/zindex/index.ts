@@ -43,9 +43,7 @@ export {
   getTransactionInput,
   getInputSources,
   // Transaction Graph - Count
-  // countTransactions, // TODO: Add when migrating latest upstream changes
-  // countOutputs,
-  // countInputs,
+  countTransactions,
   // Transaction Graph - Graph
   getTransactionGraph,
 } from './tx_graph';
@@ -106,6 +104,8 @@ export {
   getStarkProofsByBlock,
   getRecentStarkProofs,
   getStarkProofsBySize,
+  countStarkProofs,
+  getSumProofSizesByVerifier,
   // Ztarknet Facts
   getZtarknetFacts,
   getFactsByVerifier,
@@ -116,10 +116,4 @@ export {
   getFactsByInnerProgramHash,
   getRecentFacts,
   getStateTransition,
-  // STARKS - Count
-  // countVerifiers, // TODO: Add when migrating latest upstream changes
-  // countStarkProofs,
-  // countFacts,
-  // STARKS - Aggregations
-  // getSumProofSizesByVerifier,
 } from './starks';

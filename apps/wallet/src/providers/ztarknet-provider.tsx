@@ -230,7 +230,11 @@ export function ZtarknetProvider({ children }: ZtarknetProviderProps) {
       const network = getCurrentNetwork();
       const storedKeys = localStorage.getItem(STORAGE_KEYS.AVAILABLE_KEYS(network));
       if (storedKeys) {
-        return JSON.parse(storedKeys);
+        const parsed = JSON.parse(storedKeys);
+        // Filter out any null/undefined/non-string values
+        return Array.isArray(parsed)
+          ? parsed.filter((k): k is string => typeof k === 'string' && k.length > 0)
+          : [];
       }
       return [];
     } catch (error) {
@@ -392,9 +396,10 @@ export function ZtarknetProvider({ children }: ZtarknetProviderProps) {
 
         for (let i = 0; i < userAddresses.length; i++) {
           const usernameFelt = usernamesFelt[i];
+          const userAddress = userAddresses[i];
           const usernameStr = felt252ToString(BigInt(usernameFelt));
-          if (usernameStr) {
-            usernameMap.set(userAddresses[i], usernameStr);
+          if (usernameStr && userAddress) {
+            usernameMap.set(userAddress, usernameStr);
           }
         }
 
@@ -420,11 +425,11 @@ export function ZtarknetProvider({ children }: ZtarknetProviderProps) {
         throw new Error('No account connected');
       }
 
+      const usernameFelt = stringToFelt252(usernameStr);
+      console.log('Claiming username:', usernameStr, 'as felt:', usernameFelt);
+
       try {
-        const usernameFelt = stringToFelt252(usernameStr);
-
-        console.log('Claiming username:', usernameStr, 'as felt:', usernameFelt);
-
+        // Simple execute like the old working code
         const response = await account.execute([
           {
             contractAddress: USERNAME_REGISTRY_CONTRACT_ADDRESS,
@@ -435,6 +440,7 @@ export function ZtarknetProvider({ children }: ZtarknetProviderProps) {
 
         console.log('Username claim transaction hash:', response.transaction_hash);
 
+        // Wait for transaction confirmation
         if (provider) {
           await provider.waitForTransaction(response.transaction_hash, {
             retryInterval: 100,
@@ -442,11 +448,16 @@ export function ZtarknetProvider({ children }: ZtarknetProviderProps) {
         }
 
         setUsername(usernameStr);
-
         return response.transaction_hash;
       } catch (error) {
         console.error('Failed to claim username:', error);
-        return null;
+        if (error instanceof Error) {
+          const errorMsg = error.message.toLowerCase();
+          if (errorMsg.includes('not deployed') || errorMsg.includes('contract not found')) {
+            throw new Error('Username registry contract not deployed on this network');
+          }
+        }
+        throw new Error('Failed to claim username. Please try again.');
       }
     },
     [account, provider]
@@ -743,9 +754,10 @@ export function ZtarknetProvider({ children }: ZtarknetProviderProps) {
       if (account) return;
 
       const availableKeyIds = getAvailableKeys();
-      if (availableKeyIds && availableKeyIds.length > 0) {
+      const firstKeyId = availableKeyIds?.[0];
+      if (firstKeyId) {
         try {
-          const privateKey = getPrivateKey(availableKeyIds[0]);
+          const privateKey = getPrivateKey(firstKeyId);
           if (privateKey) {
             await connectStorageAccount(privateKey);
             console.log('Auto-connected to existing account on app load');

@@ -37,19 +37,21 @@ export function SendModal({ isOpen, onClose, toAddress = '', amount = '' }: Send
       const loadAccounts = async () => {
         const availableKeys = getAvailableKeys();
         if (availableKeys && availableKeys.length > 0) {
-          const accountsList = await Promise.all(
-            availableKeys.map(async (keyId) => {
-              const parts = keyId.split('.');
-              const address = parts[parts.length - 1];
-              const username = await getUsernameForAddress(address);
-              const displayName = username || `Account-${address.slice(-8)}`;
-              return { keyId, address, username: displayName };
-            })
-          );
+          const accountsPromises = availableKeys.map(async (keyId) => {
+            const parts = keyId.split('.');
+            const address = parts[parts.length - 1];
+            if (!address) return null;
+            const username = await getUsernameForAddress(address);
+            const displayName = username || `Account-${address.slice(-8)}`;
+            return { keyId, address, username: displayName };
+          });
+          const accountsResults = await Promise.all(accountsPromises);
+          const accountsList = accountsResults.filter((acc): acc is AccountOption => acc !== null);
           setAccounts(accountsList);
 
-          if (!selectedAccountKeyId) {
-            setSelectedAccountKeyId(accountsList[0].keyId);
+          const firstAccount = accountsList[0];
+          if (!selectedAccountKeyId && firstAccount) {
+            setSelectedAccountKeyId(firstAccount.keyId);
           }
         }
       };
@@ -93,15 +95,22 @@ export function SendModal({ isOpen, onClose, toAddress = '', amount = '' }: Send
     setIsSubmitting(true);
 
     try {
+      if (!selectedAccountKeyId) {
+        throw new Error('No account selected');
+      }
+
       const privateKey = getPrivateKey(selectedAccountKeyId);
       if (!privateKey) {
-        throw new Error('Failed to get private key');
+        throw new Error('Failed to get private key. Please create or import an account first.');
       }
 
       const config = getNetworkConfig();
+      if (!config.accountClassHash) {
+        throw new Error('Account class hash not configured');
+      }
+
       const provider = new RpcProvider({
         nodeUrl: config.rpcUrl,
-        chainId: config.chainId,
         blockIdentifier: 'latest',
       });
 
@@ -114,7 +123,17 @@ export function SendModal({ isOpen, onClose, toAddress = '', amount = '' }: Send
         0
       );
 
-      const accountInstance = new Account(provider, accountAddress, privateKey, '1', '0x3');
+      if (!accountAddress) {
+        throw new Error('Failed to calculate account address');
+      }
+
+      const accountInstance = new Account({
+        provider,
+        address: accountAddress,
+        signer: privateKey,
+        cairoVersion: '1',
+        transactionVersion: '0x3',
+      });
       const amountInWei = BigInt(Math.floor(Number.parseFloat(amountValue) * 1e18));
 
       const transferCall = {
@@ -219,18 +238,24 @@ export function SendModal({ isOpen, onClose, toAddress = '', amount = '' }: Send
                 <span className="text-[10px] font-mono uppercase tracking-widest text-accent/60 mb-1.5 block">
                   From Account
                 </span>
-                <select
-                  value={selectedAccountKeyId}
-                  onChange={(e) => setSelectedAccountKeyId(e.target.value)}
-                  disabled={isSubmitting || !!success}
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/[0.02] border border-white/10 text-sm text-foreground focus:outline-none focus:border-accent/50 transition-all disabled:opacity-50"
-                >
-                  {accounts.map((account) => (
-                    <option key={account.keyId} value={account.keyId}>
-                      {account.username}
-                    </option>
-                  ))}
-                </select>
+                {accounts.length === 0 ? (
+                  <div className="px-3 py-2.5 rounded-lg bg-yellow-500/5 border border-yellow-500/20 text-sm text-yellow-400">
+                    No accounts found. Please create or import an account first.
+                  </div>
+                ) : (
+                  <select
+                    value={selectedAccountKeyId}
+                    onChange={(e) => setSelectedAccountKeyId(e.target.value)}
+                    disabled={isSubmitting || !!success}
+                    className="w-full px-3 py-2.5 rounded-lg bg-white/[0.02] border border-white/10 text-sm text-foreground focus:outline-none focus:border-accent/50 transition-all disabled:opacity-50"
+                  >
+                    {accounts.map((account) => (
+                      <option key={account.keyId} value={account.keyId}>
+                        {account.username}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <div>
@@ -263,7 +288,11 @@ export function SendModal({ isOpen, onClose, toAddress = '', amount = '' }: Send
               </div>
 
               <div className="flex justify-end pt-2">
-                <Button type="submit" variant="primary" disabled={isSubmitting || !!success}>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={isSubmitting || !!success || accounts.length === 0}
+                >
                   {success ? (
                     <>
                       <Check className="w-4 h-4 mr-2" />

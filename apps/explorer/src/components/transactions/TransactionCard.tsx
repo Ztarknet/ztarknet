@@ -116,12 +116,11 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
   const txKind = getTransactionKind(tx);
 
   return (
-    <Link
-      href={`/tx/${tx.txid}`}
-      className={`${cardWrapperClass} block no-underline`}
-    >
+    <Link href={`/tx/${tx.txid}`} className={`${cardWrapperClass} block no-underline`}>
       <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} />
-      <div className={`${cardInnerClass} transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]`}>
+      <div
+        className={`${cardInnerClass} transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]`}
+      >
         {/* Mobile/Tablet Layout - Below md breakpoint */}
         <div className="md:hidden flex flex-col gap-3 w-full relative z-10">
           <span className={`badge border ${TX_KIND_STYLES[txKind] || TX_KIND_STYLES.standard}`}>
@@ -140,7 +139,9 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
             </div>
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Outputs</span>
-              <span className="text-base font-semibold text-foreground font-mono">{numOutputs}</span>
+              <span className="text-base font-semibold text-foreground font-mono">
+                {numOutputs}
+              </span>
             </div>
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Total Output</span>
@@ -170,11 +171,15 @@ export function TransactionCard({ tx, isLoading = false }: TransactionCardProps)
           </code>
           <div className="flex flex-col gap-0.5 whitespace-nowrap">
             <span className="field-label">Inputs</span>
-            <span className="text-[0.95rem] font-semibold text-foreground font-mono">{numInputs}</span>
+            <span className="text-[0.95rem] font-semibold text-foreground font-mono">
+              {numInputs}
+            </span>
           </div>
           <div className="flex flex-col gap-0.5 whitespace-nowrap">
             <span className="field-label">Outputs</span>
-            <span className="text-[0.95rem] font-semibold text-foreground font-mono">{numOutputs}</span>
+            <span className="text-[0.95rem] font-semibold text-foreground font-mono">
+              {numOutputs}
+            </span>
           </div>
           <div className="flex flex-col gap-0.5 whitespace-nowrap">
             <span className="field-label">Total Output</span>

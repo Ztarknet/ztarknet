@@ -179,6 +179,21 @@ export async function getInputSources(txid: string): Promise<TransactionGraphNod
   return apiGet<TransactionGraphNode[]>(`${TX_GRAPH_BASE}/inputs/sources`, { txid });
 }
 
+// ==================== Count ====================
+
+interface CountResponse {
+  count: number;
+}
+
+/**
+ * Count total transactions with optional filters
+ */
+export async function countTransactions(
+  params: Partial<{ type: string; block_height: number }> = {}
+): Promise<CountResponse> {
+  return apiGet<CountResponse>(`${TX_GRAPH_BASE}/transactions/count`, params);
+}
+
 // ==================== Graph ====================
 
 interface GraphParams {

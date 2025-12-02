@@ -82,12 +82,11 @@ export function BlockCard({ block, isLoading = false }: BlockCardProps) {
   const reward = getBlockReward(block);
 
   return (
-    <Link
-      href={`/block/${block.hash}`}
-      className={`${cardWrapperClass} block no-underline`}
-    >
+    <Link href={`/block/${block.hash}`} className={`${cardWrapperClass} block no-underline`}>
       <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} />
-      <div className={`${cardInnerClass} transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]`}>
+      <div
+        className={`${cardInnerClass} transition-all duration-300 group-hover:shadow-[0_18px_36px_rgba(255,137,70,0.15)]`}
+      >
         <div className={`relative z-10 ${gridClass}`}>
           {/* Block number + time */}
           <div className="flex flex-row justify-between items-center gap-2 md:flex-col md:items-start md:gap-1">

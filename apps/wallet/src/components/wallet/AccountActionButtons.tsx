@@ -1,5 +1,6 @@
 'use client';
 
+import { getAccountExplorerUrl } from '@/config/ztarknet';
 import { Button } from '@workspace/ui/components/button';
 import { Check, Copy, ExternalLink, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -17,7 +18,7 @@ export function AccountActionButtons({
 
   const handleViewInExplorer = () => {
     if (accountAddress) {
-      window.open(`https://explorer.ztarknet.cash/account/${accountAddress}`, '_blank');
+      window.open(getAccountExplorerUrl(accountAddress), '_blank');
     }
   };
 

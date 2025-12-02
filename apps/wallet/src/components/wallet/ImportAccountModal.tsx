@@ -93,8 +93,11 @@ export function ImportAccountModal({
       );
 
       const availableKeys = getAvailableKeys();
-      const existingKey = availableKeys.find((keyId) =>
-        keyId.toLowerCase().endsWith(accountAddress.toLowerCase())
+      const existingKey = availableKeys.find(
+        (keyId) =>
+          keyId &&
+          accountAddress &&
+          keyId.toLowerCase().endsWith(accountAddress?.toLowerCase() ?? '')
       );
 
       if (existingKey) {
@@ -105,7 +108,6 @@ export function ImportAccountModal({
 
       const provider = new RpcProvider({
         nodeUrl: config.rpcUrl,
-        chainId: config.chainId,
         blockIdentifier: 'latest',
       });
 

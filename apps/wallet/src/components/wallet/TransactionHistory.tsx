@@ -1,5 +1,6 @@
 'use client';
 
+import { getAccountExplorerUrl } from '@/config/ztarknet';
 import { Button } from '@workspace/ui/components/button';
 import { Clock, ExternalLink } from 'lucide-react';
 
@@ -18,7 +19,7 @@ export function TransactionHistory({ accountAddress }: TransactionHistoryProps) 
 
   const handleViewInExplorer = () => {
     if (accountAddress) {
-      window.open(`https://explorer.ztarknet.cash/account/${accountAddress}`, '_blank');
+      window.open(getAccountExplorerUrl(accountAddress), '_blank');
     }
   };
 

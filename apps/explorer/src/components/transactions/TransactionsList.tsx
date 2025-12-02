@@ -2,7 +2,7 @@
 
 import { useRecentTransactions } from '@/hooks/queries/useTransactionQueries';
 import type { RpcTransaction, ZindexTransaction } from '@/types/transaction';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { TransactionCard } from './TransactionCard';
 
 const FILTER_TAGS = [
@@ -20,18 +20,49 @@ type FilterTagId = (typeof FILTER_TAGS)[number]['id'];
 const PAGE_SIZE = 10;
 
 export function TransactionsList() {
-  // Single selection - default to 'all'
-  const [selectedFilter, setSelectedFilter] = useState<FilterTagId>('all');
+  // Multiple selection - default to ['all']
+  const [selectedFilters, setSelectedFilters] = useState<Set<FilterTagId>>(new Set(['all']));
+
+  // Convert selected filters to API format (comma-separated string or 'all')
+  const apiFilter = useMemo(() => {
+    if (selectedFilters.has('all') || selectedFilters.size === 0) {
+      return 'all';
+    }
+    return Array.from(selectedFilters).join(',');
+  }, [selectedFilters]);
 
   const {
     data: transactions,
     isLoading: loading,
     error,
-  } = useRecentTransactions(selectedFilter, PAGE_SIZE);
+  } = useRecentTransactions(apiFilter, PAGE_SIZE);
 
-  // Handle tag click - single selection only
+  // Handle tag click - support multiple selection
   const handleTagClick = (tagId: FilterTagId) => {
-    setSelectedFilter(tagId);
+    setSelectedFilters((prev) => {
+      const newFilters = new Set(prev);
+
+      if (tagId === 'all') {
+        // Clicking 'all' clears all other selections and selects 'all'
+        return new Set<FilterTagId>(['all']);
+      }
+
+      // Remove 'all' if selecting a specific type
+      newFilters.delete('all');
+
+      // Toggle the clicked filter
+      if (newFilters.has(tagId)) {
+        newFilters.delete(tagId);
+        // If no filters selected, default back to 'all'
+        if (newFilters.size === 0) {
+          return new Set<FilterTagId>(['all']);
+        }
+      } else {
+        newFilters.add(tagId);
+      }
+
+      return newFilters;
+    });
   };
 
   return (
@@ -39,7 +70,7 @@ export function TransactionsList() {
       {/* Filter Tags */}
       <div className="flex flex-wrap gap-2 mb-6 items-center">
         {FILTER_TAGS.map((tag) => {
-          const isSelected = selectedFilter === tag.id;
+          const isSelected = selectedFilters.has(tag.id);
           return (
             <button
               type="button"
@@ -96,7 +127,13 @@ export function TransactionsList() {
           // Empty state
           <div className="py-20 px-8 text-center bg-card-bg border border-[rgba(255,137,70,0.2)] rounded-2xl">
             <p className="text-xl text-muted font-mono m-0">
-              No {selectedFilter !== 'all' ? selectedFilter.toUpperCase() : ''} transactions found
+              No{' '}
+              {!selectedFilters.has('all')
+                ? `${Array.from(selectedFilters)
+                    .map((f) => f.toUpperCase())
+                    .join(', ')} `
+                : ''}
+              transactions found
             </p>
           </div>
         )}

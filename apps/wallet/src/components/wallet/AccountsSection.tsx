@@ -22,7 +22,7 @@ interface AccountsSectionProps {
 
 const extractAddressFromKeyId = (keyId: string): string => {
   const parts = keyId.split('.');
-  return parts[parts.length - 1];
+  return parts[parts.length - 1] ?? '';
 };
 
 const generatePreseededUsername = (address: string): string => {
@@ -57,11 +57,17 @@ export function AccountsSection({
       const addresses = keyIds.map(extractAddressFromKeyId);
       const usernameMap = await getUsernamesForAddresses(addresses);
 
-      const accountList = addresses.map((address, index) => ({
-        keyId: keyIds[index],
-        address,
-        username: usernameMap.get(address) || generatePreseededUsername(address),
-      }));
+      const accountList = addresses
+        .map((address, index) => {
+          const keyId = keyIds[index];
+          if (!keyId || !address) return null;
+          return {
+            keyId,
+            address,
+            username: usernameMap.get(address) || generatePreseededUsername(address),
+          };
+        })
+        .filter((acc): acc is Account => acc !== null);
 
       setAccounts(accountList);
       setLoading(false);
