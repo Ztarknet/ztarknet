@@ -1,0 +1,293 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Font families */
+    --font-sans: "sculpin-variable", sans-serif;
+    --font-mono: "ibm-plex-mono", sans-serif;
+
+    /* Original Ztarknet design tokens */
+    --background: #040405;
+    --foreground: #f4f4f6;
+    --muted: #777c8e;
+    --accent: #ff6b1a;
+    --accent-strong: #ff8946;
+    --card-bg: rgba(12, 13, 17, 0.85);
+    --card-border: rgba(255, 107, 26, 0.4);
+    --max-width: 1224px;
+    --section-padding: 120px;
+
+    /* Shadcn UI variables mapped to Ztarknet theme */
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 18 100% 55%;
+    --primary-foreground: 20 100% 10%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted-foreground: 215 16% 47%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 18 100% 55%;
+    --input: 217 33% 17%;
+    --ring: 18 100% 55%;
+    --radius: 0.5rem;
+    --chart-1: 18 100% 55%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    background: radial-gradient(circle at top right, #0e0912 0%, #040405 60%);
+    color: var(--foreground);
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+  }
+
+  /* Text selection styles */
+  ::selection {
+    background-color: rgb(255, 137, 70);
+    color: white;
+  }
+
+  ::-moz-selection {
+    background-color: rgb(255, 137, 70);
+    color: white;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: conic-gradient(
+        from 45deg at 10% 10%,
+        rgba(255, 107, 26, 0.1),
+        rgba(255, 107, 26, 0) 40%
+      ),
+      linear-gradient(
+        120deg,
+        rgba(255, 137, 70, 0.12) 0%,
+        rgba(255, 137, 70, 0) 40%,
+        rgba(255, 137, 70, 0.08) 70%,
+        rgba(255, 137, 70, 0) 100%
+      );
+    z-index: -3;
+    pointer-events: none;
+  }
+}
+
+@layer components {
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 100 100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect x='0' y='0' width='100' height='100' filter='url(%23n)' opacity='0.14'/%3E%3C/svg%3E");
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .container-custom {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  @media (min-width: 1280px) {
+    .container-custom {
+      padding: 0;
+    }
+  }
+
+  .max-w-container {
+    max-width: var(--max-width);
+  }
+
+  /* Section padding - use instead of py-[120px] */
+  .section-padding {
+    padding-top: var(--section-padding);
+    padding-bottom: var(--section-padding);
+  }
+
+  /* Heading section - use instead of text-[1.8rem] font-bold tracking-tight */
+  .heading-section {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--foreground);
+  }
+
+  /* Stat value - use instead of text-[2rem] font-bold font-mono */
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--foreground);
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 uppercase tracking-[0.2em] text-xs;
+    color: rgba(255, 107, 26, 0.7);
+  }
+
+  .accent-text {
+    color: var(--accent);
+    text-shadow: 0 0 18px rgba(255, 107, 26, 0.45);
+  }
+
+  .glass-card {
+    padding: 24px;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 137, 70, 0.2);
+    border-radius: 16px;
+    box-shadow: inset 0 0 0 1px rgba(255, 137, 70, 0.05), 0 16px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(16px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .glass-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 137, 70, 0.5);
+  }
+
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hero-glow {
+    position: absolute;
+    right: -220px;
+    top: -80px;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba(255, 137, 70, 0.25), rgba(4, 4, 5, 0));
+    filter: blur(40px);
+    z-index: -2;
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  @keyframes slideRight {
+    0% {
+      transform: translateX(0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(calc(100% + 0.5rem));
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideRightFull {
+    0% {
+      left: 0;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      left: calc(100% - 0.5rem);
+      opacity: 0;
+    }
+  }
+
+  @keyframes beamMove {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(500%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes beamMoveVertical {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(500%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideDown {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(calc(100% + 0.5rem));
+      opacity: 0;
+    }
+  }
+}
