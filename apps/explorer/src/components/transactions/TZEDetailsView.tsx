@@ -46,6 +46,7 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
   const [verifierName, setVerifierName] = useState<string | null>(null);
   const [loadingVerifier, setLoadingVerifier] = useState<boolean>(false);
   const [nextVerifyTx, setNextVerifyTx] = useState<string | null>(null);
+  const [loadingNextVerify, setLoadingNextVerify] = useState<boolean>(false);
 
   // Parse TZE data from inputs and outputs
   let tzeInputData: TzeData | null = null;
@@ -72,6 +73,11 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
       }
     }
   }
+
+  // Determine mode based on transaction structure:
+  // - If spending a TZE input → STARK Verify mode (1)
+  // - If NOT spending a TZE input → Initialize mode (0)
+  const tzeMode = tzeInputData ? 1 : 0;
 
   // Fetch old state root from previous transaction if this is a STARK Verify
   useEffect(() => {
@@ -125,21 +131,45 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
 
       try {
         setLoadingVerifier(true);
-        const { getStarkProofsByTransaction } = await import('@/services/zindex/starks');
 
-        // Get STARK proofs for this transaction
-        const proofsData = await getStarkProofsByTransaction(tx.txid);
+        let verifierId: string | null = null;
 
-        // The API returns an array directly (not { proofs: [...] })
-        if (proofsData && Array.isArray(proofsData) && proofsData.length > 0) {
-          const proof = proofsData[0] as StarkProof;
-
-          // Fetch verifier details using verifier_id from proof
-          if (proof.verifier_id) {
-            const verifierData = (await getVerifier(proof.verifier_id)) as VerifierData;
-            if (verifierData?.verifier_name) {
-              setVerifierName(verifierData.verifier_name);
+        // For Initialize mode (tzeMode === 0), construct verifier_id from tx output
+        if (tzeMode === 0) {
+          // Find the vout index of the TZE output
+          let tzeVout: number | null = null;
+          if (tx.vout) {
+            for (let i = 0; i < tx.vout.length; i++) {
+              const output = tx.vout[i] as Vout;
+              if (output.scriptPubKey?.hex?.toLowerCase().startsWith('ff')) {
+                tzeVout = i;
+                break;
+              }
             }
+          }
+
+          if (tzeVout !== null) {
+            verifierId = `${tx.txid}:${tzeVout}`;
+          }
+        } else {
+          // For Verify mode, get verifier_id from STARK proof
+          const { getStarkProofsByTransaction } = await import('@/services/zindex/starks');
+
+          // Get STARK proofs for this transaction
+          const proofsData = await getStarkProofsByTransaction(tx.txid);
+
+          // The API returns an array directly (not { proofs: [...] })
+          if (proofsData && Array.isArray(proofsData) && proofsData.length > 0) {
+            const proof = proofsData[0] as StarkProof;
+            verifierId = proof.verifier_id ?? null;
+          }
+        }
+
+        // Fetch verifier details if we have a verifier_id
+        if (verifierId) {
+          const verifierData = (await getVerifier(verifierId)) as VerifierData;
+          if (verifierData?.verifier_name) {
+            setVerifierName(verifierData.verifier_name);
           }
         }
       } catch (error: unknown) {
@@ -154,7 +184,7 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
     }
 
     fetchVerifier();
-  }, [tx.txid]);
+  }, [tx.txid, tzeMode, tx.vout]);
 
   // Check if TZE output is spent (find next verify transaction)
   useEffect(() => {
@@ -181,6 +211,8 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
       }
 
       try {
+        setLoadingNextVerify(true);
+
         // Find the vout index of the TZE output
         let tzeVout: number | null = null;
         if (tx.vout) {
@@ -213,6 +245,8 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
         } else {
           console.error('[TZE Details] Error fetching next verify transaction:', error);
         }
+      } finally {
+        setLoadingNextVerify(false);
       }
     }
 
@@ -228,11 +262,6 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
   }
 
   const { tzeId, payload } = tzeOutputData;
-
-  // Determine mode based on transaction structure:
-  // - If spending a TZE input → STARK Verify mode (1)
-  // - If NOT spending a TZE input → Initialize mode (0)
-  const tzeMode = tzeInputData ? 1 : 0;
 
   const typeName = getTZETypeName(tzeId);
   const modeName = getTZEModeName(tzeId, tzeMode);
@@ -390,7 +419,7 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
       <div className="p-5 bg-[rgba(12,13,17,0.4)] rounded-[10px] border border-[rgba(255,107,26,0.15)]">
         {/* Verifier Field - shown for both Initialize and Verify modes */}
         <div className="flex flex-col gap-2 pb-2">
-          <div className="flex justify-between items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div className="flex items-center gap-3">
               <span className="field-label">Verifier</span>
               {loadingVerifier ? (
@@ -417,24 +446,34 @@ export function TZEDetailsView({ tx }: TZEDetailsViewProps) {
                 <span className="font-mono text-sm text-muted italic">Not available</span>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {tzeMode === 1 && spendingTzeInput && spendingTzeInput.txid && (
                 <Link
                   href={`/tx/${spendingTzeInput.txid}`}
-                  className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:-translate-x-0.5 whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:-translate-x-0.5"
                   title="View the previous STARK Verify transaction"
                 >
                   ← View Prev Verify
                 </Link>
               )}
-              {nextVerifyTx && (
+              {nextVerifyTx ? (
                 <Link
                   href={`/tx/${nextVerifyTx}`}
-                  className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:translate-x-0.5 whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-accent no-underline rounded-md border border-[rgba(255,107,26,0.3)] bg-[rgba(255,107,26,0.05)] transition-all duration-200 hover:bg-[rgba(255,107,26,0.15)] hover:border-[rgba(255,107,26,0.5)] hover:translate-x-0.5"
                   title="View the next STARK Verify transaction"
                 >
                   View Next Verify →
                 </Link>
+              ) : (
+                tzeMode === 1 &&
+                !loadingNextVerify && (
+                  <div
+                    className="inline-flex items-center gap-1.5 py-1.5 px-3 text-sm font-medium text-muted no-underline rounded-md border border-[rgba(255,107,26,0.15)] bg-[rgba(255,107,26,0.02)] cursor-not-allowed opacity-50"
+                    title="Unspent"
+                  >
+                    View Next Verify →
+                  </div>
+                )
               )}
             </div>
           </div>

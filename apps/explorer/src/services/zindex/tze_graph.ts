@@ -22,10 +22,13 @@ interface TZEInput {
 }
 
 /**
- * Get all TZE inputs with pagination
+ * Get all TZE inputs for a transaction
  */
-export async function getTzeInputs(params: PaginationParams = {}): Promise<TZEInput[]> {
-  return apiGet<TZEInput[]>(`${TZE_GRAPH_BASE}/inputs`, withPaginationDefaults(params));
+export async function getTzeInputs(txid: string): Promise<TZEInput[]> {
+  if (!txid) {
+    throw new Error('Transaction ID is required');
+  }
+  return apiGet<TZEInput[]>(`${TZE_GRAPH_BASE}/inputs`, { txid });
 }
 
 interface TZEInputParams {
@@ -49,36 +52,57 @@ export async function getTzeInput(params: TZEInputParams): Promise<TZEInput> {
   return apiGet<TZEInput>(`${TZE_GRAPH_BASE}/inputs/input`, { txid, vin });
 }
 
+interface TZEInputsByTypeParams extends PaginationParams {
+  type: 'demo' | 'stark_verify';
+}
+
 /**
  * Get TZE inputs by extension type
  */
-export async function getTzeInputsByType(type: string): Promise<TZEInput[]> {
+export async function getTzeInputsByType(params: TZEInputsByTypeParams): Promise<TZEInput[]> {
+  const { type, ...rest } = params;
+
   if (!type) {
-    throw new Error('Extension type is required');
+    throw new Error('Extension type is required (demo|stark_verify)');
   }
-  return apiGet<TZEInput[]>(`${TZE_GRAPH_BASE}/inputs/by-type`, { type });
+
+  return apiGet<TZEInput[]>(`${TZE_GRAPH_BASE}/inputs/by-type`, {
+    type,
+    ...withPaginationDefaults(rest),
+  });
+}
+
+interface TZEInputsByModeParams extends PaginationParams {
+  mode: number | string;
 }
 
 /**
  * Get TZE inputs by mode
  */
-export async function getTzeInputsByMode(mode: string): Promise<TZEInput[]> {
-  if (!mode) {
-    throw new Error('Extension mode is required');
+export async function getTzeInputsByMode(params: TZEInputsByModeParams): Promise<TZEInput[]> {
+  const { mode, ...rest } = params;
+
+  if (mode === undefined || mode === null) {
+    throw new Error('Extension mode is required (0 or 1)');
   }
-  return apiGet<TZEInput[]>(`${TZE_GRAPH_BASE}/inputs/by-mode`, { mode });
+
+  return apiGet<TZEInput[]>(`${TZE_GRAPH_BASE}/inputs/by-mode`, {
+    mode: String(mode),
+    ...withPaginationDefaults(rest),
+  });
 }
 
-interface TZETypeAndModeParams {
-  type: string;
+interface TZETypeAndModeParams extends PaginationParams {
+  type: 'demo' | 'stark_verify';
   mode: string;
 }
 
 /**
  * Get TZE inputs by type and mode
+ * @param params.mode - Extension mode string (open|close for demo, initialize|verify for stark_verify)
  */
 export async function getTzeInputsByTypeAndMode(params: TZETypeAndModeParams): Promise<TZEInput[]> {
-  const { type, mode } = params;
+  const { type, mode, ...rest } = params;
 
   if (!type) {
     throw new Error('Extension type is required');
@@ -87,7 +111,11 @@ export async function getTzeInputsByTypeAndMode(params: TZETypeAndModeParams): P
     throw new Error('Extension mode is required');
   }
 
-  return apiGet<TZEInput[]>(`${TZE_GRAPH_BASE}/inputs/by-type-mode`, { type, mode });
+  return apiGet<TZEInput[]>(`${TZE_GRAPH_BASE}/inputs/by-type-mode`, {
+    type,
+    mode,
+    ...withPaginationDefaults(rest),
+  });
 }
 
 interface PrevOutputParams {
@@ -127,10 +155,13 @@ interface TZEOutput {
 }
 
 /**
- * Get all TZE outputs with pagination
+ * Get all TZE outputs for a transaction
  */
-export async function getTzeOutputs(params: PaginationParams = {}): Promise<TZEOutput[]> {
-  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs`, withPaginationDefaults(params));
+export async function getTzeOutputs(txid: string): Promise<TZEOutput[]> {
+  if (!txid) {
+    throw new Error('Transaction ID is required');
+  }
+  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs`, { txid });
 }
 
 interface TZEOutputParams {
@@ -174,33 +205,54 @@ export async function getAllUnspentTzeOutputs(params: PaginationParams = {}): Pr
   );
 }
 
+interface TZEOutputsByTypeParams extends PaginationParams {
+  type: 'demo' | 'stark_verify';
+}
+
 /**
  * Get TZE outputs by extension type
  */
-export async function getTzeOutputsByType(type: string): Promise<TZEOutput[]> {
+export async function getTzeOutputsByType(params: TZEOutputsByTypeParams): Promise<TZEOutput[]> {
+  const { type, ...rest } = params;
+
   if (!type) {
-    throw new Error('Extension type is required');
+    throw new Error('Extension type is required (demo|stark_verify)');
   }
-  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/by-type`, { type });
+
+  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/by-type`, {
+    type,
+    ...withPaginationDefaults(rest),
+  });
+}
+
+interface TZEOutputsByModeParams extends PaginationParams {
+  mode: number | string;
 }
 
 /**
  * Get TZE outputs by mode
  */
-export async function getTzeOutputsByMode(mode: string): Promise<TZEOutput[]> {
-  if (!mode) {
-    throw new Error('Extension mode is required');
+export async function getTzeOutputsByMode(params: TZEOutputsByModeParams): Promise<TZEOutput[]> {
+  const { mode, ...rest } = params;
+
+  if (mode === undefined || mode === null) {
+    throw new Error('Extension mode is required (0 or 1)');
   }
-  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/by-mode`, { mode });
+
+  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/by-mode`, {
+    mode: String(mode),
+    ...withPaginationDefaults(rest),
+  });
 }
 
 /**
  * Get TZE outputs by type and mode
+ * @param params.mode - Extension mode string (open|close for demo, initialize|verify for stark_verify)
  */
 export async function getTzeOutputsByTypeAndMode(
   params: TZETypeAndModeParams
 ): Promise<TZEOutput[]> {
-  const { type, mode } = params;
+  const { type, mode, ...rest } = params;
 
   if (!type) {
     throw new Error('Extension type is required');
@@ -209,17 +261,29 @@ export async function getTzeOutputsByTypeAndMode(
     throw new Error('Extension mode is required');
   }
 
-  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/by-type-mode`, { type, mode });
+  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/by-type-mode`, {
+    type,
+    mode,
+    ...withPaginationDefaults(rest),
+  });
 }
 
 /**
  * Get unspent TZE outputs by extension type
  */
-export async function getUnspentTzeOutputsByType(type: string): Promise<TZEOutput[]> {
+export async function getUnspentTzeOutputsByType(
+  params: TZEOutputsByTypeParams
+): Promise<TZEOutput[]> {
+  const { type, ...rest } = params;
+
   if (!type) {
-    throw new Error('Extension type is required');
+    throw new Error('Extension type is required (demo|stark_verify)');
   }
-  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/unspent-by-type`, { type });
+
+  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/unspent-by-type`, {
+    type,
+    ...withPaginationDefaults(rest),
+  });
 }
 
 /**
@@ -228,7 +292,7 @@ export async function getUnspentTzeOutputsByType(type: string): Promise<TZEOutpu
 export async function getUnspentTzeOutputsByTypeAndMode(
   params: TZETypeAndModeParams
 ): Promise<TZEOutput[]> {
-  const { type, mode } = params;
+  const { type, mode, ...rest } = params;
 
   if (!type) {
     throw new Error('Extension type is required');
@@ -237,7 +301,11 @@ export async function getUnspentTzeOutputsByTypeAndMode(
     throw new Error('Extension mode is required');
   }
 
-  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/unspent-by-type-mode`, { type, mode });
+  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/unspent-by-type-mode`, {
+    type,
+    mode,
+    ...withPaginationDefaults(rest),
+  });
 }
 
 /**
@@ -247,23 +315,18 @@ export async function getSpentTzeOutputs(params: PaginationParams = {}): Promise
   return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/spent`, withPaginationDefaults(params));
 }
 
-interface ValueRangeParams {
-  min_value: number;
-  max_value: number;
+interface ValueRangeParams extends PaginationParams {
+  min_value?: number;
 }
 
 /**
- * Get TZE outputs within a value range
+ * Get TZE outputs with value greater than or equal to minimum value
  */
-export async function getTzeOutputsByValue(params: ValueRangeParams): Promise<TZEOutput[]> {
-  const { min_value, max_value } = params;
+export async function getTzeOutputsByValue(params: ValueRangeParams = {}): Promise<TZEOutput[]> {
+  const { min_value = 0, ...rest } = params;
 
-  if (min_value === undefined || min_value === null) {
-    throw new Error('min_value is required');
-  }
-  if (max_value === undefined || max_value === null) {
-    throw new Error('max_value is required');
-  }
-
-  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/by-value`, { min_value, max_value });
+  return apiGet<TZEOutput[]>(`${TZE_GRAPH_BASE}/outputs/by-value`, {
+    min_value,
+    ...withPaginationDefaults(rest),
+  });
 }

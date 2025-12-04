@@ -12,8 +12,8 @@ interface BlockCardProps {
   isLoading?: boolean;
 }
 
-// Fixed column widths for consistent layout between loading and loaded states
-const GRID_COLS_DESKTOP = 'md:grid-cols-[200px_1fr_80px_100px_70px]';
+// Grid layout: auto for block#/time, flexible hash, auto for stats
+const GRID_COLS_DESKTOP = 'md:grid-cols-[auto_minmax(200px,1fr)_100px_100px_70px]';
 
 export function BlockCard({ block, isLoading = false }: BlockCardProps) {
   const relativeTime = useRelativeTime(block?.time);
@@ -56,14 +56,14 @@ export function BlockCard({ block, isLoading = false }: BlockCardProps) {
 
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Reward</span>
-                <span className="text-base font-semibold text-foreground font-mono">
+                <span className="text-base font-semibold text-foreground font-mono min-w-[100px]">
                   <span className="inline-block bg-[rgba(255,255,255,0.1)] rounded animate-pulse w-[80px] h-[1.25em]" />
                 </span>
               </div>
 
               <div className="flex flex-col gap-0.5 whitespace-nowrap">
                 <span className="field-label">Size</span>
-                <span className="text-base font-semibold text-foreground font-mono">
+                <span className="text-base font-semibold text-foreground font-mono min-w-[60px]">
                   <span className="inline-block bg-[rgba(255,255,255,0.1)] rounded animate-pulse w-[50px] h-[1.25em]" />
                 </span>
               </div>
@@ -115,14 +115,14 @@ export function BlockCard({ block, isLoading = false }: BlockCardProps) {
 
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Reward</span>
-              <span className="text-base font-semibold text-foreground font-mono">
+              <span className="text-base font-semibold text-foreground font-mono min-w-[100px]">
                 {reward !== null ? `${formatZEC(reward)} ZEC` : 'N/A'}
               </span>
             </div>
 
             <div className="flex flex-col gap-0.5 whitespace-nowrap">
               <span className="field-label">Size</span>
-              <span className="text-base font-semibold text-foreground font-mono">
+              <span className="text-base font-semibold text-foreground font-mono min-w-[60px]">
                 {formatSize(block.size)}
               </span>
             </div>

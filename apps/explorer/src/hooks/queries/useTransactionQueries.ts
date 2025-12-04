@@ -8,7 +8,7 @@ import {
   getTransaction,
   getTransactionsByType,
 } from '@/services/zindex';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 interface TransactionData {
   txid: string;
@@ -90,6 +90,31 @@ export function useStarkProofsCount(pollInterval = 30000) {
     },
     refetchInterval: pollInterval,
     staleTime: 10000,
+  });
+}
+
+/**
+ * Hook for infinite loading of transactions (pagination)
+ */
+export function useInfiniteTransactions(filter = 'all', pageSize = 10) {
+  return useInfiniteQuery({
+    queryKey: ['infiniteTransactions', filter, pageSize],
+    queryFn: async ({ pageParam = 0 }) => {
+      const fetchFn =
+        filter === 'all'
+          ? () => getRecentTransactions({ limit: pageSize, offset: pageParam })
+          : () => getTransactionsByType({ type: filter, limit: pageSize, offset: pageParam });
+
+      const transactions = (await fetchFn()) as TransactionData[];
+      return {
+        transactions,
+        nextOffset: transactions.length === pageSize ? pageParam + pageSize : null,
+      };
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.nextOffset,
+    refetchInterval: 3000,
+    staleTime: 1000,
   });
 }
 

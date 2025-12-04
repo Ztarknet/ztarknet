@@ -148,11 +148,13 @@ export async function countStarkProofs(
  */
 export async function getSumProofSizesByVerifier(
   verifier_id: string
-): Promise<{ total_size: number }> {
+): Promise<{ total_proof_size: number }> {
   if (!verifier_id) {
     throw new Error('Verifier ID is required');
   }
-  return apiGet<{ total_size: number }>(`${STARKS_BASE}/verifier/sum-proof-sizes`, { verifier_id });
+  return apiGet<{ total_proof_size: number }>(`${STARKS_BASE}/verifier/sum-proof-sizes`, {
+    verifier_id,
+  });
 }
 
 // ==================== Ztarknet Facts ====================

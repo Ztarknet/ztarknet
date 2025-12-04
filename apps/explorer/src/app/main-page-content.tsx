@@ -95,13 +95,33 @@ export function MainPageContent() {
                 </div>
               </div>
 
-              <div className="mb-0">
+              <div className="mb-5">
                 <span className="eyebrow mb-2">Network Type</span>
                 <div className="text-base text-[rgba(255,255,255,0.7)] break-all leading-relaxed">
                   <code className="bg-[rgba(255,255,255,0.05)] px-2 py-0.5 rounded text-accent">
                     regtest
                   </code>{' '}
                   - Regression test network for development
+                </div>
+              </div>
+
+              <div className="mb-5">
+                <span className="eyebrow mb-2">Transaction Version</span>
+                <div className="text-base text-[rgba(255,255,255,0.7)] break-all leading-relaxed">
+                  <code className="bg-[rgba(255,255,255,0.05)] px-2 py-0.5 rounded text-accent">
+                    V6
+                  </code>{' '}
+                  - Current transaction format
+                </div>
+              </div>
+
+              <div className="mb-0">
+                <span className="eyebrow mb-2">Network Upgrade</span>
+                <div className="text-base text-[rgba(255,255,255,0.7)] break-all leading-relaxed">
+                  <code className="bg-[rgba(255,255,255,0.05)] px-2 py-0.5 rounded text-accent">
+                    ZFuture
+                  </code>{' '}
+                  - Latest protocol version
                 </div>
               </div>
             </div>

@@ -55,7 +55,7 @@ export async function getAccountsByBalanceRange(
 export async function getTopAccountsByBalance(
   params: PaginationParams = {}
 ): Promise<AccountData[]> {
-  return apiGet<AccountData[]>(`${ACCOUNTS_BASE}/top-balance`, {
+  return apiGet<AccountData[]>(`${ACCOUNTS_BASE}/top-balances`, {
     limit: params.limit ?? 10,
   });
 }
@@ -97,11 +97,12 @@ export async function getAccountTransactions(
 
 interface AccountTransactionsByTypeParams extends PaginationParams {
   address: string;
-  type: string;
+  type: 'receive' | 'send';
 }
 
 /**
  * Get account transactions by type
+ * @param params.type - Transaction type (receive|send)
  */
 export async function getAccountTransactionsByType(
   params: AccountTransactionsByTypeParams
@@ -112,10 +113,10 @@ export async function getAccountTransactionsByType(
     throw new Error('Account address is required');
   }
   if (!type) {
-    throw new Error('Transaction type is required');
+    throw new Error('Transaction type is required (receive|send)');
   }
 
-  return apiGet<Transaction[]>(`${ACCOUNTS_BASE}/transactions/by-type`, {
+  return apiGet<Transaction[]>(`${ACCOUNTS_BASE}/transactions/type`, {
     address,
     type,
     ...withPaginationDefaults(rest),
@@ -158,10 +159,10 @@ export async function getAccountSendingTransactions(
   });
 }
 
-interface BlockRangeParams {
+interface BlockRangeParams extends PaginationParams {
   address: string;
-  from_height: number;
-  to_height: number;
+  from_block: number;
+  to_block: number;
 }
 
 /**
@@ -170,22 +171,23 @@ interface BlockRangeParams {
 export async function getAccountTransactionsByBlockRange(
   params: BlockRangeParams
 ): Promise<Transaction[]> {
-  const { address, from_height, to_height } = params;
+  const { address, from_block, to_block, ...rest } = params;
 
   if (!address) {
     throw new Error('Account address is required');
   }
-  if (from_height === undefined || from_height === null) {
-    throw new Error('from_height is required');
+  if (from_block === undefined || from_block === null) {
+    throw new Error('from_block is required');
   }
-  if (to_height === undefined || to_height === null) {
-    throw new Error('to_height is required');
+  if (to_block === undefined || to_block === null) {
+    throw new Error('to_block is required');
   }
 
   return apiGet<Transaction[]>(`${ACCOUNTS_BASE}/transactions/block-range`, {
     address,
-    from_height,
-    to_height,
+    from_block,
+    to_block,
+    ...withPaginationDefaults(rest),
   });
 }
 
@@ -200,7 +202,7 @@ export async function getAccountTransactionCount(address: string): Promise<Trans
   if (!address) {
     throw new Error('Account address is required');
   }
-  return apiGet<TransactionCount>(`${ACCOUNTS_BASE}/transaction-count`, { address });
+  return apiGet<TransactionCount>(`${ACCOUNTS_BASE}/transactions/count`, { address });
 }
 
 interface AccountTransactionParams {
@@ -223,7 +225,7 @@ export async function getAccountTransaction(
     throw new Error('Transaction ID is required');
   }
 
-  return apiGet<Transaction>(`${ACCOUNTS_BASE}/transaction`, { address, txid });
+  return apiGet<Transaction>(`${ACCOUNTS_BASE}/transactions/transaction`, { address, txid });
 }
 
 /**
@@ -233,5 +235,28 @@ export async function getTransactionAccounts(txid: string): Promise<AccountData[
   if (!txid) {
     throw new Error('Transaction ID is required');
   }
-  return apiGet<AccountData[]>(`${ACCOUNTS_BASE}/tx-accounts`, { txid });
+  return apiGet<AccountData[]>(`${ACCOUNTS_BASE}/transactions/by-txid`, { txid });
+}
+
+// ==================== Count ====================
+
+/**
+ * Count total accounts
+ */
+export async function countAccounts(): Promise<{ count: number }> {
+  return apiGet<{ count: number }>(`${ACCOUNTS_BASE}/count`);
+}
+
+/**
+ * Count account transactions with optional filters
+ * @param params.address - Filter by account address
+ * @param params.type - Filter by transaction type (send|receive)
+ */
+export async function countAccountTransactions(
+  params: { address?: string; type?: 'send' | 'receive' } = {}
+): Promise<{ count: number }> {
+  const queryParams: Record<string, string | undefined> = {};
+  if (params.address) queryParams.address = params.address;
+  if (params.type) queryParams.type = params.type;
+  return apiGet<{ count: number }>(`${ACCOUNTS_BASE}/transactions/total-count`, queryParams);
 }

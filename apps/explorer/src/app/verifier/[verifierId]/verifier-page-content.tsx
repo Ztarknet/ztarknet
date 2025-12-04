@@ -122,7 +122,7 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
         // Fetch total proof sizes for this verifier
         try {
           const sumData = await getSumProofSizesByVerifier(verifierData.verifier_id);
-          const totalBytes = sumData?.total_size || 0;
+          const totalBytes = sumData?.total_proof_size || 0;
           setTotalProofSizeMB(totalBytes / (1024 * 1024));
         } catch (sumError: unknown) {
           if (sumError instanceof Error) {
@@ -167,11 +167,36 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
     fetchVerifier();
   }, [verifierId]);
 
-  // Fetch transactions for each proof + init transaction
+  // Helper to dedupe and sort transactions with init at bottom
+  const dedupeAndSortTransactions = useCallback(
+    (txs: RpcTransaction[], initTxId: string | null) => {
+      // Dedupe by txid - keep the first occurrence
+      const seen = new Set<string>();
+      const uniqueTxs = txs.filter((tx) => {
+        if (seen.has(tx.txid)) return false;
+        seen.add(tx.txid);
+        return true;
+      });
+
+      return uniqueTxs.sort((a, b) => {
+        const aIsInit = a.txid === initTxId;
+        const bIsInit = b.txid === initTxId;
+
+        // If one is init and other isn't, init goes to bottom
+        if (aIsInit && !bIsInit) return 1;
+        if (!aIsInit && bIsInit) return -1;
+
+        // Otherwise sort by block height (most recent first)
+        return (b.height || 0) - (a.height || 0);
+      });
+    },
+    []
+  );
+
+  // Fetch transactions for initial proofs only (NOT init tx)
   useEffect(() => {
-    async function fetchTransactions() {
-      if (!verifier) {
-        setLoadingTransactions(false);
+    async function fetchInitialTransactions() {
+      if (!verifier || proofs.length === 0) {
         return;
       }
 
@@ -182,23 +207,18 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
         const initTxId = verifier.verifier_id ? verifier.verifier_id.split(':')[0] : null;
 
         // Get unique transaction IDs from proofs
-        const proofTxIds = proofs.map((proof: StarkProof) => proof.txid);
+        const proofTxIds = [...new Set(proofs.map((proof: StarkProof) => proof.txid))];
 
-        // Combine init tx + proof txs (removing duplicates)
-        const allTxIds = initTxId
-          ? [...new Set([initTxId, ...proofTxIds])]
-          : [...new Set(proofTxIds)];
+        // Filter out txids we've already fetched
+        const newTxIds = proofTxIds.filter((txid) => !fetchedTxIdsRef.current.has(txid));
 
-        // Filter to only fetch txIds we haven't already fetched
-        const txIdsToFetch = allTxIds.filter((txid) => !fetchedTxIdsRef.current.has(txid));
-
-        if (txIdsToFetch.length === 0) {
+        if (newTxIds.length === 0) {
           setLoadingTransactions(false);
           return;
         }
 
-        // Fetch each transaction
-        const txPromises = txIdsToFetch.map((txid: string) =>
+        // Fetch each new transaction
+        const txPromises = newTxIds.map((txid: string) =>
           getRawTransaction(txid).catch((err: unknown) => {
             if (err instanceof Error) {
               console.error(`Error fetching transaction ${txid}:`, err.message);
@@ -211,8 +231,8 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
 
         const txData = await Promise.all(txPromises);
 
-        // Filter out null values and mark as fetched
-        const validNewTxs = txData.filter((tx): tx is RpcTransaction => {
+        // Filter out null values and track fetched txids
+        const validTxs = txData.filter((tx): tx is RpcTransaction => {
           if (tx !== null) {
             fetchedTxIdsRef.current.add(tx.txid);
             return true;
@@ -220,26 +240,10 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
           return false;
         });
 
-        // Append new transactions to existing ones
-        setTransactions((prev) => {
-          const combined = [...prev, ...validNewTxs];
-
-          // Sort by block height (most recent first), with init transaction at the bottom
-          combined.sort((a: RpcTransaction, b: RpcTransaction) => {
-            const aIsInit = a.txid === initTxId;
-            const bIsInit = b.txid === initTxId;
-
-            // If one is init and other isn't, init goes to bottom
-            if (aIsInit && !bIsInit) return 1;
-            if (!aIsInit && bIsInit) return -1;
-
-            // Otherwise sort by block height (most recent first)
-            return (b.height || 0) - (a.height || 0);
-          });
-
-          return combined;
-        });
-
+        // Append to existing transactions, dedupe, and sort
+        setTransactions((prev) =>
+          dedupeAndSortTransactions([...prev, ...validTxs], initTxId ?? null)
+        );
         setLoadingTransactions(false);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -251,10 +255,36 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
       }
     }
 
-    fetchTransactions();
-  }, [verifier, proofs]);
+    fetchInitialTransactions();
+  }, [verifier, proofs, dedupeAndSortTransactions]);
 
-  // Load more proofs function
+  // Add init transaction when all proofs are loaded
+  useEffect(() => {
+    async function addInitTransaction() {
+      if (!verifier || !allProofsLoaded) return;
+
+      const initTxId = verifier.verifier_id ? verifier.verifier_id.split(':')[0] : null;
+      if (!initTxId || fetchedTxIdsRef.current.has(initTxId)) return;
+
+      try {
+        const initTx = await getRawTransaction(initTxId);
+        if (initTx) {
+          fetchedTxIdsRef.current.add(initTx.txid);
+          setTransactions((prev) => dedupeAndSortTransactions([...prev, initTx], initTxId));
+        }
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          console.error('Error fetching init transaction:', err.message);
+        } else {
+          console.error('Error fetching init transaction:', err);
+        }
+      }
+    }
+
+    addInitTransaction();
+  }, [verifier, allProofsLoaded, dedupeAndSortTransactions]);
+
+  // Load more proofs and their transactions
   const loadMoreProofs = useCallback(async () => {
     if (!verifier || loadingMoreProofs || allProofsLoaded) return;
 
@@ -267,7 +297,42 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
       });
 
       if (Array.isArray(moreProofs) && moreProofs.length > 0) {
-        // Append new proofs
+        // Get unique new txids from the new proofs
+        const newProofTxIds = [...new Set(moreProofs.map((proof: StarkProof) => proof.txid))];
+        const txIdsToFetch = newProofTxIds.filter(
+          (txid: string) => !fetchedTxIdsRef.current.has(txid)
+        );
+
+        // Fetch the new transactions
+        if (txIdsToFetch.length > 0) {
+          const txPromises = txIdsToFetch.map((txid: string) =>
+            getRawTransaction(txid).catch((err: unknown) => {
+              if (err instanceof Error) {
+                console.error(`Error fetching transaction ${txid}:`, err.message);
+              } else {
+                console.error(`Error fetching transaction ${txid}:`, err);
+              }
+              return null;
+            })
+          );
+
+          const txData = await Promise.all(txPromises);
+          const validNewTxs = txData.filter((tx): tx is RpcTransaction => {
+            if (tx !== null) {
+              fetchedTxIdsRef.current.add(tx.txid);
+              return true;
+            }
+            return false;
+          });
+
+          const initTxId = verifier.verifier_id ? verifier.verifier_id.split(':')[0] : null;
+
+          // Append new transactions, dedupe, and re-sort
+          setTransactions((prev) =>
+            dedupeAndSortTransactions([...prev, ...validNewTxs], initTxId ?? null)
+          );
+        }
+
         setProofs((prev) => [...prev, ...moreProofs]);
         setProofsOffset((prev) => prev + PAGE_SIZE);
       }
@@ -281,7 +346,7 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
       }
       setLoadingMoreProofs(false);
     }
-  }, [verifier, loadingMoreProofs, allProofsLoaded, proofsOffset]);
+  }, [verifier, loadingMoreProofs, allProofsLoaded, proofsOffset, dedupeAndSortTransactions]);
 
   if (loading) {
     return (
@@ -395,9 +460,9 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
       {/* Verifier Statistics Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 min-h-40">
         <StatCard
-          label="Total TZE Txs"
-          value={totalTzeCount.toLocaleString()}
-          description="Verify + Initialize"
+          label="Total Proofs"
+          value={totalProofCount.toLocaleString()}
+          description="STARK Proofs Verified"
         />
         <StatCard label="Total Proofs Sizes" value={totalProofSizeMB.toFixed(2)} description="MB" />
         <StatCard label="Bridge Balance" value={bridgeBalance} description="ZEC" />
@@ -437,7 +502,7 @@ export function VerifierPageContent({ verifierId }: VerifierPageContentProps) {
 
       {/* TZE Transactions List */}
       <h2 className="heading-section mb-6">
-        {totalProofCount > 0 ? totalTzeCount : transactions.length} TZE Transaction
+        {transactions.length} of {totalTzeCount} TZE Transaction
         {totalTzeCount !== 1 ? 's' : ''}
       </h2>
       <div className="flex flex-col gap-4">

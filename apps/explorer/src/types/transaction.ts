@@ -50,6 +50,9 @@ export interface Transaction {
   // Zindex API format fields
   type?: 'coinbase' | 'tze' | 't2t' | 't2z' | 'z2t' | 'z2z' | string;
   total_output?: number;
+  input_count?: number;
+  output_count?: number;
+  // Legacy field names (for backwards compatibility)
   num_inputs?: number | string;
   num_outputs?: number | string;
 }
