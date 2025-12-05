@@ -1,4 +1,3 @@
-import { FlickeringGrid } from '@workspace/ui/components/flickering-grid';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -73,15 +72,6 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/ibz2aiz.css" />
       </head>
       <body>
-        <div className="noise-overlay" aria-hidden="true" />
-        <FlickeringGrid
-          className="fixed top-0 left-0 w-full h-[100vh] z-[-2] pointer-events-none [mask-image:linear-gradient(to_bottom,white_0%,white_50%,transparent_100%)]"
-          squareSize={4}
-          gridGap={6}
-          color="#ff6b1a"
-          maxOpacity={0.2}
-          flickerChance={0.1}
-        />
         {children}
       </body>
     </html>

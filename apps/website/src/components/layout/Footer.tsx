@@ -17,26 +17,27 @@ export function Footer() {
       </div>
 
       {/* Main Container */}
-      <div className="relative z-10 max-w-container mx-auto">
-        <div className="flex">
-          {/* Footer Logo (Z icon) on the left */}
-          <div className="shrink-0">
+      <div className="relative z-10 max-w-container mx-auto px-4 lg:px-0">
+        {/* Mobile: Stacked layout / Desktop: Horizontal */}
+        <div className="flex flex-col md:flex-row">
+          {/* Footer Logo (Z icon) */}
+          <div className="shrink-0 flex justify-center md:justify-start">
             <Image
               src="/footer-logo.svg"
               alt=""
               width={180}
               height={180}
-              className="pointer-events-none"
+              className="pointer-events-none w-[120px] h-[120px] md:w-[180px] md:h-[180px]"
               aria-hidden="true"
             />
           </div>
 
           {/* Content */}
-          <div className="flex flex-col justify-between py-6 pl-8">
+          <div className="flex flex-col items-center md:items-start justify-between py-4 md:py-6 md:pl-8 gap-4">
             {/* CTA Button */}
             <Link
               href="#"
-              className="inline-flex items-center justify-center px-5 py-4 bg-white rounded-full text-[#0B0A18] font-semibold text-base hover:bg-white/90 transition-colors w-fit"
+              className="inline-flex items-center justify-center px-5 py-3 md:py-4 bg-white rounded-full text-[#0B0A18] font-semibold text-sm md:text-base hover:bg-white/90 transition-colors w-fit"
             >
               Launch the Engine
             </Link>

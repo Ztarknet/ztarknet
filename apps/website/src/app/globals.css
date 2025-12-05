@@ -9,7 +9,7 @@
     --font-mono: "ibm-plex-mono", sans-serif;
 
     /* Original Ztarknet design tokens */
-    --background: #040405;
+    --background: #050819;
     --foreground: #f4f4f6;
     --muted: #777c8e;
     --accent: #ff6b1a;
@@ -61,7 +61,7 @@
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
-    background: radial-gradient(circle at top right, #0e0912 0%, #040405 60%);
+    background: #050819;
     color: var(--foreground);
     font-family: var(--font-mono);
     font-weight: 400;
@@ -88,25 +88,6 @@
     color: white;
   }
 
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: conic-gradient(
-        from 45deg at 10% 10%,
-        rgba(255, 107, 26, 0.1),
-        rgba(255, 107, 26, 0) 40%
-      ),
-      linear-gradient(
-        120deg,
-        rgba(255, 137, 70, 0.12) 0%,
-        rgba(255, 137, 70, 0) 40%,
-        rgba(255, 137, 70, 0.08) 70%,
-        rgba(255, 137, 70, 0) 100%
-      );
-    z-index: -3;
-    pointer-events: none;
-  }
 }
 
 @layer components {

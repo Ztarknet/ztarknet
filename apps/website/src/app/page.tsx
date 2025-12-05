@@ -1,11 +1,10 @@
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { Architecture } from '@/components/sections/Architecture';
+import { Demo } from '@/components/sections/Demo';
 import { Hero } from '@/components/sections/Hero';
-import { Resources } from '@/components/sections/Resources';
-import { Roadmap } from '@/components/sections/Roadmap';
-import { Stack } from '@/components/sections/Stack';
-import { Thesis } from '@/components/sections/Thesis';
+import { Problem } from '@/components/sections/Problem';
+import { Team } from '@/components/sections/Team';
 
 export default function Home(): React.ReactElement {
   return (
@@ -13,11 +12,10 @@ export default function Home(): React.ReactElement {
       <Header />
       <main>
         <Hero />
-        <Thesis />
+        <Problem />
         <Architecture />
-        <Stack />
-        <Roadmap />
-        <Resources />
+        <Demo />
+        <Team />
       </main>
       <Footer />
     </>
