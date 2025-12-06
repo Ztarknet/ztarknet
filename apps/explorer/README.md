@@ -52,7 +52,7 @@ The explorer will be available at `http://localhost:5173` (or another port if 51
 
 ### Production Build
 
-Build the application for production:
+Build the production application:
 ```bash
 npm run build
 ```
