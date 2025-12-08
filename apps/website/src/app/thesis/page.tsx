@@ -23,7 +23,7 @@ export default function ThesisPage(): React.ReactElement {
             playsInline
             className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
           >
-            <source src="/background-2.mp4" type="video/mp4" />
+            <source src="/background-2-v2.mp4" type="video/mp4" />
           </video>
 
           {/* Content */}

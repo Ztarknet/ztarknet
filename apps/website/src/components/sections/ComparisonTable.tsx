@@ -1,8 +1,8 @@
 'use client'
 
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
-import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { clsx } from 'clsx'
+import { PixelCheckIcon } from '@/components/icons/PixelCheckIcon'
+import { PixelCrossIcon } from '@/components/icons/PixelCrossIcon'
 
 const tiers = [
   {
@@ -39,13 +39,13 @@ export function ComparisonTable() {
         
         {/* Mobile View (Tabs) */}
         <TabGroup className="sm:hidden">
-          <TabList className="flex gap-4 p-1 rounded-xl bg-white/5 border border-[#e96b2d]/30 border-dashed">
+          <TabList className="flex gap-4 p-1 bg-white/5 border border-[#e96b2d]/30">
             {tiers.map((tier) => (
               <Tab
                 key={tier.name}
                 className={({ selected }) =>
                   classNames(
-                    'w-full rounded-lg py-2.5 text-sm font-bold leading-5 transition-all outline-none',
+                    'w-full py-2.5 text-sm font-bold leading-5 transition-all outline-none',
                     selected
                       ? 'bg-[#e96b2d] text-white shadow-sm'
                       : 'text-gray-400 hover:bg-white/[0.12] hover:text-white'
@@ -61,15 +61,15 @@ export function ComparisonTable() {
               <TabPanel
                 key={tier.name}
                 className={classNames(
-                  'rounded-xl bg-white/5 p-6 border border-[#e96b2d]/30 border-dashed relative overflow-hidden',
+                  'bg-white/5 p-6 border border-[#e96b2d]/30 relative overflow-hidden',
                   tier.featured ? 'border-[#e96b2d]/50 bg-[#e96b2d]/5' : ''
                 )}
               >
                  <div className="flex flex-col gap-2 mb-8">
-                    <h3 className={classNames("text-xl font-bold uppercase tracking-wider", tier.featured ? "text-[#e96b2d]" : "text-white/70")}>
+                    <h3 className="text-xl font-bold uppercase tracking-wider text-white">
                         {tier.name}
                     </h3>
-                    <p className="text-sm text-gray-400 font-medium border-l-2 border-dashed border-[#e96b2d]/30 pl-3">
+                    <p className="text-sm text-gray-400 font-medium border-l-2 border-[#e96b2d]/30 pl-3">
                         {tier.description}
                     </p>
                  </div>
@@ -81,10 +81,14 @@ export function ComparisonTable() {
                                 {feature.name}
                             </dt>
                             <dd className={classNames(
-                                "text-base p-3 rounded bg-black/20 border border-dashed border-[#e96b2d]/30 flex items-start gap-3",
+                                "text-base p-3 bg-black/20 border border-[#e96b2d]/30 flex items-start gap-3",
                                 tier.featured ? "text-white" : "text-gray-400"
                             )}>
-                                {!tier.featured && <XMarkIcon className="h-5 w-5 text-[#e96b2d] shrink-0" aria-hidden="true" />}
+                                {tier.featured ? (
+                                  <PixelCheckIcon className="text-[#e96b2d] shrink-0" size={20} />
+                                ) : (
+                                  <PixelCrossIcon className="text-[#e96b2d] shrink-0" size={20} />
+                                )}
                                 <span>{feature[tier.id as keyof typeof feature]}</span>
                             </dd>
                         </div>
@@ -97,21 +101,18 @@ export function ComparisonTable() {
 
         {/* Desktop View (Table) */}
         <div className="hidden sm:block">
-            <div className="relative overflow-hidden rounded-2xl bg-black/20 border border-[#e96b2d]/30 border-dashed backdrop-blur-sm">
+            <div className="relative overflow-hidden bg-black/20 backdrop-blur-sm">
                  <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="border-b border-dashed border-[#e96b2d]/30">
-                            <th className="p-6 w-1/4 bg-white/5 text-xs uppercase tracking-widest text-gray-500 font-medium">Feature</th>
+                        <tr>
+                            <th className="p-6 w-1/4 bg-transparent"></th>
                             {tiers.map((tier) => (
                                 <th key={tier.name} className={classNames(
-                                    "p-6 text-left w-[37.5%]",
+                                    "p-6 text-left w-[37.5%] border border-[#e96b2d]/30",
                                     tier.featured ? "bg-[#e96b2d]/10" : "bg-white/[0.02]"
                                 )}>
                                     <div className="flex flex-col gap-1">
-                                        <div className={classNames(
-                                            "text-lg font-bold uppercase tracking-wide", 
-                                            tier.featured ? "text-[#e96b2d]" : "text-gray-400"
-                                        )}>
+                                        <div className="text-lg font-bold uppercase tracking-wide text-white">
                                             {tier.name}
                                         </div>
                                         <div className="text-xs font-normal text-gray-500 font-sans">
@@ -122,17 +123,20 @@ export function ComparisonTable() {
                             ))}
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-dashed divide-[#e96b2d]/30">
-                        {features.map((feature) => (
+                    <tbody>
+                        {features.map((feature, index) => (
                             <tr key={feature.name} className="group hover:bg-white/[0.02] transition-colors">
-                                <th scope="row" className="p-6 text-xs font-bold uppercase tracking-wider text-gray-500 bg-white/[0.02]">
+                                <th scope="row" className={classNames(
+                                    "p-6 text-xs font-bold uppercase tracking-wider text-gray-500 bg-white/[0.02] border-l border-r border-b border-[#e96b2d]/30",
+                                    index === 0 ? "border-t" : ""
+                                )}>
                                     {feature.name}
                                 </th>
                                 
                                 {/* Soft Compute Cell */}
-                                <td className="p-6 text-sm text-gray-400 border-r border-dashed border-[#e96b2d]/30 group-hover:bg-red-500/5 transition-colors duration-300">
+                                <td className="p-6 text-sm text-gray-400 border-x border-b border-[#e96b2d]/30 group-hover:bg-red-500/5 transition-colors duration-300">
                                     <div className="flex items-start gap-3 opacity-80">
-                                        <XMarkIcon className="h-5 w-5 text-[#e96b2d] shrink-0" aria-hidden="true" />
+                                        <PixelCrossIcon className="text-[#e96b2d] shrink-0" size={20} />
                                         <span>
                                             {feature.soft}
                                         </span>
@@ -140,9 +144,9 @@ export function ComparisonTable() {
                                 </td>
 
                                 {/* Hard Compute Cell */}
-                                <td className="p-6 text-sm font-bold text-white bg-[#e96b2d]/5 group-hover:bg-[#e96b2d]/10 transition-colors duration-300 relative overflow-hidden">
+                                <td className="p-6 text-sm font-bold text-white bg-[#e96b2d]/5 group-hover:bg-[#e96b2d]/10 transition-colors duration-300 relative overflow-hidden border-l border-r border-b border-[#e96b2d]/30">
                                     <div className="flex items-start gap-3 relative z-10">
-                                        <CheckIcon className="h-5 w-5 text-[#e96b2d] shrink-0" aria-hidden="true" />
+                                        <PixelCheckIcon className="text-[#e96b2d] shrink-0" size={20} />
                                         <span>
                                             {feature.hard}
                                         </span>

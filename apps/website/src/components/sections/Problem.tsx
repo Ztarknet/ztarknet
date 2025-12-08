@@ -18,7 +18,7 @@ export function Problem() {
               playsInline
               className="w-full h-full object-cover"
             >
-              <source src="/section-01.mp4" type="video/mp4" />
+              <source src="/ascii_art-cubes.mp4" type="video/mp4" />
             </video>
           </div>
 

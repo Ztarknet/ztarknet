@@ -17,7 +17,7 @@ export function Hero() {
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
       >
-        <source src="/hero.mp4" type="video/mp4" />
+        <source src="/hero-v2.mp4" type="video/mp4" />
       </video>
 
       {/* Content - padding-top = spacing above header (12px/24px) + header (~50px/60px) + same spacing below */}

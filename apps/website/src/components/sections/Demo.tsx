@@ -21,7 +21,7 @@ export function Demo() {
                 playsInline
                 className="w-full h-full object-cover"
               >
-                <source src="/section-03.mp4" type="video/mp4" />
+                <source src="/ascii_art-spheres.mp4" type="video/mp4" />
               </video>
             </div>
           </div>

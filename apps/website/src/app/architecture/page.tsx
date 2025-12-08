@@ -123,7 +123,7 @@ export default function ArchitecturePage(): React.ReactElement {
             playsInline
             className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
           >
-            <source src="/background-2.mp4" type="video/mp4" />
+            <source src="/background-2-v2.mp4" type="video/mp4" />
           </video>
 
           {/* Content - padding-top = spacing above header (12px/24px) + header (~50px/60px) + same spacing below */}
@@ -258,7 +258,7 @@ export default function ArchitecturePage(): React.ReactElement {
                 playsInline
                 className="absolute inset-0 w-full h-full object-cover opacity-30"
               >
-                <source src="/background-2.mp4" type="video/mp4" />
+                <source src="/background-2-v2.mp4" type="video/mp4" />
               </video>
 
               {/* Content - Code style */}
@@ -287,9 +287,37 @@ export default function ArchitecturePage(): React.ReactElement {
           </div>
         </section>
 
-        {/* Flow Diagram Section - Cleaner Design */}
-        <section className="relative py-16 lg:py-24">
-          <div className="max-w-container mx-auto px-4 lg:px-0">
+        {/* Wrapper for Flow Diagram + Video with side decorations */}
+        <div className="relative">
+          {/* Side decorative images - visible only on large screens */}
+          {/* Left side */}
+          <div className="hidden xl:block absolute left-0 top-0 bottom-0 w-[700px] opacity-40 pointer-events-none z-0">
+            <Image
+              src="/ascii_art-border.png"
+              alt=""
+              width={700}
+              height={1844}
+              className="w-[700px] h-full object-cover object-center"
+            />
+            {/* Top gradient fade */}
+            <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-[#0b0a18] to-transparent" />
+          </div>
+          {/* Right side - mirrored */}
+          <div className="hidden xl:block absolute right-0 top-0 bottom-0 w-[700px] opacity-40 pointer-events-none z-0">
+            <Image
+              src="/ascii_art-border.png"
+              alt=""
+              width={700}
+              height={1844}
+              className="w-[700px] h-full object-cover object-center scale-x-[-1]"
+            />
+            {/* Top gradient fade */}
+            <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-[#0b0a18] to-transparent" />
+          </div>
+
+          {/* Flow Diagram Section - Cleaner Design */}
+          <section className="relative py-16 lg:py-24">
+            <div className="relative z-10 max-w-container mx-auto px-4 lg:px-0">
             <div className="flex flex-col items-center">
               {/* User Transaction - Start */}
               <div className="relative">
@@ -395,21 +423,22 @@ export default function ArchitecturePage(): React.ReactElement {
         </section>
 
         {/* Video Section - Google Drive Embed */}
-        <section className="relative pb-16 md:pb-24">
-          <div className="max-w-container mx-auto px-4 lg:px-0">
-            <div className="w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden bg-[#0b0a18] border border-[#e96b2d]/20">
-              <iframe
-                src="https://drive.google.com/file/d/1qnO_oC6b3dvnZEVda1_H53MlF0khPOc3/preview"
-                width="100%"
-                height="100%"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-                className="w-full h-full"
-                title="Ztarknet Architecture Video"
-              />
+          <section className="relative pb-16 md:pb-24">
+            <div className="relative z-10 max-w-container mx-auto px-4 lg:px-0">
+              <div className="w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden bg-[#0b0a18] border border-[#e96b2d]/20">
+                <iframe
+                  src="https://drive.google.com/file/d/1qnO_oC6b3dvnZEVda1_H53MlF0khPOc3/preview"
+                  width="100%"
+                  height="100%"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                  className="w-full h-full"
+                  title="Ztarknet Architecture Video"
+                />
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </main>
       <Footer />
     </>
