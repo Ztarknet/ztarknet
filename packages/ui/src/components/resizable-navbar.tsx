@@ -20,6 +20,7 @@ interface NavItemsProps {
   items: {
     name: string;
     link: string;
+    icon?: React.ReactNode;
   }[];
   className?: string;
   onItemClick?: () => void;
@@ -119,7 +120,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         <a
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
-          className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
+          className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300 flex items-center gap-2"
           key={item.link}
           href={item.link}
           target={item.link.startsWith('http') ? '_blank' : undefined}
@@ -131,6 +132,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
               className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"
             />
           )}
+          {item.icon && <span className="relative z-20 flex-shrink-0">{item.icon}</span>}
           <span className="relative z-20">{item.name}</span>
         </a>
       ))}

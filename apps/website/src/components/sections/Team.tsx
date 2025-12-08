@@ -20,7 +20,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     role: 'Core Dev',
-    name: 'Michel',
+    name: 'Michael',
     image: '/michel.jpeg',
     link: 'https://x.com/monsieur_kus',
   },
@@ -59,7 +59,7 @@ export function Team() {
         {/* Orange bordered container */}
         <div className="relative border border-[#e96b2d] rounded-3xl overflow-hidden p-8 md:p-12 lg:p-16">
           {/* Title */}
-          <h2 className="text-3xl md:text-5xl lg:text-6xl leading-[1.1] font-bold text-white mb-16">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl leading-[1.1] font-bold text-[#e96b2d] mb-16">
             Built by Humans.
             <br />
             Verified by Cryptography.

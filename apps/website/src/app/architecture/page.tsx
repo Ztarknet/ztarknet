@@ -2,6 +2,7 @@
 
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { PixelIcon } from '@/components/icons/PixelIcon';
 import { useRevealOnScroll } from '@/hooks/useRevealOnScroll';
 import Image from 'next/image';
 
@@ -10,10 +11,12 @@ const features = [
   {
     title: 'The Bridge (The TZE)',
     icon: '/ascii-circle.png',
+    link: 'https://github.com/zcash/zips/pull/1107',
     items: [
       {
         label: 'The Mechanism:',
         text: 'A "Transparent Zcash Extension" (TZE). Think of it as a portal in the Zcash code that lets it read STARK proofs.',
+        starkLink: 'https://starkware.co/stark/',
       },
       {
         label: 'The Guarantee:',
@@ -25,6 +28,7 @@ const features = [
   {
     title: 'The Eyes (Zoro)',
     icon: '/ascii-cube.png',
+    link: 'https://forum.zcashcommunity.com/t/zoro-a-stark-proven-zcash-light-client-in-cairo/53220',
     items: [
       {
         label: 'What it is:',
@@ -40,6 +44,7 @@ const features = [
   {
     title: 'The Infrastructure (Karnot)',
     icon: '/ascii-diamond.png',
+    link: 'https://x.com/karnotxyz',
     items: [
       {
         label: 'Who they are:',
@@ -55,6 +60,7 @@ const features = [
   {
     title: 'The Interface (Session Keys)',
     icon: '/ascii-cylinder.png',
+    link: 'https://hackmd.io/@m-kus/BJTINvjk-g',
     items: [
       {
         label: 'The Bottleneck:',
@@ -70,11 +76,12 @@ const features = [
   {
     title: 'The Stack',
     icon: '/ascii-cone.png',
+    readMoreLink: 'https://x.com/starkience/status/1993612235302723920',
     items: [
-      { label: 'Sequencer:', text: 'Madara (Rust-based Starknet Client).' },
-      { label: 'Prover:', text: 'Stwo (Circle-STARKs).' },
-      { label: 'L1 Node:', text: 'Zebra (Zcash Node with TZE fork).' },
-      { label: 'Explorer:', text: 'Cosmos (Open-source Starknet explorer).' },
+      { label: 'Sequencer:', text: 'Madara (Rust-based Starknet Client).', link: 'https://github.com/madara-alliance/madara' },
+      { label: 'Prover:', text: 'Stwo (Circle-STARKs).', link: 'https://github.com/starkware-libs/stwo-cairo' },
+      { label: 'L1 Node:', text: 'Zebra (Zcash Node with TZE fork).', link: 'https://github.com/AbdelStark/zebra' },
+      { label: 'Explorer:', text: 'Cosmos (Open-source Starknet explorer).', link: 'https://github.com/justmert/cosmos' },
     ],
     position: 'left',
   },
@@ -116,19 +123,20 @@ export default function ArchitecturePage(): React.ReactElement {
             playsInline
             className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
           >
-            <source src="/hero.mp4" type="video/mp4" />
+            <source src="/background-2.mp4" type="video/mp4" />
           </video>
 
           {/* Content - padding-top = spacing above header (12px/24px) + header (~50px/60px) + same spacing below */}
           <div className="relative z-10 h-full max-w-container mx-auto px-4 lg:px-0 pt-[74px] lg:pt-[108px] flex items-center">
             <div className="flex flex-col gap-6 md:gap-10">
               {/* Main headline */}
-              <h1 className="text-4xl md:text-6xl lg:text-7xl leading-[1.05] font-black tracking-tight text-white">
-                Architecture
+              <h1 className="text-4xl md:text-6xl lg:text-7xl leading-[1.05] font-black tracking-tight">
+                <span className="text-white">System </span>
+                <span className="text-[#e96b2d]">Architecture.</span>
               </h1>
 
               {/* Subtitle */}
-              <div className="max-w-4xl space-y-4 text-lg md:text-xl leading-relaxed text-[#e96b2d] italic">
+              <div className="max-w-4xl space-y-4 text-lg md:text-xl leading-relaxed text-white/90">
                 <p>
                   Architecture is not about what you build. It is about what you remove.
                 </p>
@@ -144,7 +152,7 @@ export default function ArchitecturePage(): React.ReactElement {
                   There is only a Transparent Zcash Extension (TZE) enforced by consensus. The system
                   does not ask for permission. It asks for a proof.
                 </p>
-                <p className="text-white font-medium not-italic">The only authority here is mathematics.</p>
+                <p className="text-white font-medium">The only authority here is mathematics.</p>
               </div>
             </div>
           </div>
@@ -161,17 +169,14 @@ export default function ArchitecturePage(): React.ReactElement {
                     feature.position === 'right' ? 'lg:flex-row-reverse' : 'lg:flex-row'
                   } items-start gap-8 lg:gap-16`}
                 >
-                  {/* Video Icon */}
-                  <div className="w-[150px] h-[150px] lg:w-[233px] lg:h-[233px] rounded-[20px] border border-[rgba(233,107,45,0.3)] overflow-hidden flex-shrink-0">
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="w-full h-full object-cover"
-                    >
-                      <source src={index % 2 === 0 ? '/section-01.mp4' : '/section-02.mp4'} type="video/mp4" />
-                    </video>
+                  {/* Image Icon */}
+                  <div className="w-[150px] h-[150px] lg:w-[233px] lg:h-[233px] rounded-[20px] border border-[rgba(233,107,45,0.3)] overflow-hidden flex-shrink-0 relative">
+                    <Image
+                      src={`/${index + 1}.png`}
+                      alt={feature.title}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
 
                   {/* Content */}
@@ -180,13 +185,60 @@ export default function ArchitecturePage(): React.ReactElement {
                       {feature.title}
                     </h2>
                     <ul className="space-y-4">
-                      {feature.items.map((item) => (
+                      {feature.items.map((item: { label: string; text: string; link?: string; starkLink?: string }) => (
                         <li key={item.label} className="text-white text-base lg:text-[16px] leading-[1.4]">
                           <span className="font-bold">{item.label}</span>{' '}
-                          <span>{item.text}</span>
+                          {item.link ? (
+                            <a
+                              href={item.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-[#e96b2d] transition-colors underline underline-offset-2"
+                            >
+                              {item.text}
+                            </a>
+                          ) : item.starkLink ? (
+                            <span>
+                              A "Transparent Zcash Extension" (TZE). Think of it as a portal in the Zcash code that lets it read{' '}
+                              <a
+                                href={item.starkLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#e96b2d] hover:text-white transition-colors underline underline-offset-2"
+                              >
+                                STARK proofs
+                              </a>
+                              .
+                            </span>
+                          ) : (
+                            <span>{item.text}</span>
+                          )}
                         </li>
                       ))}
                     </ul>
+                    {/* Links under the text */}
+                    {feature.link && (
+                      <a
+                        href={feature.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 mt-6 text-[#e96b2d] hover:text-white transition-colors underline underline-offset-2"
+                      >
+                        Learn more
+                        <PixelIcon size={12} />
+                      </a>
+                    )}
+                    {feature.readMoreLink && (
+                      <a
+                        href={feature.readMoreLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 mt-6 text-[#e96b2d] hover:text-white transition-colors underline underline-offset-2"
+                      >
+                        Read more
+                        <PixelIcon size={12} />
+                      </a>
+                    )}
                   </div>
                 </div>
               ))}
@@ -338,6 +390,23 @@ export default function ArchitecturePage(): React.ReactElement {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Video Section - Google Drive Embed */}
+        <section className="relative pb-16 md:pb-24">
+          <div className="max-w-container mx-auto px-4 lg:px-0">
+            <div className="w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden bg-[#0b0a18] border border-[#e96b2d]/20">
+              <iframe
+                src="https://drive.google.com/file/d/1qnO_oC6b3dvnZEVda1_H53MlF0khPOc3/preview"
+                width="100%"
+                height="100%"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                className="w-full h-full"
+                title="Ztarknet Architecture Video"
+              />
             </div>
           </div>
         </section>
