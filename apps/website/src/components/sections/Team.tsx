@@ -66,7 +66,7 @@ export function Team() {
           </h2>
 
           {/* Team Grid - Single column on mobile (horizontal cards), grid on larger screens */}
-          <div className="flex flex-col gap-4 md:grid md:grid-cols-3 lg:grid-cols-6 md:gap-8">
+          <div className="flex flex-col gap-4 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 md:gap-8">
             {teamMembers.map((member) => (
               <Link
                 key={member.role}

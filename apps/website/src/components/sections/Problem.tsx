@@ -10,7 +10,7 @@ export function Problem() {
       <div className="max-w-container mx-auto px-4 lg:px-0">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Left side - Video */}
-          <div className="w-full lg:w-1/2 aspect-square rounded-3xl overflow-hidden">
+          <div className="hidden md:block w-full lg:w-1/2 aspect-square rounded-3xl overflow-hidden">
             <video
               autoPlay
               loop

@@ -130,7 +130,7 @@ export default function ArchitecturePage(): React.ReactElement {
           <div className="relative z-10 h-full max-w-container mx-auto px-4 lg:px-0 pt-[74px] lg:pt-[108px] flex items-center">
             <div className="flex flex-col gap-6 md:gap-10">
               {/* Main headline */}
-              <h1 className="text-4xl md:text-6xl lg:text-7xl leading-[1.05] font-black tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] font-black tracking-tight">
                 <span className="text-white">System </span>
                 <span className="text-[#e96b2d]">Architecture.</span>
               </h1>
@@ -316,12 +316,12 @@ export default function ArchitecturePage(): React.ReactElement {
           </div>
 
           {/* Flow Diagram Section - Cleaner Design */}
-          <section className="relative py-16 lg:py-24">
+          <section className="relative py-16 lg:py-24 overflow-x-hidden">
             <div className="relative z-10 max-w-container mx-auto px-4 lg:px-0">
             <div className="flex flex-col items-center">
               {/* User Transaction - Start */}
               <div className="relative">
-                <div className="border-2 border-[#e96b2d] bg-[#e96b2d]/10 backdrop-blur px-6 py-4 md:px-8 md:py-6 min-w-[240px] md:min-w-[350px] rounded-lg">
+                <div className="border-2 border-[#e96b2d] bg-[#e96b2d]/10 backdrop-blur px-6 py-4 md:px-8 md:py-6 min-w-[240px] w-full max-w-[350px] md:min-w-[350px] rounded-lg">
                   <p className="text-white font-bold text-sm md:text-lg text-center">User Transaction</p>
                 </div>
               </div>
@@ -349,7 +349,7 @@ export default function ArchitecturePage(): React.ReactElement {
               </div>
 
               {/* Generate Trace Box */}
-              <div className="border border-[#e96b2d]/60 px-6 py-4 md:px-8 md:py-5 min-w-[240px] md:min-w-[350px] rounded-lg bg-[#0b0a18]">
+              <div className="border border-[#e96b2d]/60 px-6 py-4 md:px-8 md:py-5 min-w-[240px] w-full max-w-[350px] md:min-w-[350px] rounded-lg bg-[#0b0a18]">
                 <p className="text-white/80 font-medium text-sm md:text-base text-center">Generate Trace</p>
               </div>
 
@@ -376,7 +376,7 @@ export default function ArchitecturePage(): React.ReactElement {
               </div>
 
               {/* Generate ZK Proof Box */}
-              <div className="border border-[#e96b2d]/60 px-6 py-4 md:px-8 md:py-5 min-w-[240px] md:min-w-[350px] rounded-lg bg-[#0b0a18]">
+              <div className="border border-[#e96b2d]/60 px-6 py-4 md:px-8 md:py-5 min-w-[240px] w-full max-w-[350px] md:min-w-[350px] rounded-lg bg-[#0b0a18]">
                 <p className="text-white/80 font-medium text-sm md:text-base text-center">Generate ZK Proof</p>
               </div>
 
@@ -403,7 +403,7 @@ export default function ArchitecturePage(): React.ReactElement {
               </div>
 
               {/* TZE Verifier Box */}
-              <div className="border border-[#e96b2d]/60 px-6 py-4 md:px-8 md:py-5 min-w-[240px] md:min-w-[350px] rounded-lg bg-[#0b0a18]">
+              <div className="border border-[#e96b2d]/60 px-6 py-4 md:px-8 md:py-5 min-w-[240px] w-full max-w-[350px] md:min-w-[350px] rounded-lg bg-[#0b0a18]">
                 <p className="text-white/80 font-medium text-sm md:text-base text-center">TZE Verifier</p>
               </div>
 
@@ -412,7 +412,7 @@ export default function ArchitecturePage(): React.ReactElement {
 
               {/* L1 Anchor - End */}
               <div className="relative">
-                <div className="border-2 border-[#e96b2d] bg-[#e96b2d]/10 backdrop-blur px-6 py-4 md:px-8 md:py-6 min-w-[240px] md:min-w-[350px] rounded-lg">
+                <div className="border-2 border-[#e96b2d] bg-[#e96b2d]/10 backdrop-blur px-6 py-4 md:px-8 md:py-6 min-w-[240px] w-full max-w-[350px] md:min-w-[350px] rounded-lg">
                   <p className="text-white font-bold text-sm md:text-lg text-center">
                     L1 Anchor<br />State Updated
                   </p>

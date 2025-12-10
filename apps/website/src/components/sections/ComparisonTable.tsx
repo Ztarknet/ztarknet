@@ -35,11 +35,11 @@ function classNames(...classes: (string | undefined | null | false)[]) {
 export function ComparisonTable() {
   return (
     <div className="font-mono text-sm sm:text-base">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-0 sm:px-6 lg:px-8">
         
         {/* Mobile View (Tabs) */}
         <TabGroup className="sm:hidden">
-          <TabList className="flex gap-4 p-1 bg-white/5 border border-[#e96b2d]/30">
+          <TabList className="flex gap-4 p-1 bg-white/5 border border-[#e96b2d]/30 mx-4 sm:mx-0">
             {tiers.map((tier) => (
               <Tab
                 key={tier.name}
@@ -56,12 +56,12 @@ export function ComparisonTable() {
               </Tab>
             ))}
           </TabList>
-          <TabPanels className="mt-6">
+          <TabPanels className="mt-6 mx-0 sm:mx-0">
             {tiers.map((tier) => (
               <TabPanel
                 key={tier.name}
                 className={classNames(
-                  'bg-white/5 p-6 border border-[#e96b2d]/30 relative overflow-hidden',
+                  'bg-white/5 p-4 sm:p-6 border-y border-[#e96b2d]/30 sm:border relative overflow-hidden',
                   tier.featured ? 'border-[#e96b2d]/50 bg-[#e96b2d]/5' : ''
                 )}
               >

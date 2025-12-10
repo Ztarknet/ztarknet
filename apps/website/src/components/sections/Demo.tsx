@@ -12,7 +12,7 @@ export function Demo() {
       <div className="max-w-container mx-auto px-4 lg:px-0">
         <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           {/* Left side - Video (40%) */}
-          <div className="w-full lg:w-2/5 flex justify-center">
+          <div className="hidden md:flex w-full lg:w-2/5 justify-center">
             <div className="w-full max-w-[600px] aspect-square rounded-3xl overflow-hidden">
               <video
                 autoPlay
@@ -50,7 +50,7 @@ export function Demo() {
               className="w-fit h-auto px-6 py-4 rounded-full text-base font-bold"
               asChild
             >
-              <Link href="https://zixel.ztarknet.com" target="_blank" rel="noreferrer">
+              <Link href="https://ztarknet.art-peace.net" target="_blank" rel="noreferrer">
                 Draw a Zixel
               </Link>
             </Button>

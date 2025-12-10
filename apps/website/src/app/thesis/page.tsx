@@ -30,7 +30,7 @@ export default function ThesisPage(): React.ReactElement {
           <div className="relative z-10 h-full max-w-container mx-auto px-4 lg:px-0 pt-[74px] lg:pt-[108px] flex items-center">
             <div className="flex flex-col gap-6 md:gap-10">
               {/* Main headline */}
-              <h1 className="text-4xl md:text-6xl lg:text-7xl leading-[1.05] font-black tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] font-black tracking-tight">
                 <span className="text-white">Thesis:</span>
                 <br />
                 <span className="text-[#e96b2d]">Hard vs Soft Compute.</span>
@@ -53,7 +53,7 @@ export default function ThesisPage(): React.ReactElement {
 
         {/* Comparison Table Section */}
         <section className="relative py-16 md:pt-16 mb:pb-4">
-          <div className="max-w-7xl mx-auto px-4">
+          <div className="max-w-7xl mx-auto px-0 md:px-4">
             <ComparisonTable />
           </div>
         </section>

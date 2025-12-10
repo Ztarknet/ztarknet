@@ -24,7 +24,7 @@ export function Hero() {
       <div className="relative z-10 h-full max-w-container mx-auto px-4 lg:px-0 pt-[74px] lg:pt-[108px] flex items-center">
         <div className="flex flex-col gap-6 md:gap-10">
           {/* Main headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl leading-[1.05] font-black tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] font-black tracking-tight">
             <span className="text-white">The Execution Layer for </span>
             <span className="text-[#e96b2d]">Encrypted Bitcoin.</span>
           </h1>
@@ -43,7 +43,9 @@ export function Hero() {
             className="w-fit h-auto px-6 py-3 rounded-full text-base font-bold"
             asChild
           >
-            <Link href="#demo">Launch the Engine</Link>
+            <Link href="https://github.com/ztarknet/quickstart" target="_blank" rel="noreferrer">
+              Launch the Engine
+            </Link>
           </Button>
         </div>
       </div>
