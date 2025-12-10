@@ -19,7 +19,7 @@ export function Footer() {
       {/* Main Container */}
       <div className="relative z-10 max-w-container mx-auto px-0 sm:px-4 lg:px-0">
         {/* Horizontal layout with 1/3 logo and 2/3 content on mobile */}
-        <div className="grid grid-cols-3 items-stretch gap-4 md:flex md:flex-row md:items-center">
+        <div className="grid grid-cols-3 items-stretch gap-4 md:flex md:flex-row md:items-stretch">
           {/* Footer Logo (Z icon) */}
           <div className="shrink-0 col-span-1 flex justify-center md:w-auto md:justify-start">
             <Image
@@ -27,13 +27,13 @@ export function Footer() {
               alt=""
               width={180}
               height={180}
-              className="pointer-events-none w-auto h-full max-h-[220px] md:w-[180px] md:h-[300px]"
+              className="pointer-events-none w-auto h-full max-h-[220px] md:w-[180px] md:h-[300px] lg:h-auto"
               aria-hidden="true"
             />
           </div>
 
           {/* Content */}
-          <div className="col-span-2 flex flex-col items-start justify-center md:justify-between py-4 md:py-6 md:pl-8 gap-2 md:gap-3">
+          <div className="col-span-2 flex flex-col items-start justify-center md:justify-between py-4 md:py-6 md:pl-8 gap-2 md:gap-0">
             {/* CTA Button */}
             <Link
               href="https://github.com/ztarknet/quickstart"
