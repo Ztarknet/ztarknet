@@ -19,10 +19,9 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: 'Thesis', link: '#thesis' },
-    { name: 'Architecture', link: '#architecture' },
-    { name: 'Stack', link: '#stack' },
-    { name: 'Resources', link: '#resources' },
+    { name: 'Home', link: '/' },
+    { name: 'Thesis', link: '/thesis' },
+    { name: 'Architecture', link: '/architecture' },
     { name: 'Explorer', link: 'https://explorer.ztarknet.cash' },
   ];
 
@@ -36,7 +35,7 @@ export function Header() {
       <Navbar className="fixed top-3 lg:top-6 px-4 lg:px-8 hidden lg:block">
         <NavBody className="border border-[rgba(255,107,26,0.2)] !bg-black/90 backdrop-blur-xl !shadow-[0_0_24px_rgba(255,107,26,0.1)] hover:border-[rgba(255,107,26,0.4)] transition-colors !px-3 !py-2.5 max-w-container">
           {/* Logo */}
-          <Link href="#top" className="relative z-20 inline-flex items-center ml-2">
+          <Link href="/" className="relative z-20 inline-flex items-center ml-4">
             <Image src="/logo.svg" alt="Ztarknet logo" width={160} height={28} />
           </Link>
 
@@ -68,8 +67,8 @@ export function Header() {
       </Navbar>
 
       {/* Mobile Navigation (Classic with Sheet) */}
-      <nav className="lg:hidden flex items-center justify-between px-3 py-2.5 fixed top-3 left-0 right-0 z-[200] bg-black border border-[rgba(255,107,26,0.2)] rounded-full mx-8 backdrop-blur-xl">
-        <Link href="#top" className="inline-flex items-center">
+      <nav className="lg:hidden flex items-center justify-between px-5 py-2.5 fixed top-3 left-0 right-0 z-[220] bg-black border border-[rgba(255,107,26,0.2)] rounded-full mx-4 sm:mx-8 backdrop-blur-xl">
+        <Link href="/" className="inline-flex items-center">
           <Image src="/logo.svg" alt="Ztarknet logo" width={120} height={22} />
         </Link>
 
@@ -101,7 +100,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-full bg-black border-l-[rgba(255,107,26,0.2)] backdrop-blur-xl pt-20"
+              className="w-full bg-black border-l-[rgba(255,107,26,0.2)] backdrop-blur-xl pt-20 z-[210]"
             >
               <SheetHeader className="hidden">
                 <SheetTitle className="text-left text-foreground flex items-center">
