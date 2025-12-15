@@ -12,8 +12,14 @@ export const metadata: Metadata = {
   description:
     'Deploy Ztarknet accounts/wallets, manage and send funds, and interact with Ztarknet',
   icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: [
+      { url: '/social/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/social/favicon_hq.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: '/social/apple_touch_icon.png',
+    other: [
+      { rel: 'icon', url: '/social/android_chrome.png', sizes: '512x512', type: 'image/png' },
+    ],
   },
   metadataBase: new URL('https://wallet.ztarknet.cash'),
   openGraph: {
@@ -24,7 +30,7 @@ export const metadata: Metadata = {
     siteName: 'Ztarknet Wallet',
     images: [
       {
-        url: '/social.png',
+        url: '/social/og_image.png',
         width: 1200,
         height: 630,
         alt: 'Ztarknet Wallet - Secure Web Wallet',
@@ -36,7 +42,7 @@ export const metadata: Metadata = {
     title: 'Ztarknet Wallet',
     description:
       'Deploy Ztarknet accounts/wallets, manage and send funds, and interact with Ztarknet',
-    images: ['/social.png'],
+    images: ['/social/twitter_card_large.png'],
   },
 };
 

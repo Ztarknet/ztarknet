@@ -10,8 +10,14 @@ export const metadata: Metadata = {
   title: 'Ztarknet Explorer',
   description: 'Explore blocks, transactions, and accounts on the Ztarknet blockchain',
   icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: [
+      { url: '/social/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/social/favicon_hq.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: '/social/apple_touch_icon.png',
+    other: [
+      { rel: 'icon', url: '/social/android_chrome.png', sizes: '512x512', type: 'image/png' },
+    ],
   },
   metadataBase: new URL('https://explorer.ztarknet.cash'),
   openGraph: {
@@ -21,7 +27,7 @@ export const metadata: Metadata = {
     siteName: 'Ztarknet Explorer',
     images: [
       {
-        url: '/social.png',
+        url: '/social/og_image.png',
         width: 1200,
         height: 630,
         alt: 'Ztarknet Explorer - Blockchain Explorer',
@@ -32,7 +38,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Ztarknet Explorer',
     description: 'Explore blocks, transactions, and accounts on the Ztarknet blockchain',
-    images: ['/social.png'],
+    images: ['/social/twitter_card_large.png'],
   },
 };
 
