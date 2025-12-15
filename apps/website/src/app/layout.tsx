@@ -6,8 +6,14 @@ export const metadata: Metadata = {
   description:
     'Ztarknet is a cypherpunk proof-of-concept exploring a Starknet-style Layer 2 that settles on Zcash via a Transparent Zcash Extension (TZE) verifier for Circle STARK proofs.',
   icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: [
+      { url: '/social/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/social/favicon_hq.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: '/social/apple_touch_icon.png',
+    other: [
+      { rel: 'icon', url: '/social/android_chrome.png', sizes: '512x512', type: 'image/png' },
+    ],
   },
   keywords: [
     'Ztarknet',
@@ -35,7 +41,7 @@ export const metadata: Metadata = {
       'Cypherpunk PoC bringing Starknet execution, Circle STARK proofs, and Zcash settlement together through a native TZE verifier.',
     images: [
       {
-        url: '/social.png',
+        url: '/social/og_image.png',
         width: 1200,
         height: 630,
         alt: 'Ztarknet - Starknet L2 anchored to Zcash',
@@ -47,7 +53,7 @@ export const metadata: Metadata = {
     title: 'Ztarknet — Starknet L2 anchored to Zcash',
     description:
       'Explore the Starknet-on-Zcash PoC: Cairo execution, Circle STARK proofs, and a TZE verifier bringing programmable privacy to life.',
-    images: ['/social.png'],
+    images: ['/social/twitter_card_large.png'],
   },
   other: {
     'ai:summary':
